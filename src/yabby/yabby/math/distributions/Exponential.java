@@ -1,0 +1,52 @@
+package yabby.math.distributions;
+
+
+import org.apache.commons.math.distribution.ContinuousDistribution;
+import org.apache.commons.math.distribution.ExponentialDistributionImpl;
+
+import yabby.core.Description;
+import yabby.core.Input;
+import yabby.core.parameter.RealParameter;
+
+@Description("Exponential distribution.  f(x;\\lambda) = 1/\\lambda e^{-x/\\lambda}, if x >= 0 " +
+        "If the input x is a multidimensional parameter, each of the dimensions is considered as a " +
+        "separate independent component.")
+public class Exponential extends ParametricDistribution {
+    public Input<RealParameter> m_lambda = new Input<RealParameter>("mean", "mean parameter, defaults to 1");
+
+    static org.apache.commons.math.distribution.ExponentialDistribution m_dist = new ExponentialDistributionImpl(1);
+
+    @Override
+    public void initAndValidate() {
+        refresh();
+    }
+
+    /**
+     * make sure internal state is up to date *
+     */
+    void refresh() {
+        double fLambda;
+        if (m_lambda.get() == null) {
+            fLambda = 1;
+        } else {
+            fLambda = m_lambda.get().getValue();
+            if (fLambda < 0) {
+                System.err.println("Exponential::Lambda should be positive not " + fLambda + ". Assigning default value.");
+                fLambda = 1;
+            }
+        }
+        m_dist.setMean(fLambda);
+    }
+
+    @Override
+    public ContinuousDistribution getDistribution() {
+        refresh();
+        return m_dist;
+    }
+    
+    @Override
+    public double getMean() {
+    	return m_offset.get() + m_dist.getMean();
+    }
+
+} // class Exponential

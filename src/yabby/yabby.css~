@@ -1,0 +1,54 @@
+.tdcol1 {
+	width:200;
+}
+
+.table {
+	background-color:rgb(252, 249, 238);
+	text-align: center;
+	background-color: rgb(252, 249, 238);
+	border-radius: 15px 15px 15px 15px;
+	padding: 15px;
+	box-shadow: 2px 7px 20px rgba(0, 0, 0, 0.3);
+}
+
+button,input,select {
+    font-size: 100%; /* 1 */
+}
+html {
+    font-size: 100%; /* 1 */
+/*        -webkit-text-size-adjust: 100%;  2 */
+/*        -ms-text-size-adjust: 100%;  2 */
+    font-family: sans-serif;
+    color: #333;
+	text-align: center;
+}
+
+.head {
+	text-align: center;
+	vertical-align: text-top;
+	font-size:200%;
+}
+
+
+.headp {
+	text-align: center;
+	font-size:90%;
+}
+
+#seed {
+	size:20;
+	width:150;
+}
+select {
+	width:150;
+}
+
+hr {
+	width:80%;
+}
+.log {
+	text-align: left;
+}
+.runQuitButtons {
+	text-align: left;
+}
