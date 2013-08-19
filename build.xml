@@ -1,0 +1,637 @@
+<!-- Build YABBY. It is also used by Hudson YABBY project. JUnit test is available for this build. -->
+<project basedir="." default="build_jar_all_YABBY" name="BUILD_YABBY">
+	<description>
+	    Build YABBY. 
+            Also used by Hudson YABBY project. 
+	    JUnit test is available for this build.
+	    $Id: build_YABBY.xml $
+	</description>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="../yabby/src" />
+	<property name="build" location="../yabby/build" />
+	<property name="lib" location="../yabby/lib" />
+	<property name="doc" location="../yabby/doc" />
+	<property name="dist" location="../yabby/build/dist" />
+
+	<property name="main_class_YABBY" value="yabby.app.yabbyapp.BeastMain" />
+	<property name="report" value="build/junitreport" />
+
+	<path id="classpath">
+		<fileset dir="${lib}" includes="beagle.jar"/>
+		<fileset dir="${lib}" includes="jam.jar"/>
+		<fileset dir="${lib}" includes="colt.jar"/>
+		<fileset dir="${lib}" includes="mtj.jar"/>
+		<fileset dir="${lib}" includes="commons-math-2.2.jar"/>
+		<fileset dir="${lib}" includes="commons-math3-3.1.1.jar"/>
+		<fileset dir="${lib}" includes="fest.jar"/>
+		<fileset dir="${lib}" includes="junit-4.8.2.jar"/>
+ 	</path>
+
+<!--
+	<path id="testclasspath">
+		<fileset dir="${lib}" includes="**/*.jar" />
+	</path>
+-->
+
+	<!-- start -->
+	<target name="init">
+		<echo message="${ant.project.name}: ${ant.file}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}" />
+	</target>
+
+	<!-- clean previous build, and then compile Java source code, and Juint test -->
+	<target name="build_all_YABBY" depends="clean,compile-all,junit" description="Clean and Build all run-time stuff">
+	</target>
+
+	<!-- clean previous build, compile Java source code, and Junit test, and make the yabby.jar and beauti.jar -->
+	<target name="build_jar_all_YABBY"
+	        depends="clean,compile-all,junit,dist_all_YABBY"
+	        description="Clean and Build all run-time stuff">
+	</target>
+
+
+	<!-- No JUnit Test, clean previous build, compile Java source code, and make the yabby.jar and beauti.jar -->
+	<target name="build_jar_all_YABBY_NoJUnitTest"
+	        depends="clean,compile-all,dist_all_YABBY"
+	        description="Clean and Build all run-time stuff">
+	</target>
+
+	<!-- compile Java source code -->
+	<target name="compile-all" depends="init">
+		<echo>Building YABBY 2</echo>
+		<mkdir dir="${build}" />
+
+		<!-- Compile the java code from ${src} into ${build} /bin -->
+		<javac source="1.7"
+		       target="1.7"
+		       destdir="${build}"
+		       classpathref="classpath"
+		       fork="true"
+		       memoryinitialsize="256m"
+		       memorymaximumsize="1024m"
+			   includeAntRuntime='false'>
+			<src path="${src}/yabby"/>
+			<src path="${src}/util"/>
+			<src path="${src}/bdsky"/>
+			<src path="${src}/cladeage"/>
+			<src path="${src}/classic"/>
+			<src path="${src}/geo"/>
+			<src path="${src}/rb"/>
+			<src path="${src}/snapp"/>
+			<include name="yabby/**/**" />
+			<!-- apache commons math, JSON -->
+			<include name="org/**/**" />
+			<!-- classic -->
+			<include name="dr/**/**" />
+			<!-- compile JUnit test classes -->
+			<include name="test/yabby/**" />
+		</javac>
+		<copy todir="${build}">
+			<fileset dir="${src}" includes="**/*.properties" />
+			<fileset dir="${src}" includes="**/*.png" />
+		</copy>
+		<echo message="Successfully compiled." />
+	</target>
+
+	<!-- make the yabby.jar and beauti.jar -->
+	<target name="dist_all_YABBY" depends="compile-all" description="create YABBY jar">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}" />
+
+		<!-- Put everything in ${build} into the yabby.jar file -->
+		<jar jarfile="${dist}/yabby.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="${main_class_YABBY}" />
+			</manifest>
+			<fileset dir="${build}">
+				<include name="yabby/**/*.class" />
+				<include name="yabby/**/*.properties" />
+				<include name="yabby/**/*.png" />
+				<include name="beagle/**/*.class" />
+				<include name="org/**/*.class" />
+			</fileset>
+			<zipgroupfileset dir="${lib}" includes="jam.jar" />
+			<zipgroupfileset dir="${lib}" includes="beagle.jar" />
+			<zipgroupfileset dir="${lib}" includes="colt.jar" />
+			<zipgroupfileset dir="${lib}" includes="commons-math3-3.1.1.jar" />
+		</jar>
+		<jar jarfile="${dist}/yabby.src.jar">
+			<fileset dir="${src}">
+				<include name="yabby/**/*.java" />
+				<include name="yabby/**/*.png" />
+				<include name="yabby/**/*.xsl" />
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- run yabby.jar -->
+	<target name="run_YABBY">
+		<java jar="${dist}/yabby.jar" fork="true" />
+	</target>
+
+
+	<!-- JUnit test -->
+	<target name="junit">
+		<mkdir dir="${report}" />
+		<junit printsummary="yes">
+			<!--showoutput='yes'-->
+			<classpath>
+				<path location="${build}" />
+				<path refid="classpath" />
+			</classpath>
+
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir="${report}">
+				<fileset dir="${src}/yabby">
+					<include name="test/**/*Test.java" />
+                    <exclude name="test/yabby/beast2vs1/**/*Test.java"/>
+                    <exclude name="test/yabby/app/beauti/**/*Test.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+		<echo message="JUnit test finished." />
+	</target>
+
+	<target name="junitreport">
+		<junitreport todir="${report}">
+			<fileset dir="${report}" includes="*.xml" />
+			<report format="frames" todir="${report}" />
+		</junitreport>
+		<echo message="JUnit test report finished." />
+	</target>
+
+
+	<!-- testing beauti gui-->
+	<target name="junitb">
+		<mkdir dir="${report}" />
+		<junit printsummary="yes">
+			<!--showoutput='yes'-->
+			<classpath>
+				<path location="${build}" />
+				<path refid="classpath" />
+			</classpath>
+
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir="${report}">
+				<fileset dir="${src}">
+                    <include name="test/yabby/app/beauti/**/*Test.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+		<echo message="JUnit test finished." />
+	</target>
+
+
+	<!-- Release -->
+	<property name="version" value="2.0.2" />
+	<property name="version_number" value="2.0.2" />
+	<property name="release_dir" value="release" />
+	<property name="copyright" value="Beast 2 development team 2011-2013" />
+
+	<property name="YABBY_name" value="YABBY" />
+	<property name="BEAUti_name" value="BEAUti" />
+	<property name="TreeAnnotator_name" value="TreeAnnotator" />
+	<property name="LogCombiner_name" value="LogCombiner" />
+	<property name="LogAnalyser_name" value="LogAnalyser" />
+
+	<property name="common_dir" value="${release_dir}/common" />
+	<property name="Mac_dir" value="${release_dir}/Mac" />
+	<property name="Linux_dir" value="${release_dir}/Linux" />
+	<property name="Windows_dir" value="${release_dir}/Windows" />
+	<property name="yabby1_dir" value="${common_dir}/yabby1" />
+	<property name="tools_dir" value="${common_dir}/tools" />
+
+	<property name="Mac_package_dir" value="${Mac_dir}/${YABBY_name}" />
+	<property name="Linux_package_dir" value="${Linux_dir}/${YABBY_name}" />
+	<property name="Windows_package_dir" value="${Windows_dir}/${YABBY_name}" />
+
+	<!-- Need to either install Launch4j under {YABBY workspace}/${release}
+                 or install it in the default directory and change the location of launch4j.dir -->
+	<target name="windows"
+	        depends="build_jar_all_YABBY_NoJUnitTest"
+	        description="release Windows version of YABBY, BEAUTI, TreeAnnotator, LogCombiner">
+
+		<delete dir="${Windows_package_dir}" />
+		<!-- Create the release directory -->
+		<mkdir dir="${Windows_package_dir}" />
+
+		<property name="launch4j.dir" location="${Windows_dir}/launch4j" />
+		<taskdef name="launch4j"
+		         classname="net.sf.launch4j.ant.Launch4jTask"
+		         classpath="${launch4j.dir}/launch4j.jar :${launch4j.dir}/lib/xstream.jar" />
+
+		<copy todir="${Windows_package_dir}/examples/">
+			<fileset dir="examples/">
+				<include name="*.xml" />
+				<include name="nexus/**" />
+				<exclude name="benchmark/**" />
+			</fileset>
+		</copy>
+		<!--<copy todir="${Windows_package_dir}/native">
+			<fileset dir="${common_dir}/native"/>
+		</copy>
+		<copy todir="${Windows_package_dir}/doc">
+			<fileset dir="${common_dir}/doc" />
+		</copy>
+		<copy todir="${Windows_package_dir}/bin">
+			<fileset dir="${Windows_dir}/scripts"/>
+		</copy>
+		<copy file="${dist}/beauti.jar" todir="${Windows_package_dir}/lib"/>-->
+		<copy file="${dist}/yabby.jar" todir="${Windows_package_dir}/lib" />
+		<copy file="${dist}/yabby.src.jar" todir="${Windows_package_dir}/lib" />
+		<!-- <copy file="${dist}/yabby-beagle.jar" todir="${Windows_package_dir}/lib"/> 
+		<copy todir="${Windows_package_dir}/lib">
+			<fileset dir="${Windows_dir}/lib"/>
+		</copy>-->
+		<copy file="${common_dir}/VERSION HISTORY.txt" todir="${Windows_package_dir}" />
+		<copy file="${common_dir}/README.txt" todir="${Windows_package_dir}" />
+		<copy file="${common_dir}/LICENSE.txt" todir="${Windows_package_dir}" />
+
+		<!-- BEAUTi v?.?.?.exe -->
+		<launch4j configFile="${Windows_dir}/BEAUti_launch4j.xml"
+		          jar="${dist}/yabby.jar"
+		          outfile="${Windows_package_dir}/${BEAUti_name}.exe"
+		          fileVersion="${version_number}.0"
+		          txtFileVersion="${version}"
+		          productVersion="${version_number}.0"
+		          txtProductVersion="${version}" />
+
+		<!-- YABBY v?.?.?.exe -->
+		<launch4j configFile="${Windows_dir}/YABBY_launch4j.xml"
+		          jar="${dist}/yabby.jar"
+		          outfile="${Windows_package_dir}/${YABBY_name}.exe"
+		          fileVersion="${version_number}.0"
+		          txtFileVersion="${version}"
+		          productVersion="${version_number}.0"
+		          txtProductVersion="${version}" />
+
+		<!--<launch4j configFile="${Windows_dir}/TreeStat_launch4j.xml"
+                              jar="${dist}/yabby.jar"
+                              outfile="${Windows_package_dir}/${TreeStat_name}.exe"
+                              fileVersion="${version_number}.0"
+                              txtFileVersion="${version}"
+                              productVersion="${version_number}.0"
+                              txtProductVersion="${version}"/>-->
+
+		<!-- LogAnalyser v?.?.?.exe 
+            <launch4j configFile="${Windows_dir}/LogAnalyser_launch4j.xml"
+                              jar="${dist}/yabby.jar"
+                              outfile="${Windows_package_dir}/${LogAnalyser_name}v${version}.exe"
+                              fileVersion="${version}.0"
+                              txtFileVersion="${version}"
+                              productVersion="${version}.0"
+                              txtProductVersion="${version}"/>      -->
+
+		<launch4j configFile="${Windows_dir}/LogCombiner_launch4j.xml"
+                              jar="${dist}/yabby.jar"
+                              outfile="${Windows_package_dir}/${LogCombiner_name}.exe"
+                              fileVersion="${version_number}.0"
+                              txtFileVersion="${version}"
+                              productVersion="${version_number}.0"
+                              txtProductVersion="${version}"/>
+
+
+		<launch4j configFile="${Windows_dir}/TreeAnnotator_launch4j.xml"
+							  jar="${tools_dir}/treeannotator.jar"
+							  outfile="${Windows_package_dir}/TreeAnnotator.exe"
+                              fileVersion="${version_number}.0"
+                              txtFileVersion="${version}"
+                              productVersion="${version_number}.0"
+                              txtProductVersion="${version}"/>
+
+		<launch4j configFile="${tools_dir}/DensiTree_launch4j.xml"
+		          jar="${tools_dir}/DensiTree.jar"
+		          outfile="${Windows_package_dir}/DensiTree.exe"
+		          fileVersion="2.0.0.0"
+		          txtFileVersion="2.0.0.0"
+		          productVersion="2.0.0.0"
+		          txtProductVersion="2.0.0.0" />
+
+		<copy todir="${Windows_package_dir}/templates/">
+			<fileset dir="templates/" />
+		</copy>
+<!--
+		<copy file="${yabby1_dir}/LogCombiner.exe" todir="${Windows_package_dir}" />
+		<copy file="${yabby1_dir}/TreeAnnotator.exe" todir="${Windows_package_dir}" />
+-->
+		<zip destfile="${Windows_dir}/${YABBY_name} v${version}.zip">
+			<zipfileset dir="${Windows_package_dir}" prefix="${YABBY_name}" />
+		</zip>
+
+		<echo message="Windows version release is finished." />
+	</target>
+
+	<target name="linux"
+	        depends="build_jar_all_YABBY_NoJUnitTest"
+	        description="release Linux/Unix version of YABBY, BEAUTI, TreeAnnotator, LogCombiner">
+		<delete dir="${Linux_package_dir}" />
+		<!-- Create the release directory -->
+		<mkdir dir="${Linux_package_dir}" />
+
+		<copy todir="${Linux_package_dir}/bin">
+			<fileset dir="${Linux_dir}/bin" />
+		</copy>
+		<chmod dir="${Linux_package_dir}/bin" perm="755" includes="**/**" />
+
+		<!--<copy todir="${Linux_package_dir}/doc">
+			<fileset dir="${common_dir}/doc" />
+		</copy>-->
+		<copy todir="${Linux_package_dir}/examples/">
+			<fileset dir="examples/">
+				<include name="*.xml" />
+				<include name="nexus/**" />
+				<exclude name="benchmark/**" />
+			</fileset>
+		</copy>
+
+		<copy file="${common_dir}/icons/yabby.png" todir="${Linux_package_dir}/images" />
+		<copy file="${common_dir}/icons/beauti.png" todir="${Linux_package_dir}/images" />
+		<!-- <copy file="${common_dir}/icons/utility.png" todir="${Linux_package_dir}/images" /> 
+		<copy file="${dist}/beauti.jar" todir="${Linux_package_dir}/lib" /> -->
+		<copy file="${dist}/yabby.jar" todir="${Linux_package_dir}/lib" />
+		<copy file="${dist}/yabby.src.jar" todir="${Linux_package_dir}/lib" />
+		<!-- <copy file="${dist}/yabby-beagle.jar" todir="${Linux_package_dir}/lib"/> 
+		<copy todir="${Linux_package_dir}/lib">
+			<fileset dir="${Linux_dir}/lib" />
+		</copy>-->
+
+		<!--		
+		<copy file="${yabby1_dir}/yabby161.jar" todir="${Linux_package_dir}/lib" />
+		-->
+		<copy file="${tools_dir}/treeannotator.jar" todir="${Linux_package_dir}/lib" />
+
+		<copy file="${tools_dir}/DensiTree.jar" todir="${Linux_package_dir}/lib" />
+		<copy file="${tools_dir}/DensiTree.png" todir="${Linux_package_dir}/images" />
+
+		<copy todir="${Linux_package_dir}/templates/">
+			<fileset dir="templates/" />
+		</copy>
+		<copy file="${common_dir}/VERSION HISTORY.txt" todir="${Linux_package_dir}" />
+		<copy file="${common_dir}/README.txt" todir="${Linux_package_dir}" />
+		<copy file="${common_dir}/LICENSE.txt" todir="${Linux_package_dir}" />
+
+		<!-- Only works under Unix or NonStop Kernel (Tandem) -->
+		<!-- <chmod dir="${Linux_package_dir}/bin" perm="755" includes="**/**"/>
+
+            <tar destfile="${Linux_dir}/${YABBY_name}v${version}.tgz" compression="gzip">
+                    <tarfileset dir="${Linux_package_dir}" prefix="${YABBY_name}v${version}"/>
+            </tar>-->
+		<!-- [ANT Bug 550] the tar task change the mode of the executables files, have to tar manaully -->
+		<echo message="Have to tar manaully, because [ANT Bug 550] the tar task change the mode of the executables files." />
+		<!-- tar -cvzf YABBYv1.x.x.tgz YABBYv1.x.x/ -->
+		<!-- cksum YABBYv1.x.x.tgz -->
+		<!-- tar -xvzf YABBYv1.x.x.tgz -->
+		<echo message="Linux/Unix version release is finished." />
+	</target>
+
+	<property name="jarbundler_dir" value="/Applications/eclipse/plugins/org.apache.ant_1.8.2.v20110505-1300/lib" />
+	<target name="mac"
+	        depends="build_jar_all_YABBY_NoJUnitTest"
+	        description="release Mac version of YABBY, BEAUTI, TreeAnnotator, LogCombiner">
+		<delete dir="${Mac_package_dir}" />
+		<delete file="${Mac_dir}/pack.temp.dmg"/>
+		<delete file="${Mac_dir}/YABBY v${version}.dmg"/>
+		<!-- Create the release directory -->
+		<mkdir dir="${Mac_package_dir}" />
+
+		<copy todir="${Mac_package_dir}/bin">
+			<fileset dir="${Linux_dir}/bin" />
+		</copy>
+		<chmod dir="${Mac_package_dir}/bin" perm="755" includes="**/**" />
+
+		<copy todir="${Mac_package_dir}/examples/">
+			<fileset dir="examples/">
+				<include name="*.xml" />
+				<include name="nexus/**" />
+				<exclude name="benchmark/**" />
+			</fileset>
+		</copy>
+		<!-- <copy todir="${Mac_package_dir}/native">
+			<fileset dir="${common_dir}/native" />
+		</copy>
+<copy todir="${Mac_package_dir}/doc">
+			<fileset dir="${common_dir}/doc" />
+		</copy>
+		
+		<copy file="${dist}/beauti.jar" todir="${Mac_package_dir}/lib" /> -->
+		<copy file="${dist}/yabby.jar" todir="${Mac_package_dir}/lib" />
+		<copy file="${dist}/yabby.src.jar" todir="${Mac_package_dir}/lib" />
+		<!-- <copy file="${dist}/yabby-beagle.jar" todir="${Mac_package_dir}/lib"/> 
+		<copy todir="${Mac_package_dir}/lib">
+			<fileset dir="${Mac_dir}/lib" />
+		</copy> -->
+
+		<copy file="${common_dir}/VERSION HISTORY.txt" todir="${Mac_package_dir}" />
+		<copy file="${common_dir}/README.txt" todir="${Mac_package_dir}" />
+		<copy file="${common_dir}/LICENSE.txt" todir="${Mac_package_dir}" />
+
+		<taskdef name="jarbundler"
+		         classname="net.sourceforge.jarbundler.JarBundler"
+		         classpath="${jarbundler_dir}/jarbundler-2.2.0.jar" />
+
+		<!-- create a jar bundle for the mac -->
+		<jarbundler dir="${Mac_package_dir}"
+		            name="${YABBY_name}"
+		            mainclass="${main_class_YABBY}"
+		            icon="${common_dir}/icons/yabby.icns"
+		            jvmversion="1.6+"
+		            vmoptions="-Xmx1024M"
+		            arguments="-window -working -options"
+		            version="${version}"
+		            infostring="${YABBY_name}, ${copyright}"
+		            bundleid="${main_class_YABBY}">
+			<jarfileset dir="${Mac_package_dir}/lib">
+				<include name="**/yabby.jar" />
+				<!-- <include name="**/yabby-beagle.jar" /> -->
+			</jarfileset>
+			<!-- 			<jarfileset dir="${Mac_package_dir}/lib">
+				<include name="libNucleotideLikelihoodCore.jnilib" />
+			</jarfileset> -->
+			<javaproperty name="apple.laf.useScreenMenuBar" value="true" />
+			<javaproperty name="java.library.path" value="$JAVAROOT:/usr/local/lib" />
+		</jarbundler>
+
+		<jarbundler dir="${Mac_package_dir}"
+		            name="${BEAUti_name}"
+		            mainclass="yabby.app.beauti.Beauti"
+		            icon="${common_dir}/icons/beauti.icns"
+		            jvmversion="1.6+"
+		            vmoptions="-Xmx1024M -Xdock:name=&quot;BEAUti 2&quot;"
+		            arguments=""
+		            version="${version}"
+		            infostring="${BEAUti_name}, ${copyright}"
+		            bundleid="yabby.app.beauti.Beauti">
+			<jarfileset dir="${Mac_package_dir}/lib">
+				<include name="**/yabby.jar" />
+			</jarfileset>
+			<!--<jarfileset dir="${Mac_package_dir}/lib">
+				<include name="**/quaqua.jar" />
+			</jarfileset>
+			<jarfileset dir="${Mac_package_dir}/lib">
+				<include name="libquaqua*.jnilib" />
+			</jarfileset>-->
+			<javaproperty name="apple.laf.useScreenMenuBar" value="true" />
+			<javaproperty name="java.library.path" value="$JAVAROOT" />
+		</jarbundler>
+
+		<!-- ant copy will not redirect the source, so that have to re-bundler it -->
+		<jarbundler dir="${Mac_package_dir}"
+		            name="${LogCombiner_name}"
+		            mainclass="yabby.app.tools.LogCombiner"
+		            icon="${yabby1_dir}/utility.icns"
+		            jvmversion="1.6+"
+		            vmoptions="-Xmx1024M"
+		            arguments=""
+		            version="${version}"
+		            infostring="${LogCombiner_name}, ${copyright}"
+		            bundleid="dr.app.tools.logcombiner">
+			<jarfileset dir="${Mac_package_dir}/lib">
+				<include name="**/yabby.jar" />
+			</jarfileset>
+			<javaproperty name="apple.laf.useScreenMenuBar" value="true" />
+			<javaproperty name="java.library.path" value="$JAVAROOT/lib" />
+		</jarbundler>
+
+		<jarbundler dir="${Mac_package_dir}"
+		            name="${TreeAnnotator_name}"
+		            mainclass="yabby.app.treeannotator.TreeAnnotator"
+		            icon="${yabby1_dir}/utility.icns"
+		            jvmversion="1.6+"
+		            vmoptions="-Xmx1024M"
+		            arguments=""
+		            version="${version}"
+		            infostring="${TreeAnnotator_name}, ${copyright}"
+		            bundleid="yabby.app.treeannotator.treeannotator">
+			<jarfileset dir="${tools_dir}">
+				<include name="**/treeannotator.jar" />
+			</jarfileset>
+			<javaproperty name="apple.laf.useScreenMenuBar" value="true" />
+			<javaproperty name="java.library.path" value="$JAVAROOT/lib" />
+		</jarbundler>
+
+		<!--	<jarbundler dir="${Mac_package_dir}"
+		            name="${TreeStat_name}"
+		            mainclass="dr.app.treestat.TreeStatApp"
+		            icon="${common_dir}/icons/TreeStat.icns"
+		            jvmversion="1.6+"
+		            vmoptions="-Xmx1024M"
+		            arguments=""
+		            version="${version}"
+		            infostring="${TreeStat_name}, ${copyright}"
+		            bundleid="dr.app.treestat">
+			<jarfileset dir="${Mac_package_dir}/lib">
+				<include name="**/yabby.jar" />
+			</jarfileset>
+			<javaproperty name="apple.laf.useScreenMenuBar" value="true" />
+			<javaproperty name="java.library.path" value="$JAVAROOT/lib" />
+		</jarbundler> -->
+
+		<jarbundler dir="${Mac_package_dir}"
+		            name="DensiTree"
+		            mainclass="viz.DensiTree"
+		            icon="${tools_dir}/DensiTree.icns"
+		            jvmversion="1.6+"
+		            vmoptions="-Xmx3g"
+		            arguments=""
+		            version="2.0"
+		            infostring="DensiTree, http://compevol.auckland.ac.nz/software/DensiTree/"
+		            bundleid="viz.DensiTree">
+			<jarfileset dir="${tools_dir}">
+				<include name="**/DensiTree.jar" />
+			</jarfileset>
+			<javaproperty name="apple.laf.useScreenMenuBar" value="true" />
+			<javaproperty name="java.library.path" value="$JAVAROOT/lib" />
+		</jarbundler>
+
+		<copy todir="${Mac_package_dir}/templates/">
+			<fileset dir="templates/" />
+		</copy>
+
+		<echo message="Building disk image." />
+		<exec executable='release/Mac/createdmg.sh'/>
+
+<!--
+		<exec executable='ln'>
+			<arg value="-s" />
+			<arg value="/Applications" />
+			<arg value="${Mac_package_dir}" />
+		</exec>
+
+		<exec executable="/usr/bin/hdiutil">
+			<arg value="create" />
+			<arg value="-ov" />
+			<arg value="-srcfolder" />
+			<arg value="${Mac_package_dir}" />
+			<arg value="-volname" />
+			<arg value="${YABBY_name}" />
+			<arg value="-imagekey" />
+			<arg value="zlib-level=6" />
+			<arg value="${Mac_dir}/${YABBY_name} v${version}.dmg" />
+		</exec>
+-->
+		<echo message="Mac version release is finished." />
+	</target>
+
+	<target name="doc" description="Create Developer Docs for Beast 2" depends='javadoc'>
+		<copy file="doc/tutorial.slides.part1.pdf" tofile="release/common/doc/develop/" />
+		<copy file="doc/tutorial.slides.part2.pdf" tofile="release/common/doc/develop/" />
+		<!-- part 3 needs updating -->
+		<!--copy file="doc/tutorial.slides.part3.pdf" tofile="release/common/doc/develop/" /-->
+	</target>
+
+	<target name="javadoc" description="Create Javadocs for Beast 2" depends='docPreProcess'>
+		<mkdir dir="${common_dir}/javadoc/" />
+		<javadoc destdir="${common_dir}/javadoc/">
+			<fileset dir="src2/" includes="yabby/core/**/*.java" />
+			<fileset dir="src2/" includes="yabby/util/**/*.java" />
+			<fileset dir="src2/" includes="yabby/math/**/*.java" />
+			<fileset dir="src2/" includes="yabby/evolution/**/*.java" />
+		</javadoc>
+		
+		<!-- clean up -->
+		<delete dir="src2/"/>
+	</target>
+
+	<!-- run perl script that extracts @Description and Input.description info for javadoc -->
+	<target name="docPreProcess">
+		<exec executable="perl" dir="${basedir}">
+			<arg value="scripts/doc.pl" />
+		</exec>
+	</target>
+
+	<property name="sdk_dir" value="${release_dir}/${YABBY_name}_SDK" />
+
+	<!-- zip up everything that goes in the SDK -->
+	<target name="sdk" description="Create Beast 2 SDK" depends="dist_all_YABBY,javadoc">
+
+		<delete file="${release_dir}/${YABBY_name}_v${version}_SDK.zip" />
+
+		<copy file="doc/slides/sdk.pdf" tofile="${common_dir}/YABBY_Getting_Started.pdf" />
+
+		<zip destfile="${release_dir}/${YABBY_name}_v${version}_SDK.zip">
+			<fileset dir="${common_dir}">
+				<include name="**/*.txt" />
+				<include name="**/*.pdf" />
+				<include name="javadoc/**/*.*" />
+			</fileset>
+			<fileset dir="${dist}">
+				<include name="yabby.jar" />
+				<include name="yabby.src.jar" />
+			</fileset>
+		</zip>
+
+		<!-- clean up -->
+		<delete file="${common_dir}/YABBY_Getting_Started.pdf" />
+
+		<echo message="SDK release is finished." />
+	</target>
+
+</project>
+
