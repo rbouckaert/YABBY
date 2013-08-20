@@ -29,7 +29,7 @@ public abstract class TestFramework extends TestCase {
 //        for (int i = 0; i < xmls.length; i++) {
 //            if (giveExpectations(i).size() > 0) {
         Randomizer.setSeed(SEED);
-        Logger.FILE_MODE = Logger.FILE_OVERWRITE;
+        Logger.FILE_MODE = Logger.LogFileMode.overwrite;
         String sDir = System.getProperty("user.dir");
 
         String sFileName = sDir + "/examples/beast2vs1/" + xmls[index_XML];

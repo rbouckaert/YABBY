@@ -76,8 +76,11 @@ public class Logger extends YABBYObject {
      * list of loggers, if any
      */
     List<Loggable> m_loggers;
-    public final static int FILE_ONLY_NEW = 0, FILE_OVERWRITE = 1, FILE_APPEND = 2, FILE_ONLY_NEW_OR_EXIT = 3;
-    public static int FILE_MODE = FILE_ONLY_NEW;
+    public enum LogFileMode {
+    	only_new, overwrite, resume, only_new_or_exit
+    }
+    //public final static int FILE_ONLY_NEW = 0, FILE_OVERWRITE = 1, FILE_APPEND = 2, FILE_ONLY_NEW_OR_EXIT = 3;
+    public static LogFileMode FILE_MODE = LogFileMode.only_new;
     /**
      * Compound loggers get a sample number printed at the beginning of the line,
      * while tree loggers don't.
@@ -337,11 +340,11 @@ public class Logger extends YABBYObject {
                 sFileName = System.getProperty("file.name.prefix") + "/" + sFileName;
             }
             switch (FILE_MODE) {
-                case FILE_ONLY_NEW:// only open file if the file does not already exists
-                case FILE_ONLY_NEW_OR_EXIT: {
+                case only_new:// only open file if the file does not already exists
+                case only_new_or_exit: {
                     File file = new File(sFileName);
                     if (file.exists()) {
-                        if (FILE_MODE == FILE_ONLY_NEW_OR_EXIT) {
+                        if (FILE_MODE == LogFileMode.only_new_or_exit) {
                             Log.err.println("Trying to write file " + sFileName + " but the file already exists. Exiting now.");
                             throw new RuntimeException("Use overwrite or resume option, or remove the file");
                             //System.exit(0);
@@ -361,7 +364,7 @@ public class Logger extends YABBYObject {
                     System.out.println("Writing file " + sFileName);
                     return true;
                 }
-                case FILE_OVERWRITE:// (over)write log file
+                case overwrite:// (over)write log file
                 {
                     String sMsg = "Writing";
                     if (new File(sFileName).exists()) {
@@ -371,7 +374,7 @@ public class Logger extends YABBYObject {
                     System.out.println(sMsg + " file " + sFileName);
                     return true;
                 }
-                case FILE_APPEND:// append log file, pick up SampleOffset by reading existing log
+                case resume:// append log file, pick up SampleOffset by reading existing log
                 {
                     File file = new File(sFileName);
                     if (file.exists()) {

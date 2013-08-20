@@ -25,6 +25,7 @@
 package yabby.core;
 
 
+import java.io.File;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
@@ -252,7 +253,32 @@ public class Input<T> {
     public String getTipText() {
         return tipText;
     }
-
+    
+	public String getValueTipText() {
+		if (theClass == Boolean.class) {
+			return ("[true|false]");
+		}
+		if (theClass == Integer.class) {
+			return ("<integer>");
+		}
+		if (theClass == Long.class) {
+			return ("<long>");
+		}
+		if (theClass == Double.class) {
+			return ("<double>");
+		}
+		if (theClass == String.class) {
+			return "<string>";
+		}
+		if (theClass == File.class) {
+			return "<filename>";
+		}
+		if (theClass.isEnum()) {
+			return Arrays.toString(possibleValues).replaceAll(",","|");
+		}
+		return "";
+	}
+    
     public Class<?> getType() {
         return theClass;
     }
@@ -449,7 +475,7 @@ public class Input<T> {
      * @param plugin whose type is to be determined
      * @throws Exception
      */
-    public void determineClass(final YABBYObject plugin) throws Exception {
+    public void determineClass(final Object plugin) throws Exception {
         try {
             final Field[] fields = plugin.getClass().getFields();
             // find this input in the plugin
@@ -471,7 +497,14 @@ public class Input<T> {
                             try {
                                 theClass = (Class<?>) genericTypes[0];
                             } catch (Exception e) {
-                                System.err.println(plugin.getClass().getName() + " " + plugin.getID() + " failed. " +
+                            	// resolve ID
+                            	String id = "";
+                                Method method = plugin.getClass().getMethod("getID");
+                                if (method != null) {
+                                	id = method.invoke(plugin).toString();
+                                }
+                                // assemble error message
+                                System.err.println(plugin.getClass().getName() + " " + id + " failed. " +
                                         "Possibly template or abstract Plugin used " +
                                         "or if it is a list, the list was not initilised???");
                                 System.err.println("class is " + plugin.getClass());
@@ -536,7 +569,7 @@ public class Input<T> {
                     return;
                 }
             }
-            throw new Exception("Input 104: value " + sValue + " not found in " + Arrays.toString(possibleValues));
+            throw new Exception("Input 104: value " + sValue + " not found. Select one of " + Arrays.toString(possibleValues));
         }
 
         // call a string constructor of theClass

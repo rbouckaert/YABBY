@@ -22,9 +22,16 @@
 
 <script>
 var xmlHttp = null;
+var myVar = null;
 
 function runYabby() {
 $("#log").append("<P>run</P>");
+
+	if ($('fileinput').val() == undefined) {
+		$('#log').append("<span class='logLevelerror'>You need to specify a file to run</span>");
+		$('#inputfilelabel')[0].style.visibility = 'visible';
+		return;
+	}
 	var $inputs = $('#myForm :input');
 	var str = "{";
     $inputs.each(function() {
@@ -32,16 +39,34 @@ $("#log").append("<P>run</P>");
 			str += this.id +":" + "\"" + $(this).val() + "\",";
 		}
     });
-    if ($('#useBeagle')[0].checked) {
-    	str += "useBeagleChecked:true";
-    }
+    if ($('#useBeagleChecked')[0].checked) {
+    	str += "useBeagle:true";
+	}    
 	str += "}";
     var Url = "runYabby.html?"+str;
+	xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open( "GET", Url, false );
+    xmlHttp.send(null);
+    
+    if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 ) {
+        $("#log").append(xmlHttp.responseText);
+    }
+    if (xmlHttp.responseText.indexOf("YABBY_is_done") < 0) {
+		myVar = setInterval(function(){pollYabby()},333);
+		//pollYabby();
+	}
+    
+    
+    
+    
+    
+/*
 	xmlHttp = new XMLHttpRequest(); 
     xmlHttp.open( "POST", Url, false );
 	var boundary = "AJAX-----------------------" + (new Date).getTime();
     xmlHttp.setRequestHeader("Content-type", "application/form-data; boundary=" + boundary);
 	var inputfile = document.getElementById("inputfile");
+*/
 
 /*    
     var CRLF = "\r\n";
@@ -57,22 +82,41 @@ $("#log").append("<P>run</P>");
 	part += reader + CRLF;
 	part += "--" + boundary + "--" + CRLF;
 */
-
+/*
 	var oMyForm = new FormData();
 	oMyForm.append("userfile", inputfile.files[0]);
 	    
-//	xmlHttp.send(inputfile.files[0]);
 	xmlHttp.send(oMyForm);
-    //xmlHttp.send( null );
 
-//alert(xmlHttp.responseText + xmlHttp.readyState + " " + xmlHttp.status);
-
-//	document.getElementById("runQuitButtons").style.visibility = "hidden";
     if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 ) {
         $("#log").append(xmlHttp.responseText);
     }
     if (xmlHttp.responseText.indexOf("YABBY_is_done") < 0) {
-		pollYabby();
+		myVar = setInterval(function(){pollYabby()},333);
+		//pollYabby();
+	}
+*/
+}
+
+function getInputFile() {
+    var Url = "getInputFile.html";
+    xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open( "GET", Url, false );
+    xmlHttp.send( null );
+
+    if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 ) {
+	   	var doc = document.implementation.createHTMLDocument("");
+		doc.documentElement.innerHTML = xmlHttp.responseText;
+		var text = $(doc).find('#body').text();
+    	$("#inputfile")[0].value = text;
+    }
+}
+
+function checkInputFile() {
+	var value = $("#inputfile")[0].value;
+	if (value.indexOf("file://") >= 0) {
+		value = value.substring(7);
+		$("#inputfile")[0].value = value;
 	}
 }
 </script>
@@ -81,12 +125,12 @@ function quitYabby() {
 //$("#log").append("<P>quit</P>");
     var Url = "quitYabby.html";
     xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", Url, false );
+    xmlHttp.open( "GET", Url, true );
     xmlHttp.send( null );
 
-    if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 ) {
-        document.getElementById("log").value = xmlHttp.responseText;
-    }
+//    if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 ) {
+//        document.getElementById("log").value = xmlHttp.responseText;
+//    }
     var ww = window.open(window.location, '_self'); ww.close();
     window.close();
 }
@@ -110,7 +154,6 @@ function showBeagleInfo() {
 
 function pollYabby() {
 //	alert("Polling");
-	do {
 	    var Url = "poll.html";
 	    xmlHttp = new XMLHttpRequest(); 
 	    xmlHttp.open( "GET", Url, false );
@@ -120,32 +163,53 @@ function pollYabby() {
 	    	$("#log").append(xmlHttp.responseText);
 	    }
 	    window.scrollTo(0,document.body.scrollHeight);
+
+	if (xmlHttp.responseText.indexOf("YABBY_is_done") >= 0) {
+		clearInterval(myVar);
+	}
 	    
-    } while (xmlHttp.responseText.indexOf("YABBY_is_done") < 0); 
 }
 
 function toggleBeagle() {
-	if ($('#useBeagle')[0].checked) {
-		$('#beagleMode')[0].disabled = false;
+	if ($('#useBeagleChecked')[0].checked) {
+		$('#processor')[0].disabled = false;
+		$('#processor')[0].selectedIndex = 2;
 		$('#beagleModeLabel')[0].style.color = '#010101';
-		$('#beaglePrecision')[0].disabled = false;
+		$('#precision')[0].disabled = false;
 		$('#beaglePrecisionLabel')[0].style.color = '#010101';
 		$('#beagleScaling')[0].disabled = false;
 		$('#beagleScalingLabel')[0].style.color = '#010101';
 	} else {
-		$('#beagleMode')[0].disabled = true;
+		$('#processor')[0].disabled = true;
+		$('#processor')[0].selectedIndex = 0;
 		$('#beagleModeLabel')[0].style.color = '#a0a0a0';
-		$('#beaglePrecision')[0].disabled = true;
+		$('#precision')[0].disabled = true;
 		$('#beaglePrecisionLabel')[0].style.color = '#a0a0a0';
 		$('#beagleScaling')[0].disabled = true;
 		$('#beagleScalingLabel')[0].style.color = '#a0a0a0';
 	}
 }
+
+function getRandomSeed() {
+    var Url = "getRandomSeed.html";
+    xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open( "GET", Url, false );
+    xmlHttp.send( null );
+
+    if ( xmlHttp.readyState == 4 && xmlHttp.status == 200 ) {
+	   	var doc = document.implementation.createHTMLDocument("");
+		doc.documentElement.innerHTML = xmlHttp.responseText;
+		var text = $(doc).find('#body').text();
+    	$("#seed")[0].value = text;
+    }
+    
+    toggleBeagle();
+}
 </script>
 
 </head>
 
-<body id='myForm'>
+<body id='myForm' onunload='quitYabby()' onload='getRandomSeed()'>
 
 <div class='head'>
 <a href='yabby.html'><img src='yabby/app/draw/icons/yabby.png'/></a>
@@ -163,14 +227,19 @@ YABBY</div>
 <table>
 <form method='post' enctype="multipart/form-data" action='runYabby.html' id='yabbyform'>
 <tr><td  colspan='2' title='Input file in XML or JSON format that specifies the analysis'>YABBY input file:
+<span id='inputfilelabel' style='color:red;font-weight:bold;visibility:hidden;'>*</span>
 <!--</td>
 </tr><tr>    
 <td colspan='2'> -->
+<input id='inputfile' type='text' oninput='checkInputFile()'>
+<input type='button' onclick='getInputFile();' value='Browse'>
+<!--
 <input id='inputfile' name='file' type='file' /></td> </tr>
+-->
 </form> 
 <tr><td class='tdcol1'>Log files:</td>    <td>
 	<select id='mode'>
-		<option value='batch'>default: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;only write new log files</option>
+		<option value='only_new_or_exit'>default: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;only write new log files</option>
 		<option value='overwrite'>overwrite:      &nbsp;&nbsp;&nbsp;overwrite existing log files (if any)</option>
 		<option value='resume'>resume:      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;appends log to existing files (if any)</option>
 	</select>
@@ -184,7 +253,7 @@ YABBY</div>
 <div class='table'>
 <table >
 <tr><td class='tdcol1'>Log level:</td>    <td>
-	<select id='logLevel'>
+	<select id='debug'>
 		<option value='info'>info: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;show informative messages, warning and errors</option>
 		<option value='debug'>debug: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;also show more detailed messages</option>
 		<option value='trace'>trace: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;furthermore show even more detailed messages</option>
@@ -232,7 +301,7 @@ YABBY</div>
 <table>
 <tr>
 <!--title='BEAGLE is a high-performance phylogenetic library that can make use of additional computational resources such as graphics boards. It must be downloaded and installed independently of BEAST: http://beagle-lib.googlecode.com/'--> 
-	<td class='tdcol1'><input id='useBeagle' type='checkbox'
+	<td class='tdcol1'><input id='useBeagleChecked' type='checkbox'
 	onchange='toggleBeagle();' >Use Beagle</input></td>
 	<td><button id="opener" style='width:100%'>What is Beagle?</button>
 </td>
@@ -267,7 +336,8 @@ YABBY</div>
 <tr>
 	<td id='beagleModeLabel' class='tdcol1' title='Select the type of hardware you want to use. SSE is typically faster than CPU, GPU can be faster for large state spaces and large alignments, but it depends on your data whether it outperforms SSE. You can only use GPU if it is available on your machine -- use the Show Beagle Info button to see what hardware is available.'>Prefer use of:</td>
 	<td>
-		<select id='beagleMode' class='select'>
+		<select id='processor' class='select'>
+			<option value='java'>Java</option>
 			<option value='CPU'>CPU</option>
 			<option value='SSE'>SSE</option>
 			<option value='GPU'>GPU</option>
@@ -277,7 +347,7 @@ YABBY</div>
 <tr>
 	<td id='beaglePrecisionLabel'>Precision:</td>
 	<td>
-		<select id='beaglePrecision' class='select'>
+		<select id='precision' class='select'>
 			<option value='double'>Double</option>
 			<option value='single'>Single</option>
 		</select>
@@ -287,7 +357,7 @@ YABBY</div>
 	<td id='beagleScalingLabel'>Scaling:</td>
 	<td>
 		<select id='beagleScaling' class='select'>
-			<option value='default'>Default</option>
+			<option value='default_'>Default</option>
 			<option value='none'>None</option>
 			<option value='dynamic'>Dynamic</option>
 			<option value='always'>Always</option>
@@ -317,7 +387,7 @@ YABBY</div>
 <div id='runQuitButtons'>
 <input type='button' id='run' value='Run' onclick='runYabby();'/> 
 <input type='button' id='quit' value='Quit' onclick='quitYabby()'/>
-<input type='button' id='clear' value='Clear' onclick='$("#log").empty()'/>
+<input type='button' id='clear' value='Clear' onclick='$("#log").empty();$("#inputfilelabel")[0].style.visibility = "hidden";'/>
 </div>
 
 

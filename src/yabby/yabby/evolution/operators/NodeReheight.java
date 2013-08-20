@@ -54,7 +54,7 @@ public class NodeReheight extends TreeOperator {
         }
 
         m_nGeneTrees = m_geneTrees.get().size();
-        m_nSpecies = m_tree.get().getLeafNodeCount();
+        m_nSpecies = treeInput.get().getLeafNodeCount();
     }
 
     // initialisation code: create node number in gene tree to node number in species tree map
@@ -69,7 +69,7 @@ public class NodeReheight extends TreeOperator {
 
     @Override
     public double proposal() {
-        final Tree tree = m_tree.get();
+        final Tree tree = treeInput.get();
         m_nodes = tree.getNodesAsArray();
         final int nNodes = tree.getNodeCount();
         // randomly change left/right order
@@ -127,7 +127,7 @@ public class NodeReheight extends TreeOperator {
 
         // find species on the left of selected node
         final boolean[] bLowerSpecies = new boolean[m_nSpecies];
-        final Node[] nodes = m_tree.get().getNodesAsArray();
+        final Node[] nodes = treeInput.get().getNodesAsArray();
         for (int i = 0; i < iNode; i++) {
             final Node node = nodes[iReverseOrder[i]];
             if (node.isLeaf()) {

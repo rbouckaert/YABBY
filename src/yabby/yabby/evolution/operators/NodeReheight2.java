@@ -22,7 +22,7 @@ public class NodeReheight2 extends TreeOperator {
 	
 	@Override
 	public double proposal() {
-		Tree tree = m_tree.get();
+		Tree tree = treeInput.get();
 		m_nodes = tree.getNodesAsArray();
 		int nNodes = tree.getNodeCount();
 		// randomly change left/right order

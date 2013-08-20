@@ -15,7 +15,7 @@ import yabby.core.util.Log;
 
 public class HTTPPostServer extends Thread {
 
-	static final String HTML_START = "<html>" + "<title>HTTP POST Server in java</title>" + "<body>";
+	static final String HTML_START = "<html>" + "<title>HTTP POST Server in java</title>" + "<body id='body'>";
 
 	static final String HTML_END = "</body>" + "</html>";
 
@@ -55,6 +55,8 @@ public class HTTPPostServer extends Thread {
 				
 			Log.trace.println(currentLine);
 
+			// TODO: make sure only access from localhost is allowed
+			
 			if (httpMethod.equals("GET")) {
 				Log.trace.println("GET request");
 				if (httpQueryString.equals("/")) {
@@ -213,17 +215,31 @@ public class HTTPPostServer extends Thread {
 		fin.close();
 	}
 
-	public static void main(String args[]) throws Exception {
+	static int port = 5000;
+
+	public static int startServer(final HTTPRequestHandler handler) throws Exception {
+
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					ServerSocket Server = new ServerSocket(5000, 10, InetAddress.getByName("127.0.0.1"));
-					Log.trace.println("HTTP Server Waiting for client on port 5000");
-
+					ServerSocket Server = null;
+					for (int i = 0; i < 100; i++) {
+						try {
+							Server = new ServerSocket(port + i, 10, InetAddress.getByName("127.0.0.1"));
+							port += i;
+							Log.trace.println("HTTP Server Waiting for client on port " + port);
+							break;
+						} catch (Throwable t) {
+							
+						}
+					}
+	
 					while (true) {
 						Socket connected = Server.accept();
-						(new HTTPPostServer(connected)).start();
+						HTTPPostServer server = new HTTPPostServer(connected);
+						server.handler = handler;
+						server.start();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -231,8 +247,10 @@ public class HTTPPostServer extends Thread {
 			}
 		}.start();
 		Thread.sleep(500);
-
-		//YabbyDialog.main(args);
-
+		return port;
+	}
+	
+	public static void main(String args[]) throws Exception {
+		startServer(new YabbyDialog());
 	}
 }

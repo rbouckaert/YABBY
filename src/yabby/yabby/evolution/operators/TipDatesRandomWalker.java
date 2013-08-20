@@ -43,7 +43,7 @@ public class TipDatesRandomWalker extends TreeOperator {
         // determine taxon set to choose from
         if (m_taxonsetInput.get() != null) {
             List<String> sTaxaNames = new ArrayList<String>();
-            for (String sTaxon : m_tree.get().getTaxaNames()) {
+            for (String sTaxon : treeInput.get().getTaxaNames()) {
                 sTaxaNames.add(sTaxon);
             }
 
@@ -59,7 +59,7 @@ public class TipDatesRandomWalker extends TreeOperator {
                 m_iTaxa[k++] = iTaxon;
             }
         } else {
-            m_iTaxa = new int[m_tree.get().getTaxaNames().length];
+            m_iTaxa = new int[treeInput.get().getTaxaNames().length];
             for (int i = 0; i < m_iTaxa.length; i++) {
                 m_iTaxa[i] = i;
             }
@@ -70,7 +70,7 @@ public class TipDatesRandomWalker extends TreeOperator {
     public double proposal() {
         // randomly select leaf node
         int i = Randomizer.nextInt(m_iTaxa.length);
-        Node node = m_tree.get().getNode(m_iTaxa[i]);
+        Node node = treeInput.get().getNode(m_iTaxa[i]);
 
         double value = node.getHeight();
         double newValue = value;

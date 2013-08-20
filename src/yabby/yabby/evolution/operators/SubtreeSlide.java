@@ -89,7 +89,7 @@ public class SubtreeSlide extends TreeOperator {
      */
     @Override
     public double proposal() {
-        final Tree tree = m_tree.get(this);
+        final Tree tree = treeInput.get(this);
 
         double logq;
 

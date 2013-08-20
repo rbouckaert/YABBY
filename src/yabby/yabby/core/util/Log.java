@@ -38,11 +38,11 @@ public class Log {
 		setLevel(level);
 	}
 	
-	static public PrintStream err;
-	static public PrintStream warning;
-	static public PrintStream info;
-	static public PrintStream debug;
-	static public PrintStream trace;
+	static public PrintStream err= System.err;
+	static public PrintStream warning= System.err;
+	static public PrintStream info = System.out;
+	static public PrintStream debug = System.out;
+	static public PrintStream trace = System.out;
 
 	static private PrintStream errIfOpen = System.err;
 	static private PrintStream warningIfOpen = System.err;
