@@ -44,7 +44,7 @@ import javax.swing.table.AbstractTableModel;
 import yabby.app.beauti.Beauti;
 import yabby.app.util.FileDrop;
 import yabby.app.util.Utils;
-import yabby.app.yabbyapp.WholeNumberField;
+import yabby.app.util.WholeNumberField;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

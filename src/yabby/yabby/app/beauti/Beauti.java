@@ -11,11 +11,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import yabby.app.YabbyVersion;
 import yabby.app.beauti.BeautiDoc.ActionOnExit;
 import yabby.app.beauti.BeautiDoc.DOC_STATUS;
 import yabby.app.draw.*;
 import yabby.app.util.Utils;
-import yabby.app.yabbyapp.YabbyVersion;
 import yabby.util.AddOnManager;
 
 import java.awt.*;

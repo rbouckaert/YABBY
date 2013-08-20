@@ -1,4 +1,4 @@
-package yabby.app.yabbyapp;
+package yabby.app.util;
 
 import javax.swing.*;
 import javax.swing.event.*;

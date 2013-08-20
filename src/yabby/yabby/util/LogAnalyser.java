@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import yabby.app.YabbyVersion;
 import yabby.app.util.Utils;
-import yabby.app.yabbyapp.YabbyVersion;
 import yabby.core.util.ESS;
 
 

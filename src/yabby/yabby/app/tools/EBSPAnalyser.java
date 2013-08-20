@@ -26,9 +26,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import yabby.app.YabbyVersion;
 import yabby.app.util.Utils;
-import yabby.app.yabbyapp.YabbyVersion;
-import yabby.app.yabbyapp.WholeNumberField;
+import yabby.app.util.WholeNumberField;
 import yabby.evolution.tree.coalescent.CompoundPopulationFunction;
 import yabby.evolution.tree.coalescent.CompoundPopulationFunction.Type;
 import yabby.math.statistic.DiscreteStatistics;

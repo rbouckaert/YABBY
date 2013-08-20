@@ -6,11 +6,12 @@ package yabby.app.util;
  * @version 1.00 
  */
 
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import yabby.app.yabbyapp.YabbyDialog;
+import yabby.app.YabbyMCMC;
 import yabby.core.util.Log;
 
 public class HTTPPostServer extends Thread {
@@ -23,7 +24,7 @@ public class HTTPPostServer extends Thread {
 	BufferedReader inFromClient = null;
 	DataOutputStream outToClient = null;
 
-	HTTPRequestHandler handler = new YabbyDialog();
+	HTTPRequestHandler handler = new YabbyMCMC();
 
 	public HTTPPostServer(Socket client) {
 		connectedClient = client;
@@ -31,8 +32,7 @@ public class HTTPPostServer extends Thread {
 
 	public void run() {
 
-		String currentLine = null, postBoundary = null, contentength = null, filename = null, contentLength = null;
-		PrintWriter fout = null;
+		String currentLine = null, filename = null;
 
 		try {
 
@@ -55,11 +55,13 @@ public class HTTPPostServer extends Thread {
 				
 			Log.trace.println(currentLine);
 
-			// TODO: make sure only access from localhost is allowed
 			
 			if (httpMethod.equals("GET")) {
 				Log.trace.println("GET request");
-				if (httpQueryString.equals("/")) {
+
+				String client = connectedClient.getInetAddress().getHostAddress();
+				// TODO: make sure only access from localhost is processed
+				if (!client.equals("127.0.0.1") && !client.equals("localhost")) {
 					// The default home page
 					String responseString = HTTPPostServer.HTML_START + "<form action=\"http://127.0.0.1:5000\" enctype=\"multipart/form-data\" "
 							+ "method=\"post\"> " + "Enter the name of a File <input name=\"file\" type=\"file\"><br> "
@@ -136,7 +138,6 @@ public class HTTPPostServer extends Thread {
 			try {
 				sendResponse(404, "Error: " + e.getMessage() + "<br>YABBY_is_done", false, null);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -146,7 +147,7 @@ public class HTTPPostServer extends Thread {
 
 		String statusLine = null;
 		String serverdetails = "Server: Java HTTPServer";
-		String contentLengthLine = null;
+		//String contentLengthLine = null;
 		//String fileName = null;
 		String contentTypeLine = "Content-Type: text/html" + "\r\n";
 		//FileInputStream fin = null;
@@ -159,7 +160,7 @@ public class HTTPPostServer extends Thread {
 		if (isFile) {
 			//fileName = responseString;
 			//fin = new FileInputStream(fileName);
-			contentLengthLine = "Content-Length: " + Integer.toString(in.available()) + "\r\n";
+			//contentLengthLine = "Content-Length: " + Integer.toString(in.available()) + "\r\n";
 			String type_is = "text/html";
 			// find out what the filename ends with,
 			// so you can construct a the right content type
@@ -187,7 +188,7 @@ public class HTTPPostServer extends Thread {
 			contentTypeLine = "Content-Type: " + type_is + "\r\n";
 		} else {
 			responseString = HTTPPostServer.HTML_START + responseString + HTTPPostServer.HTML_END;
-			contentLengthLine = "Content-Length: " + responseString.length() + "\r\n";
+			//contentLengthLine = "Content-Length: " + responseString.length() + "\r\n";
 		}
 
 		outToClient.writeBytes(statusLine);
@@ -220,6 +221,7 @@ public class HTTPPostServer extends Thread {
 	public static int startServer(final HTTPRequestHandler handler) throws Exception {
 
 		new Thread() {
+			@SuppressWarnings("resource")
 			@Override
 			public void run() {
 				try {
@@ -251,6 +253,6 @@ public class HTTPPostServer extends Thread {
 	}
 	
 	public static void main(String args[]) throws Exception {
-		startServer(new YabbyDialog());
+		startServer(new YabbyMCMC());
 	}
 }

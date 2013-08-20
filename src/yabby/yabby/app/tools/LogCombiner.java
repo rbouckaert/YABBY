@@ -17,8 +17,8 @@ import java.util.Locale;
 
 import javax.swing.JFrame;
 
+import yabby.app.YabbyVersion;
 import yabby.app.tools.LogCombinerDialog;
-import yabby.app.yabbyapp.YabbyVersion;
 import yabby.util.LogAnalyser;
 
 

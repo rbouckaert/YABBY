@@ -73,6 +73,7 @@ public class NodeReheight extends TreeOperator {
         m_nodes = tree.getNodesAsArray();
         final int nNodes = tree.getNodeCount();
         // randomly change left/right order
+        tree.startEditing(this);
         reorder(tree.getRoot());
         // collect heights
         final double[] fHeights = new double[nNodes];

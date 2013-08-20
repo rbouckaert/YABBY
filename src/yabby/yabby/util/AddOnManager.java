@@ -35,9 +35,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import yabby.app.YabbyVersion;
 import yabby.app.util.Arguments;
 import yabby.app.util.Utils;
-import yabby.app.yabbyapp.YabbyVersion;
 import yabby.core.util.Log;
 import yabby.evolution.alignment.Alignment;
 

@@ -3,9 +3,7 @@ package yabby.app.util;
 import java.io.*;
 import java.net.*;
 
-import org.json.JSONObject;
-
-import yabby.app.yabbyapp.YabbyDialog;
+import yabby.app.YabbyMCMC;
 
 /**
  * 
@@ -31,7 +29,7 @@ import yabby.app.yabbyapp.YabbyDialog;
 public class HTTPServer extends Thread {
 	private int port; // port we are going to listen to
 	
-	HTTPRequestHandler handler = new YabbyDialog();
+	HTTPRequestHandler handler = new YabbyMCMC();
 	public void setRequestHandler(HTTPRequestHandler handler) {
 		this.handler = handler;
 	}

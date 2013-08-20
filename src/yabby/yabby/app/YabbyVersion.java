@@ -1,4 +1,4 @@
-package yabby.app.yabbyapp;
+package yabby.app;
 
 import yabby.app.util.Version;
 

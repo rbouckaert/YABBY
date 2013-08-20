@@ -204,15 +204,43 @@ function getRandomSeed() {
     }
     
     toggleBeagle();
+	window.parent.document.body.style.zoom = 1.0;
+}
+</script>
+
+<script>
+var CTRL = false;
+
+function KeyDownHandler(event) {
+    var x = event.keyCode;
+	processkey(x, true);
+}
+
+function KeyUpHandler(event) {
+    var x = event.keyCode;
+	processkey(x, false);
+}
+
+function processkey(chCode, keydown) {
+	if (chCode == 107 && CTRL == true && keydown == true) {
+		window.parent.document.body.style.zoom = window.parent.document.body.style.zoom.toString() * 1.25;
+	}
+	if (chCode == 109 && CTRL == true && keydown == true) {
+		window.parent.document.body.style.zoom = window.parent.document.body.style.zoom.toString() / 1.25;
+	}
+
+	if (chCode == 17) {
+		CTRL = keydown;
+	}
 }
 </script>
 
 </head>
 
-<body id='myForm' onunload='quitYabby()' onload='getRandomSeed()'>
+<body id='myForm' onunload='quitYabby()' onload='getRandomSeed()' onkeydown='KeyDownHandler(event)' onkeyup='KeyUpHandler(event)'>
 
 <div class='head'>
-<a href='yabby.html'><img src='yabby/app/draw/icons/yabby.png'/></a>
+<a href='yabby.html'><img width='15%' src='yabby/app/draw/icons/yabby.png'/></a>
 YABBY</div>
 <div class='headp'>Yabby ain't beast but Yabby!</div>
 <div class='headp'>Version 2.0.4</div>
@@ -226,16 +254,19 @@ YABBY</div>
 <div class='table'>
 <table>
 <form method='post' enctype="multipart/form-data" action='runYabby.html' id='yabbyform'>
-<tr><td  colspan='2' title='Input file in XML or JSON format that specifies the analysis'>YABBY input file:
-<span id='inputfilelabel' style='color:red;font-weight:bold;visibility:hidden;'>*</span>
-<!--</td>
-</tr><tr>    
-<td colspan='2'> -->
-<input id='inputfile' type='text' oninput='checkInputFile()'>
+<tr><td  class='tdcol1' colspan='1' title='Input file in XML or JSON format that specifies the analysis'>YABBY input file:
+</td>
+<!--
+</tr><tr>
+-->
+<td>
+<input id='inputfile' type='text' oninput='checkInputFile()' size='30'></td><td>
 <input type='button' onclick='getInputFile();' value='Browse'>
+<span id='inputfilelabel' style='color:red;font-weight:bold;visibility:hidden;'>*</span>
 <!--
 <input id='inputfile' name='file' type='file' /></td> </tr>
 -->
+</td></tr>
 </form> 
 <tr><td class='tdcol1'>Log files:</td>    <td>
 	<select id='mode'>
@@ -259,7 +290,7 @@ YABBY</div>
 		<option value='trace'>trace: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;furthermore show even more detailed messages</option>
 	</select>
    </td>
-<tr><td title='random number seed'>Random number seed:</td><td><input id='seed' type='number' value='123' title='Start of random number sequences. This only requires changing if you need to run the same analysis twice with the same starting condition'/></td></tr>
+<tr><td title='random number seed'>Random number seed:</td><td><input id='seed' type='text' value='123' width='30' title='Start of random number sequences. This only requires changing if you need to run the same analysis twice with the same starting condition'/></td></tr>
 <tr><td>Threading:</td>
     <td>
 	<select id='threads' class='select'>

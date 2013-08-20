@@ -1,4 +1,5 @@
-package yabby.app.yabbyapp;
+package yabby.app;
+
 
 
 
@@ -6,6 +7,7 @@ package yabby.app.yabbyapp;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,6 +22,7 @@ import beagle.BeagleInfo;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -41,7 +44,11 @@ import yabby.util.Randomizer;
 import yabby.util.XMLParser;
 import yabby.util.XMLParserException;
 
-public class YabbyDialog extends Application implements HTTPRequestHandler {
+/** 
+ * main program for running MCMC analysis as well as other analysis 
+ */
+
+public class YabbyMCMC extends Application implements HTTPRequestHandler {
 	
 	public Input<String> debugInput = new  Input<String> ("debug", "set level of debug messages shown. One of " + Arrays.toString(Log.Level.values()), "info");  
 	public Input<Boolean> optionsInput = new  Input<Boolean> ("options", "Display an options dialog", false);  
@@ -74,6 +81,10 @@ public class YabbyDialog extends Application implements HTTPRequestHandler {
 	 * used for displaying GUI 
 	 */
     private static WebEngine webEngine;
+	/** 
+	 * used for stream info to the GUI 
+	 */
+	OutputStream stream = null;
     /**
      * number of threads used to run the likelihood beast.core *
      */
@@ -92,12 +103,9 @@ public class YabbyDialog extends Application implements HTTPRequestHandler {
      */
     Runnable m_runnable;
 
-    public YabbyDialog() {
+    public YabbyMCMC() {
     	defaultInput = inputfileInput;
-    	if (YabbyMain.server != null) {
-    		YabbyMain.server.setRequestHandler(this);
-    	}
-    	    }
+    }
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -126,14 +134,17 @@ public class YabbyDialog extends Application implements HTTPRequestHandler {
     	        System.exit(0);
     	    }
     	});
+        
+        URL url = (URL) ClassLoader.getSystemResource("yabby/app/draw/icons/yabby.png");
+        Image image = new Image(url.toString());
+        primaryStage.getIcons().add(image);
 	}
 
-	
 	@Override
 	public String handleRequest(String url, StringBuffer data) throws IOException {
         OutputStream stream;
-        if (YabbyMain.stream != null) {
-        	stream = YabbyMain.stream; 
+        if (this.stream != null) {
+        	stream = this.stream; 
         } else {
 	        stream = new AppOutputStream();
 	        
@@ -147,7 +158,7 @@ public class YabbyDialog extends Application implements HTTPRequestHandler {
 	        
 	        //System.setOut(new HTMLPrintStream(stream, Log.Level.info));
 	        System.setErr(Log.warning);
-	        YabbyMain.stream = stream;
+	        this.stream = stream;
         }
 		HTMLPrintStream.currentLevel = null;
 		
@@ -265,19 +276,17 @@ public class YabbyDialog extends Application implements HTTPRequestHandler {
     	
         boolean resume = false;
 
-        OutputStream stream = new AppOutputStream();
         
         if (optionsInput.get()) {
+            OutputStream stream = new AppOutputStream();
 	 		Log.trace = new HTMLPrintStream(stream, Log.Level.trace);
 	        Log.debug = new HTMLPrintStream(stream, Log.Level.debug);
 	        Log.info = new HTMLPrintStream(stream, Log.Level.info);
 	        Log.warning = new HTMLPrintStream(stream, Log.Level.warning);
 	        Log.err = new HTMLPrintStream(stream, Log.Level.error);
 	        System.setOut(Log.info);
-	        
-	        //System.setOut(new HTMLPrintStream(stream, Log.Level.info));
 	        System.setErr(Log.warning);
-	        YabbyMain.stream = stream;
+	        this.stream = stream;
         }
         
         switch (debugInput.get()) {
@@ -410,7 +419,7 @@ public class YabbyDialog extends Application implements HTTPRequestHandler {
 	 */
 	public static void main(String[] args) throws Exception {
 		try {
-			YabbyDialog main = new YabbyDialog();
+			YabbyMCMC main = new YabbyMCMC();
 			main.parseArgs(args, false);
 			if (main.optionsInput.get()) {
 				port = HTTPPostServer.startServer(main);

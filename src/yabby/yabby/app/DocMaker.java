@@ -37,7 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import yabby.app.yabbyapp.YabbyVersion;
 import yabby.core.Citation;
 import yabby.core.Description;
 import yabby.core.Input;
