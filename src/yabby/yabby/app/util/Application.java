@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import com.sun.org.glassfish.gmbal.Description;
+import yabby.core.Description;
 
 import yabby.core.Input;
 import yabby.core.util.Log;
