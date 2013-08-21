@@ -448,9 +448,9 @@ public class Input<T> {
      * diagnostic info when the value cannot be set.
      */
     public boolean canSetValue(Object value, YABBYObject plugin) throws Exception {
-        String sName = new String(name.charAt(0) + "").toUpperCase() + name.substring(1);
+        String inputName = new String(name.charAt(0) + "").toUpperCase() + name.substring(1);
         try {
-            Method method = plugin.getClass().getMethod("canSet" + sName, Object.class);
+            Method method = plugin.getClass().getMethod("canSet" + inputName, Object.class);
             //System.err.println("Calling method " + plugin.getClass().getName() +"."+ method.getName());
             Object o = method.invoke(plugin, value);
             return (Boolean) o;
