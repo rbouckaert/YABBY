@@ -558,6 +558,7 @@ public class XMLParser {
 	            String sClass = child.getTextContent();
 	            // remove spaces
 	            sClass = sClass.replaceAll("\\s", "");
+	            sClass = sClass.replaceAll("beast", "yabby");
 	            // go through namespaces in order they are declared to find the correct class
 	            boolean bDone = false;
 	            for (String sNameSpace : m_sNameSpaces) {
@@ -683,6 +684,10 @@ public class XMLParser {
             sSpecClass = sSpec;
         }
     	sSpecClass = sSpecClass.replaceAll("beast", "yabby");
+    	
+    	if (sSpecClass.indexOf("YABBYObject") > 0) {
+    		System.out.println(sSpecClass);
+    	}
 
     	Object o = null;
         // try to create object from sSpecName, taking namespaces in account
@@ -698,7 +703,7 @@ public class XMLParser {
                 } catch (InstantiationException e) {
                     // we only get here when the class exists, but cannot be created
                     // for instance because it is abstract
-                    throw new Exception("Cannot instantiate class. Please check the spec attribute.");
+                    throw new Exception("Cannot instantiate class (" + sSpecClass + "). Please check the spec attribute.");
                 } catch (ClassNotFoundException e) {
                     // TODO: handle exception
                 }
