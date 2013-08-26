@@ -93,9 +93,9 @@ public abstract class StateNode extends YABBYObject implements Loggable, Cloneab
      * NB: Should only be used for initialisation!
      */
     public void assignFromWithoutID(StateNode other) {
-        final String sID = m_sID;
+        final String sID = ID;
         assignFrom(other);
-        m_sID = sID;
+        ID = sID;
     }
 
     /**

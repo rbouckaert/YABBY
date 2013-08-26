@@ -243,7 +243,7 @@ public class BeautiSubTemplate extends YABBYObject {
             // HACK2: rename file name for trace log if it has the default value
             Logger logger = (Logger) doc.pluginmap.get("tracelog");
             if (logger != null) {
-	            String fileName = logger.m_pFileName.get();
+	            String fileName = logger.fileNameInput.get();
 	            if (fileName.startsWith("beast.") && treeLikelihood != null) {
 	            	Alignment data = ((GenericTreeLikelihood)treeLikelihood).m_data.get();
 	            	while (data instanceof FilteredAlignment) {
@@ -251,7 +251,7 @@ public class BeautiSubTemplate extends YABBYObject {
 	            	}
 	            	fileName = data.getID() + fileName.substring(5);
 	            	try {
-						logger.m_pFileName.setValue(fileName, logger);
+						logger.fileNameInput.setValue(fileName, logger);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

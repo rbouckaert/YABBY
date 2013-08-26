@@ -246,7 +246,7 @@ public abstract class Parameter<T> extends StateNode implements Function {
      */
     public String toString() {
         final StringBuilder buf = new StringBuilder();
-        buf.append(m_sID).append("[").append(values.length);
+        buf.append(ID).append("[").append(values.length);
         if (minorDimension > 0) {
             buf.append(" ").append(minorDimension);
         }

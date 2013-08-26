@@ -58,24 +58,24 @@ public class Logger extends YABBYObject {
         none, alphabetic, smart
     }
 
-    public Input<String> m_pFileName = new Input<String>("fileName", "Name of the file, or stdout if left blank");
+    public Input<String> fileNameInput = new Input<String>("fileName", "Name of the file, or stdout if left blank");
 
-    public Input<Integer> m_pEvery = new Input<Integer>("logEvery", "Number of the samples logged", 1);
-    public Input<YABBYObject> m_pModelPlugin = new Input<YABBYObject>("model", "Model to log at the top of the log. " +
+    public Input<Integer> everyInput = new Input<Integer>("logEvery", "Number of the samples logged", 1);
+    public Input<YABBYObject> modelInput = new Input<YABBYObject>("model", "Model to log at the top of the log. " +
             "If specified, XML will be produced for the model, commented out by # at the start of a line. " +
             "Alignments are suppressed. This way, the log file documents itself. ");
-    public Input<LOGMODE> m_sMode = new Input<LOGMODE>("mode", "logging mode, one of " + LOGMODE.values(), LOGMODE.autodetect, LOGMODE.values());
-    public Input<SORTMODE> sortMode = new Input<SORTMODE>("sort", "sort items to be logged, one of " + SORTMODE.values(), SORTMODE.none, SORTMODE.values());
-    public Input<Boolean> sanitiseHeaders = new Input<Boolean>("sanitiseHeaders", "whether to remove any clutter introduced by Beauti" , false);
+    public Input<LOGMODE> modeInput = new Input<LOGMODE>("mode", "logging mode, one of " + LOGMODE.values(), LOGMODE.autodetect, LOGMODE.values());
+    public Input<SORTMODE> sortModeInput = new Input<SORTMODE>("sort", "sort items to be logged, one of " + SORTMODE.values(), SORTMODE.none, SORTMODE.values());
+    public Input<Boolean> sanitiseHeadersInput = new Input<Boolean>("sanitiseHeaders", "whether to remove any clutter introduced by Beauti" , false);
 
-    public Input<List<YABBYObject>> m_pLoggers = new Input<List<YABBYObject>>("log",
+    public Input<List<YABBYObject>> loggersInput = new Input<List<YABBYObject>>("log",
             "Element in a log. This can be any plug in that is Loggable.",
             new ArrayList<YABBYObject>(), Validate.REQUIRED, Loggable.class);
 
     /**
      * list of loggers, if any
      */
-    List<Loggable> m_loggers;
+    List<Loggable> loggerList;
     public enum LogFileMode {
     	only_new, overwrite, resume, only_new_or_exit
     }
@@ -86,16 +86,16 @@ public class Logger extends YABBYObject {
      * while tree loggers don't.
      */
     public final static int COMPOUND_LOGGER = 0, TREE_LOGGER = 2;
-    public int m_mode = COMPOUND_LOGGER;
+    public int mode = COMPOUND_LOGGER;
     /**
      * offset for the sample number, which is non-zero when a chain is resumed *
      */
-    static int m_nSampleOffset = 0;
+    static int sampleOffset = 0;
 
     /**
      * number of samples between logs *
      */
-    int m_nEvery = 1;
+    int every = 1;
 
     /**
      * stream to log to
@@ -105,50 +105,50 @@ public class Logger extends YABBYObject {
     /**
      * keep track of time taken between logs to estimate speed *
      */
-    long m_nStartLogTime = -5;
-    int m_nStartSample;
+    long startLogTime = -5;
+    int startSample;
 
 
     @Override
     public void initAndValidate() throws Exception {
-        List<YABBYObject> loggers = m_pLoggers.get();
+        List<YABBYObject> loggers = loggersInput.get();
         final int nLoggers = loggers.size();
         if (nLoggers == 0) {
             throw new Exception("Logger with nothing to log specified");
         }
 
-        m_loggers = new ArrayList<Loggable>();
+        loggerList = new ArrayList<Loggable>();
         for (int k = 0; k < nLoggers; ++k) {
-            m_loggers.add((Loggable) loggers.get(k));
+            loggerList.add((Loggable) loggers.get(k));
         }
 
         // determine logging mode
-        LOGMODE sMode = m_sMode.get();
+        LOGMODE sMode = modeInput.get();
         if (sMode.equals(LOGMODE.autodetect)) {
-            m_mode = COMPOUND_LOGGER;
-            if (nLoggers == 1 && m_loggers.get(0) instanceof Tree) {
-                m_mode = TREE_LOGGER;
+            mode = COMPOUND_LOGGER;
+            if (nLoggers == 1 && loggerList.get(0) instanceof Tree) {
+                mode = TREE_LOGGER;
             }
         } else if (sMode.equals(LOGMODE.tree)) {
-            m_mode = TREE_LOGGER;
+            mode = TREE_LOGGER;
         } else if (sMode.equals(LOGMODE.compound)) {
-            m_mode = COMPOUND_LOGGER;
+            mode = COMPOUND_LOGGER;
         } else {
             throw new Exception("Mode '" + sMode + "' is not supported. Choose one of " + LOGMODE.values());
         }
 
-        if (m_pEvery.get() != null) {
-            m_nEvery = m_pEvery.get();
+        if (everyInput.get() != null) {
+            every = everyInput.get();
         }
         
-        if (m_mode == COMPOUND_LOGGER) {
-        	switch (sortMode.get()) {
+        if (mode == COMPOUND_LOGGER) {
+        	switch (sortModeInput.get()) {
         	case none:
         		// nothing to do
        			break;
         	case alphabetic:
         		// sort loggers by id
-        		Collections.sort(m_loggers, new Comparator<Loggable>() {
+        		Collections.sort(loggerList, new Comparator<Loggable>() {
 					@Override
 					public int compare(Loggable o1, Loggable o2) {
 						String id1 = ((YABBYObject)o1).getID();
@@ -164,8 +164,8 @@ public class Logger extends YABBYObject {
         		// This way, multi-partition analysis generated by BEAUti get all  
         		// related log items together in Tracer
         		List<String> ids = new ArrayList<String>();
-        		for (int i = 0; i < m_loggers.size(); i++) {
-        			String id = ((YABBYObject)m_loggers.get(i)).getID();
+        		for (int i = 0; i < loggerList.size(); i++) {
+        			String id = ((YABBYObject)loggerList.get(i)).getID();
         			if (id == null) {
         				id = "";
         			}
@@ -174,15 +174,15 @@ public class Logger extends YABBYObject {
         			}
         			ids.add(id);
         		}
-        		for (int i = 0; i < m_loggers.size(); i++) {
+        		for (int i = 0; i < loggerList.size(); i++) {
         			int k = 1;
         			String id = ids.get(i);
-        			for (int j = i + 1; j < m_loggers.size(); j++) {
+        			for (int j = i + 1; j < loggerList.size(); j++) {
         				if (ids.get(j).equals(id)) {
         					ids.remove(j);
         					ids.add(i + k, id);
-        					Loggable l = m_loggers.remove(j);
-        					m_loggers.add(i + k, l);
+        					Loggable l = loggerList.remove(j);
+        					loggerList.add(i + k, l);
         					k++;
         				}
         			}
@@ -197,11 +197,11 @@ public class Logger extends YABBYObject {
      * initialise log, open file (if necessary) and produce header of log
      */
     public void init() throws Exception {
-        boolean bNeedsHeader = openLogFile();
-        if (bNeedsHeader) {
-            if (m_pModelPlugin.get() != null) {
+        boolean needsHeader = openLogFile();
+        if (needsHeader) {
+            if (modelInput.get() != null) {
                 // print model at top of log
-                String sXML = new XMLProducer().modelToXML(m_pModelPlugin.get());
+                String sXML = new XMLProducer().modelToXML(modelInput.get());
                 sXML = "#" + sXML.replaceAll("\\n", "\n#");
                 m_out.println("#\n#model:\n#");
                 m_out.println(sXML);
@@ -216,13 +216,13 @@ public class Logger extends YABBYObject {
             }
             ByteArrayOutputStream rawbaos = new ByteArrayOutputStream();
             PrintStream out = new PrintStream(rawbaos);
-            if (m_mode == COMPOUND_LOGGER) {
+            if (mode == COMPOUND_LOGGER) {
                 out.print("Sample\t");
             }
-            for (Loggable m_logger : m_loggers) {
+            for (Loggable m_logger : loggerList) {
                 m_logger.init(out);
             }
-            if (sanitiseHeaders.get()) {
+            if (sanitiseHeadersInput.get()) {
             	m_out.print(sanitiseHeader(rawbaos.toString()));
             } else {
             	m_out.print(rawbaos.toString());
@@ -314,14 +314,14 @@ public class Logger extends YABBYObject {
 
 
 	boolean openLogFile() throws Exception {
-        String sFileName = m_pFileName.get();
+        String sFileName = fileNameInput.get();
         if (sFileName == null || sFileName.length() == 0) {
             m_out = System.out;
             return true;
         } else {
             if (sFileName.contains("$(tree)")) {
             	String treeName = "tree";
-            	for (Loggable logger : m_loggers) {
+            	for (Loggable logger : loggerList) {
             		if (logger instanceof YABBYObject) {
             			String id = ((YABBYObject) logger).getID();
             			if (id.indexOf(".t:") > 0) {
@@ -330,11 +330,11 @@ public class Logger extends YABBYObject {
             		}
             	}
                 sFileName = sFileName.replace("$(tree)", treeName);
-                m_pFileName.setValue(sFileName, this);
+                fileNameInput.setValue(sFileName, this);
             }
             if (sFileName.contains("$(seed)")) {
                 sFileName = sFileName.replace("$(seed)", Randomizer.getSeed() + "");
-                m_pFileName.setValue(sFileName, this);
+                fileNameInput.setValue(sFileName, this);
             }
             if (System.getProperty("file.name.prefix") != null) {
                 sFileName = System.getProperty("file.name.prefix") + "/" + sFileName;
@@ -378,7 +378,7 @@ public class Logger extends YABBYObject {
                 {
                     File file = new File(sFileName);
                     if (file.exists()) {
-                        if (m_mode == COMPOUND_LOGGER) {
+                        if (mode == COMPOUND_LOGGER) {
                             // first find the sample nr offset
                             BufferedReader fin = new BufferedReader(new FileReader(sFileName));
                             String sStr = null;
@@ -387,10 +387,10 @@ public class Logger extends YABBYObject {
                             }
                             fin.close();
                             int nSampleOffset = Integer.parseInt(sStr.split("\\s")[0]);
-                            if (m_nSampleOffset > 0 && nSampleOffset != m_nSampleOffset) {
+                            if (sampleOffset > 0 && nSampleOffset != sampleOffset) {
                                 throw new Exception("Error 400: Cannot resume: log files do not end in same sample number");
                             }
-                            m_nSampleOffset = nSampleOffset;
+                            sampleOffset = nSampleOffset;
                             // open the file for appending
                             FileOutputStream out2 = new FileOutputStream(sFileName, true);
                             m_out = new PrintStream(out2);
@@ -426,11 +426,11 @@ public class Logger extends YABBYObject {
                             }
                             final String sStr = sStrLast.split("\\s+")[1];
                             final int nSampleOffset = Integer.parseInt(sStr.substring(6));
-                            if (m_nSampleOffset > 0 && nSampleOffset != m_nSampleOffset) {
+                            if (sampleOffset > 0 && nSampleOffset != sampleOffset) {
                                 treeFileBackup.renameTo(new File(sFileName));
                                 throw new Exception("Error 401: Cannot resume: log files do not end in same sample number");
                             }
-                            m_nSampleOffset = nSampleOffset;
+                            sampleOffset = nSampleOffset;
                             // open the file and write back all but the last line
                             FileOutputStream out2 = new FileOutputStream(sFileName);
                             m_out = new PrintStream(out2);
@@ -458,15 +458,15 @@ public class Logger extends YABBYObject {
      * * @param nSample
      */
     public void log(int nSample) {
-        if ((nSample < 0) || (nSample % m_nEvery > 0)) {
+        if ((nSample < 0) || (nSample % every > 0)) {
             return;
         }
-        if (m_nSampleOffset > 0) {
+        if (sampleOffset > 0) {
             if (nSample == 0) {
                 // don't need to duplicate the last line in the log
                 return;
             }
-            nSample += m_nSampleOffset;
+            nSample += sampleOffset;
         }
         ByteArrayOutputStream baos = null;
         PrintStream tmp = null;
@@ -475,10 +475,10 @@ public class Logger extends YABBYObject {
             baos = new ByteArrayOutputStream();
             m_out = new PrintStream(baos);
         }
-        if (m_mode == COMPOUND_LOGGER) {
+        if (mode == COMPOUND_LOGGER) {
             m_out.print((nSample) + "\t");
         }
-        for (Loggable m_logger : m_loggers) {
+        for (Loggable m_logger : loggerList) {
             m_logger.log(nSample, m_out);
         }
         if ( baos != null ) {
@@ -492,19 +492,19 @@ public class Logger extends YABBYObject {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            if (m_nStartLogTime < 0) {
-                if (nSample - m_nSampleOffset > 6000) {
-                    m_nStartLogTime++;
-                    if (m_nStartLogTime == 0) {
-                        m_nStartLogTime = System.currentTimeMillis();
-                        m_nStartSample = nSample;
+            if (startLogTime < 0) {
+                if (nSample - sampleOffset > 6000) {
+                    startLogTime++;
+                    if (startLogTime == 0) {
+                        startLogTime = System.currentTimeMillis();
+                        startSample = nSample;
                     }
                 }
                 m_out.print(" --");
             } else {
 
                 long nLogTime = System.currentTimeMillis();
-                int nSecondsPerMSamples = (int) ((nLogTime - m_nStartLogTime) * 1000.0 / (nSample - m_nStartSample + 1.0));
+                int nSecondsPerMSamples = (int) ((nLogTime - startLogTime) * 1000.0 / (nSample - startSample + 1.0));
                 String sTimePerMSamples =
                         (nSecondsPerMSamples >= 3600 ? nSecondsPerMSamples / 3600 + "h" : "") +
                                 (nSecondsPerMSamples >= 60 ? (nSecondsPerMSamples % 3600) / 60 + "m" : "") +
@@ -567,7 +567,7 @@ public class Logger extends YABBYObject {
      * stop logging, produce end of log message and close file (if necessary) *
      */
     public void close() {
-        for (Loggable m_logger : m_loggers) {
+        for (Loggable m_logger : loggerList) {
             m_logger.close(m_out);
         }
 
@@ -579,7 +579,7 @@ public class Logger extends YABBYObject {
 
 
     public static int getSampleOffset() {
-        return m_nSampleOffset;
+        return sampleOffset;
     }
 
 } // class Logger

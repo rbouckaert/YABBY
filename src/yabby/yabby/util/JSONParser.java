@@ -679,7 +679,8 @@ public class JSONParser {
 				try {
 					if (!bDone) {
 						nameSpace = nameSpace.replaceAll("beast", "yabby");
-						o = Class.forName(nameSpace + specClass).newInstance();
+						Class c = Class.forName(nameSpace + specClass); 
+						o = c.newInstance();
 						bDone = true;
 						break;
 					}
@@ -690,6 +691,7 @@ public class JSONParser {
 					throw new Exception("Cannot instantiate class. Please check the spec attribute.");
 				} catch (ClassNotFoundException e) {
 					// TODO: handle exception
+					System.err.println(e.getMessage());
 				}
 			}
 			if (!bDone) {

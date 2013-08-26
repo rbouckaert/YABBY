@@ -89,7 +89,7 @@ public class BeautiBase extends FestSwingJUnitTestCase {
 	
 	String traceLogAsString() {
 		Logger logger = (Logger) doc.pluginmap.get("tracelog");
-		List<YABBYObject> logs = logger.m_pLoggers.get();
+		List<YABBYObject> logs = logger.loggersInput.get();
 		return "assertTraceLogEqual" + pluginListAsString(logs);
 	}
 
@@ -188,7 +188,7 @@ public class BeautiBase extends FestSwingJUnitTestCase {
 	void assertTraceLogEqual(String... ids) {
 		System.err.println("assertTraceLogEqual");
 		Logger logger = (Logger) doc.pluginmap.get("tracelog");
-		List<YABBYObject> logs = logger.m_pLoggers.get();
+		List<YABBYObject> logs = logger.loggersInput.get();
 		asserListsEqual(logs, ids);
 	}
 

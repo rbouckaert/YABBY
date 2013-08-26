@@ -385,7 +385,7 @@ public class Tree extends StateNode {
     @Override
     public Tree copy() {
         Tree tree = new Tree();
-        tree.m_sID = m_sID;
+        tree.ID = ID;
         tree.index = index;
         tree.root = root.copy();
         tree.nodeCount = nodeCount;
@@ -402,7 +402,7 @@ public class Tree extends StateNode {
         Tree tree = (Tree) other;
         Node[] nodes = new Node[nodeCount];
         listNodes(tree.root, nodes);
-        tree.m_sID = m_sID;
+        tree.ID = ID;
         //tree.index = index;
         root.assignTo(nodes);
         tree.root = nodes[root.getNr()];
@@ -421,7 +421,7 @@ public class Tree extends StateNode {
         for (int i = 0; i < tree.getNodeCount(); i++) {
             nodes[i] = createNode();
         }
-        m_sID = tree.m_sID;
+        ID = tree.ID;
         //index = tree.index;
         root = nodes[tree.root.getNr()];
         root.assignFrom(nodes, tree.root);

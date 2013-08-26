@@ -101,14 +101,14 @@ abstract public class YABBYObject {
     } // initByName
 
     // identifiable
-    protected String m_sID;
+    protected String ID;
 
     public String getID() {
-        return m_sID;
+        return ID;
     }
 
-    public void setID(String sID) {
-        m_sID = sID;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
 
@@ -200,7 +200,7 @@ abstract public class YABBYObject {
      * @throws IllegalArgumentException
      */
     public List<YABBYObject> listActivePlugins() throws IllegalArgumentException, IllegalAccessException {
-        List<YABBYObject> sPlugins = new ArrayList<YABBYObject>();
+        List<YABBYObject> plugins = new ArrayList<YABBYObject>();
         Field[] fields = getClass().getFields();
         for (Field field : fields) {
             if (field.getType().isAssignableFrom(Input.class)) {
@@ -210,30 +210,30 @@ abstract public class YABBYObject {
                         List<?> vector = (List<?>) input.get();
                         for (Object o : vector) {
                             if (o instanceof YABBYObject) {
-                                sPlugins.add((YABBYObject) o);
+                                plugins.add((YABBYObject) o);
                             }
                         }
                     } else if (input.get() != null && input.get() instanceof YABBYObject) {
-                        sPlugins.add((YABBYObject) input.get());
+                        plugins.add((YABBYObject) input.get());
                     }
                 }
             }
         }
-        return sPlugins;
+        return plugins;
     } // listActivePlugins
 
     /**
      * get description of an input
      *
-     * @param sName of the input
+     * @param name of the input
      * @return list of inputs
      */
-    public String getTipText(String sName) throws IllegalArgumentException, IllegalAccessException {
+    public String getTipText(String name) throws IllegalArgumentException, IllegalAccessException {
         Field[] fields = getClass().getDeclaredFields();
         for (Field field : fields) {
             if (field.getType().isAssignableFrom(Input.class)) {
                 Input<?> input = (Input<?>) field.get(this);
-                if (input.getName().equals(sName)) {
+                if (input.getName().equals(name)) {
                     return input.getTipText();
                 }
             }
@@ -245,8 +245,8 @@ abstract public class YABBYObject {
     /**
      * check whether the input is an Integer, Double, Boolean or String *
      */
-    public boolean isPrimitive(String sName) throws Exception {
-        Input<?> input = getInput(sName);
+    public boolean isPrimitive(String name) throws Exception {
+        Input<?> input = getInput(name);
         if (input.getType() == null) {
             input.determineClass(this);
         }
@@ -268,18 +268,18 @@ abstract public class YABBYObject {
     /**
      * get value of an input by input name *
      */
-    public Object getInputValue(String sName) throws Exception {
-        Input<?> input = getInput(sName);
+    public Object getInputValue(String name) throws Exception {
+        Input<?> input = getInput(name);
         return input.get();
     } // getInputValue
 
     /**
      * set value of an input by input name *
      */
-    public void setInputValue(String sName, Object value) throws Exception {
-        Input<?> input = getInput(sName);
+    public void setInputValue(String name, Object value) throws Exception {
+        Input<?> input = getInput(name);
         if (!input.canSetValue(value, this)) {
-            throw new Exception("Cannot set input value of " + sName);
+            throw new Exception("Cannot set input value of " + name);
         }
         input.setValue(value, this);
     } // setInputValue

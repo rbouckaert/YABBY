@@ -536,7 +536,7 @@ public class Node extends YABBYObject {
         node.m_iLabel = m_iLabel;
         node.m_sMetaData = m_sMetaData;
         node.m_Parent = null;
-        node.setID(m_sID);
+        node.setID(ID);
 
         for (Node child : getChildren()) {
             node.addChild(child.copy());
@@ -553,7 +553,7 @@ public class Node extends YABBYObject {
         node.m_iLabel = m_iLabel;
         node.m_sMetaData = m_sMetaData;
         node.m_Parent = null;
-        node.m_sID = m_sID;
+        node.ID = ID;
         if (getLeft() != null) {
             node.setLeft(nodes[getLeft().getNr()]);
             getLeft().assignTo(nodes);
@@ -574,7 +574,7 @@ public class Node extends YABBYObject {
         m_iLabel = node.m_iLabel;
         m_sMetaData = node.m_sMetaData;
         m_Parent = null;
-        m_sID = node.m_sID;
+        ID = node.ID;
         if (node.getLeft() != null) {
             setLeft(nodes[node.getLeft().getNr()]);
             getLeft().assignFrom(nodes, node.getLeft());

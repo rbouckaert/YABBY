@@ -271,7 +271,7 @@ public class PriorListInputEditor extends ListInputEditor {
             prior.m_distInput.setValue(null, prior);
 
             Logger logger = (Logger) doc.pluginmap.get("tracelog");
-            logger.m_pLoggers.setValue(prior, logger);
+            logger.loggersInput.setValue(prior, logger);
         } catch (Exception e) {
             // TODO: handle exception
         }

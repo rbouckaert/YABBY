@@ -29,6 +29,7 @@ import java.io.File;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import yabby.core.parameter.RealParameter;
 
@@ -492,6 +493,9 @@ public class Input<T> {
                         if (value != null && value instanceof List<?>) {
                             Type[] genericTypes2 = ((ParameterizedType) genericTypes[0]).getActualTypeArguments();
                             theClass = (Class<?>) genericTypes2[0];
+                        } else if (value != null && value instanceof Map<?,?>) {
+                                Type[] genericTypes2 = ((ParameterizedType) genericTypes[0]).getActualTypeArguments();
+                                theClass = (Class<?>) genericTypes2[0];
                         } else {
                             // it is not a list (or if it is, this will fail)
                             try {
