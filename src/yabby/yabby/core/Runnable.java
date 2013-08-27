@@ -1,10 +1,15 @@
 package yabby.core;
 
+import java.io.File;
+
+import yabby.core.Input.Validate;
+
 @Description("Entry point for running a Beast task, for instance an MCMC or other probabilistic " +
         "analysis, a simulation, etc.")
-public abstract class Runnable extends YABBYObject {
-    public void run() throws Exception {
-    }
+public abstract class Runnable extends YABBYObject {	
+	
+	/** entry point for anything runnable **/
+	abstract public void run() throws Exception;
 
     /**
      * Set up information related to the file for (re)storing the State.

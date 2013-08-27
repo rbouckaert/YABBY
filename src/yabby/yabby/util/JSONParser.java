@@ -35,8 +35,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,7 +109,22 @@ public class JSONParser {
 
 	public Runnable parseFile(File file) throws Exception {
 		// parse the JSON file into a JSONObject
-		doc = new JSONObject(new JSONTokener(new FileInputStream(file)));
+		
+		// first get rid of comments: remove all text on lines starting with space followed by //
+		// keep line breaks so that error reporting indicates the correct line.
+		BufferedReader fin = new BufferedReader(new FileReader(file));
+		StringBuffer buf = new StringBuffer();
+		String sStr = null;
+		while (fin.ready()) {
+			sStr = fin.readLine();
+			if (!sStr.matches("^\\s*//.*")) {
+				buf.append(sStr);
+			}
+			buf.append('\n');
+		}
+		fin.close();
+		
+		doc = new JSONObject(buf.toString());
 		processPlates(doc);
 
 		IDMap = new HashMap<String, YABBYObject>();
@@ -485,7 +502,7 @@ public class JSONParser {
 	 */
 	void parseNameSpaceAndMap(JSONObject topNode) throws XMLParserException {
 		// process namespaces
-		if (hasAtt(topNode, "namespace")) {
+		if (topNode.has("namespace")) {
 			String sNameSpace = getAttribute(topNode, "namespace");
 			setNameSpace(sNameSpace);
 		} else {
@@ -835,52 +852,23 @@ public class JSONParser {
 		if (node.keySet() != null) {
 			// parse inputs in occurrance of inputs in the parent object
 			// this determines the order in which initAndValidate is called
-			for (Input<?> input : parent.listInputs()) {
+			List<Input<?>> inputs = parent.listInputs();
+			Set<String> done = new HashSet<String>();
+			for (Input<?> input : inputs) {
 				String name = input.getName();
-				if (node.has(name)) {
-					if (!(name.equals("id") || name.equals("idref") || name.equals("spec") || name.equals("name"))) {
-						Object o = node.get(name);
-						if (o instanceof String) {
-							String value = (String) o;
-							if (value.startsWith("@")) {
-								String IDRef = value.substring(1);
-								JSONObject element = new JSONObject();
-								element.put("idref", IDRef);
-								YABBYObject plugin = createObject(element, YOBJECT_CLASS, parent);
-								setInput(node, parent, name, plugin);
-							} else {
-								setInput(node, parent, name, value);
-							}
-						} else if (o instanceof Number) {
-							parent.setInputValue(name, o);
-						} else if (o instanceof Boolean) {
-							parent.setInputValue(name, o);
-						} else if (o instanceof JSONObject) {
-							JSONObject child = (JSONObject) o;
-							String className = getClassName(child, name, parent);
-							YABBYObject childItem = createObject(child, className, parent);
-							if (childItem != null) {
-								setInput(node, parent, name, childItem);
-							}
-							// nChildElements++;
-						} else if (o instanceof JSONArray) {
-							JSONArray list = (JSONArray) o;
-							for (int i = 0; i < list.length(); i++) {
-								Object o2 = list.get(i);
-								JSONObject child = (JSONObject) o2;
-								String className = getClassName(child, name, parent);
-								YABBYObject childItem = createObject(child, className, parent);
-								if (childItem != null) {
-									setInput(node, parent, name, childItem);
-								}
-							}
-						} else {
-							throw new Exception("Developer error: Don't know how to handle this JSON construction");
-						}
-					}
+				processInput(name, node, parent);
+				done.add(name);
+			}
+			
+			for (String name : node.keySet()) {
+				if (!done.contains(name)) {
+					// this can happen with Maps
+					processInput(name, node, parent);
 				}
 			}
 		}
+		
+		
 		// // process element nodes
 		// NodeList children = node.getChildNodes();
 		// String sText = "";
@@ -936,6 +924,55 @@ public class JSONParser {
 			}
 		}
 	} // setInputs
+
+	private void processInput(String name, JSONObject node, YABBYObject parent) throws Exception {
+		if (node.has(name)) {
+			if (!(name.equals("id") || name.equals("idref") || name.equals("spec") || name.equals("name"))) {
+				Object o = node.get(name);
+				if (o instanceof String) {
+					String value = (String) o;
+					if (value.startsWith("@")) {
+						String IDRef = value.substring(1);
+						JSONObject element = new JSONObject();
+						element.put("idref", IDRef);
+						YABBYObject plugin = createObject(element, YOBJECT_CLASS, parent);
+						setInput(node, parent, name, plugin);
+					} else {
+						setInput(node, parent, name, value);
+					}
+				} else if (o instanceof Number) {
+					parent.setInputValue(name, o);
+				} else if (o instanceof Boolean) {
+					parent.setInputValue(name, o);
+				} else if (o instanceof JSONObject) {
+					JSONObject child = (JSONObject) o;
+					String className = getClassName(child, name, parent);
+					YABBYObject childItem = createObject(child, className, parent);
+					if (childItem != null) {
+						setInput(node, parent, name, childItem);
+					}
+					// nChildElements++;
+				} else if (o instanceof JSONArray) {
+					JSONArray list = (JSONArray) o;
+					for (int i = 0; i < list.length(); i++) {
+						Object o2 = list.get(i);
+						if (o2 instanceof JSONObject) {
+							JSONObject child = (JSONObject) o2;
+							String className = getClassName(child, name, parent);
+							YABBYObject childItem = createObject(child, className, parent);
+							if (childItem != null) {
+								setInput(node, parent, name, childItem);
+							}
+						} else {
+							parent.setInputValue(name, o2);									
+						}
+					}
+				} else {
+					throw new Exception("Developer error: Don't know how to handle this JSON construction");
+				}
+			}
+		}		
+	}
 
 	void setInput(JSONObject node, YABBYObject plugin, String name, YABBYObject plugin2) throws JSONParserException {
 		try {
@@ -1036,14 +1073,6 @@ public class JSONParser {
 			return Double.MAX_VALUE;
 		}
 		return Double.parseDouble(sAtt);
-	}
-
-	/**
-	 * test whether a node contains a attribute with given name *
-	 */
-	boolean hasAtt(JSONObject node, String attributeName) {
-		Object o = node.get(attributeName);
-		return (o != null);
 	}
 
 	public interface RequiredInputProvider {

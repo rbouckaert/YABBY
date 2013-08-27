@@ -2,6 +2,9 @@ package yabby.core.parameter;
 
 import java.io.PrintStream;
 
+import yabby.core.Description;
+
+@Description("Parameter represented by a string value")
 public class StringParameter extends Parameter<String> {
 
 	@Override
