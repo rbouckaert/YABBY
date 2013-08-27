@@ -215,10 +215,10 @@ public class SiteModelInputEditor extends PluginInputEditor {
 		    CompoundDistribution likelihood = (CompoundDistribution) doc.pluginmap.get("likelihood");
 			for (Distribution d : likelihood.pDistributions.get()) {
 				GenericTreeLikelihood treelikelihood = (GenericTreeLikelihood) d;
-	    		Alignment data = treelikelihood.m_data.get(); 
+	    		Alignment data = treelikelihood.dataInput.get(); 
 	    		int weight = data.getSiteCount();
-	    		if (treelikelihood.m_pSiteModel.get() instanceof SiteModel) {
-		    		SiteModel siteModel = (SiteModel) treelikelihood.m_pSiteModel.get();
+	    		if (treelikelihood.siteModelInput.get() instanceof SiteModel) {
+		    		SiteModel siteModel = (SiteModel) treelikelihood.siteModelInput.get();
 		    		RealParameter mutationRate = siteModel.muParameterInput.get();
 		    		//clockRate.m_bIsEstimated.setValue(true, clockRate);
 		    		if (mutationRate.m_bIsEstimated.get()) {
@@ -256,8 +256,8 @@ public class SiteModelInputEditor extends PluginInputEditor {
     		    CompoundDistribution likelihood = (CompoundDistribution) doc.pluginmap.get("likelihood");
     			for (Distribution d : likelihood.pDistributions.get()) {
     				GenericTreeLikelihood treelikelihood = (GenericTreeLikelihood) d;
-    	    		if (treelikelihood.m_pSiteModel.get() instanceof SiteModel) {
-    		    		SiteModel siteModel = (SiteModel) treelikelihood.m_pSiteModel.get();
+    	    		if (treelikelihood.siteModelInput.get() instanceof SiteModel) {
+    		    		SiteModel siteModel = (SiteModel) treelikelihood.siteModelInput.get();
     		    		RealParameter mutationRate = siteModel.muParameterInput.get();
     		    		//clockRate.m_bIsEstimated.setValue(true, clockRate);
     		    		if (mutationRate.m_bIsEstimated.get()) {

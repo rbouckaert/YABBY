@@ -224,14 +224,14 @@ public class UCRelaxedClockModel extends BranchRateModel.Base {
     
     	double calcDistance(Node node) {
     		int iNode = node.getNr();
-    		int patterncount = m_data.get().getPatternCount();
-    		int statecount = m_data.get().getDataType().getStateCount();
+    		int patterncount = dataInput.get().getPatternCount();
+    		int statecount = dataInput.get().getDataType().getStateCount();
             double [] fParentPartials = new double[patterncount * statecount];
-    		m_likelihoodCore.getNodePartials(node.getParent().getNr(), fParentPartials);
+    		likelihoodCore.getNodePartials(node.getParent().getNr(), fParentPartials);
     		if (node.isLeaf()) {
         		// distance of leaf to its parent, ignores ambiguities
     			int [] nStates = new int[patterncount ];
-        		m_likelihoodCore.getNodeStates(iNode, nStates);
+        		likelihoodCore.getNodeStates(iNode, nStates);
         		double distance = 0;
         		for (int i = 0; i < patterncount; i++) {
         			int k = nStates[i];
@@ -243,20 +243,20 @@ public class UCRelaxedClockModel extends BranchRateModel.Base {
         					d += fParentPartials[i * statecount + j];
         				}
         			}
-        			distance += d * m_data.get().getPatternWeight(i);
+        			distance += d * dataInput.get().getPatternWeight(i);
         		}
     			return distance;
     		} else {
         		// L1 distance of internal node partials to its parent partials
                 double [] fPartials = new double[fParentPartials.length];
-        		m_likelihoodCore.getNodePartials(iNode, fPartials);
+        		likelihoodCore.getNodePartials(iNode, fPartials);
         		double distance = 0;
         		for (int i = 0; i < patterncount; i++) {
         			double d = 0;
         			for (int j = 0; j < statecount; j++) {
        					d += Math.abs(fPartials[i * statecount + j] - fParentPartials[i * statecount + j]);
         			}
-        			distance += d * m_data.get().getPatternWeight(i);
+        			distance += d * dataInput.get().getPatternWeight(i);
         		}
     			return distance;
     		}

@@ -86,30 +86,30 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
     }
 
     private boolean initialize() throws Exception {
-        m_nNodeCount = m_tree.get().getNodeCount();
+        m_nNodeCount = treeInput.get().getNodeCount();
         m_bUseAmbiguities = m_useAmbiguities.get();
-        if (!(m_pSiteModel.get() instanceof SiteModel.Base)) {
+        if (!(siteModelInput.get() instanceof SiteModel.Base)) {
         	throw new Exception ("siteModel input should be of type SiteModel.Base");
         }
-        m_siteModel = (SiteModel.Base) m_pSiteModel.get();
-        m_siteModel.setDataType(m_data.get().getDataType());
-        m_substitutionModel = m_siteModel.m_pSubstModel.get();
-        m_branchRateModel = m_pBranchRateModel.get();
-        if (m_branchRateModel == null) {
-        	m_branchRateModel = new StrictClockModel();
+        m_siteModel = (SiteModel.Base) siteModelInput.get();
+        m_siteModel.setDataType(dataInput.get().getDataType());
+        substitutionModel = m_siteModel.m_pSubstModel.get();
+        branchRateModel = branchRateModelInput.get();
+        if (branchRateModel == null) {
+        	branchRateModel = new StrictClockModel();
         }
         m_branchLengths = new double[m_nNodeCount];
-        m_StoredBranchLengths = new double[m_nNodeCount];
+        storedBranchLengths = new double[m_nNodeCount];
 
-        m_nStateCount = m_data.get().getMaxStateCount();
-        m_nPatternCount = m_data.get().getPatternCount();
+        m_nStateCount = dataInput.get().getMaxStateCount();
+        m_nPatternCount = dataInput.get().getPatternCount();
 
         //System.err.println("Attempt to load BEAGLE TreeLikelihood");
 
         eigenCount = 1;//this.branchSubstitutionModel.getEigenCount();
 
         this.categoryCount = m_siteModel.getCategoryCount();
-        tipCount = m_tree.get().getLeafNodeCount();
+        tipCount = treeInput.get().getLeafNodeCount();
 
         internalNodeCount = m_nNodeCount - tipCount;
 
@@ -212,7 +212,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
                 preferenceFlags |= BeagleFlag.PROCESSOR_CPU.getMask();
         }
 
-        if (m_substitutionModel.canReturnComplexDiagonalization()) {
+        if (substitutionModel.canReturnComplexDiagonalization()) {
             requirementFlags |= BeagleFlag.EIGEN_COMPLEX.getMask();
         }
 
@@ -269,9 +269,9 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         System.err.println("  With " + m_nPatternCount + " unique site patterns.");
 
         
-        Node [] nodes = m_tree.get().getNodesAsArray();
+        Node [] nodes = treeInput.get().getNodesAsArray();
         for (int i = 0; i < tipCount; i++) {
-        	int taxon = m_data.get().getTaxonIndex(nodes[i].getID()); 
+        	int taxon = dataInput.get().getTaxonIndex(nodes[i].getID()); 
             if (m_bUseAmbiguities) {
                 setPartials(beagle, i, taxon);
             } else {
@@ -279,13 +279,13 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             }
         }
 
-        if (m_data.get() instanceof AscertainedAlignment) {
+        if (dataInput.get() instanceof AscertainedAlignment) {
             ascertainedSitePatterns = true;
         }
 
         double[] fPatternWeights = new double[m_nPatternCount];
         for (int i = 0; i < m_nPatternCount; i++) {
-            fPatternWeights[i] = m_data.get().getPatternWeight(i);
+            fPatternWeights[i] = dataInput.get().getPatternWeight(i);
         }
         beagle.setPatternWeights(fPatternWeights);
 
@@ -375,7 +375,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
      */
     protected final void setPartials(Beagle beagle,
                                      int nodeIndex, int taxon) {
-        Alignment data = m_data.get();
+        Alignment data = dataInput.get();
 
         double[] partials = new double[m_nPatternCount * m_nStateCount * categoryCount];
 
@@ -417,7 +417,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         // TODO More efficient to update only the substitution model that changed, instead of all
         for (int i = 0; i < eigenCount; i++) {
             //EigenDecomposition ed = m_substitutionModel.getEigenDecomposition(i, 0);
-            EigenDecomposition ed = m_substitutionModel.getEigenDecomposition(null);
+            EigenDecomposition ed = substitutionModel.getEigenDecomposition(null);
 
             eigenBufferHelper.flipOffset(i);
 
@@ -439,7 +439,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
      */
     protected final void setStates(Beagle beagle,
                                    int nodeIndex, int taxon) {
-        Alignment data = m_data.get();
+        Alignment data = dataInput.get();
         int i;
 
         int[] states = new int[m_nPatternCount];
@@ -470,25 +470,25 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
      */
     @Override
     protected boolean requiresRecalculation() {
-        m_nHasDirt = Tree.IS_CLEAN;
+        hasDirt = Tree.IS_CLEAN;
 
         updateSiteModel |= m_siteModel.isDirtyCalculation();
-        updateSubstitutionModel |= m_substitutionModel.isDirtyCalculation();
+        updateSubstitutionModel |= substitutionModel.isDirtyCalculation();
 
-        if (m_data.get().isDirtyCalculation()) {
-            m_nHasDirt = Tree.IS_FILTHY;
+        if (dataInput.get().isDirtyCalculation()) {
+            hasDirt = Tree.IS_FILTHY;
             return true;
         }
         if (m_siteModel.isDirtyCalculation()) {
-            m_nHasDirt = Tree.IS_DIRTY;
+            hasDirt = Tree.IS_DIRTY;
             return true;
         }
-        if (m_branchRateModel != null && m_branchRateModel.isDirtyCalculation()) {
+        if (branchRateModel != null && branchRateModel.isDirtyCalculation()) {
             //m_nHasDirt = Tree.IS_FILTHY;
             return true;
         }
 
-        return m_tree.get().somethingIsDirty();
+        return treeInput.get().somethingIsDirty();
     }
 
     /**
@@ -506,7 +506,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
 //            storedRescalingCount = rescalingCount;
         }
         super.store();
-        System.arraycopy(m_branchLengths, 0, m_StoredBranchLengths, 0, m_branchLengths.length);
+        System.arraycopy(m_branchLengths, 0, storedBranchLengths, 0, m_branchLengths.length);
     }
 
     @Override
@@ -528,8 +528,8 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
 //        updateRestrictedNodePartials = true;
         super.restore();
         double[] tmp = m_branchLengths;
-        m_branchLengths = m_StoredBranchLengths;
-        m_StoredBranchLengths = tmp;
+        m_branchLengths = storedBranchLengths;
+        storedBranchLengths = tmp;
     }
 
     // **************************************************************
@@ -570,7 +570,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             useScaleFactors = true;
             if (rescalingCountInner < RESCALE_TIMES) {
                 recomputeScaleFactors = true;
-                m_nHasDirt = Tree.IS_FILTHY;// makeDirty();
+                hasDirt = Tree.IS_FILTHY;// makeDirty();
 //                System.err.println("Recomputing scale factors");
             }
 
@@ -583,7 +583,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         } else if (this.rescalingScheme == PartialsRescalingScheme.DELAYED && everUnderflowed) {
             useScaleFactors = true;
             recomputeScaleFactors = true;
-            m_nHasDirt = Tree.IS_FILTHY;
+            hasDirt = Tree.IS_FILTHY;
             rescalingCount++;
         }
 
@@ -594,7 +594,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
 
         operationCount[0] = 0;
 
-        final Node root = m_tree.get().getRoot();
+        final Node root = treeInput.get().getRoot();
         traverse(root, null, true);
 
         if (updateSubstitutionModel) {
@@ -639,7 +639,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             int rootIndex = partialBufferHelper.getOffsetIndex(root.getNr());
 
             double[] categoryWeights = m_siteModel.getCategoryProportions(null);
-            double[] frequencies = m_substitutionModel.getFrequencies();
+            double[] frequencies = substitutionModel.getFrequencies();
 
             int cumulateScaleBufferIndex = Beagle.NONE;
             if (useScaleFactors) {
@@ -670,8 +670,8 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             if (ascertainedSitePatterns) {
                 // Need to correct for ascertainedSitePatterns
                 beagle.getSiteLogLikelihoods(patternLogLikelihoods);
-                logL = getAscertainmentCorrectedLogLikelihood((AscertainedAlignment) m_data.get(),
-                        patternLogLikelihoods, m_data.get().getWeights());
+                logL = getAscertainmentCorrectedLogLikelihood((AscertainedAlignment) dataInput.get(),
+                        patternLogLikelihoods, dataInput.get().getWeights());
             }
 
             if (Double.isNaN(logL) || Double.isInfinite(logL)) {
@@ -766,11 +766,11 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         }
 
         // First update the transition probability matrix(ices) for this branch
-        int update = (node.isDirty() | m_nHasDirt);
+        int update = (node.isDirty() | hasDirt);
 //        if (parent!=null) {
 //        	update |= parent.isDirty();
 //        }
-        final double branchRate = m_branchRateModel.getRateForBranch(node);
+        final double branchRate = branchRateModel.getRateForBranch(node);
         final double branchTime = node.getLength() * branchRate;
         if (!node.isRoot() && (update != Tree.IS_CLEAN || branchTime != m_branchLengths[nodeNum])) {
             m_branchLengths[nodeNum] = branchTime;

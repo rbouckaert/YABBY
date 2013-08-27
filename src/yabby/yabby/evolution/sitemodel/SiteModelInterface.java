@@ -105,7 +105,7 @@ public interface SiteModelInterface {
             	for (YABBYObject plugin : outputs) {
             		if (plugin instanceof TreeLikelihood) {
             			TreeLikelihood likelihood = (TreeLikelihood) plugin;
-            			m_dataType = likelihood.m_data.get().getDataType();
+            			m_dataType = likelihood.dataInput.get().getDataType();
             			break;
             		}
             	}

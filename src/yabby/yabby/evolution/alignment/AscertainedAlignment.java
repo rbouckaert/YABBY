@@ -9,9 +9,9 @@ import yabby.core.Input;
 
 @Description("Alignemnt that allows ascertainment correction")
 public class AscertainedAlignment extends Alignment {
-    public Input<Integer> m_excludefrom = new Input<Integer>("excludefrom", "first site to condition on, default 0", 0);
-    public Input<Integer> m_excludeto = new Input<Integer>("excludeto", "last site to condition on, default 0", 0);
-    public Input<Integer> m_excludeevery = new Input<Integer>("excludeevery", "interval between sites to condition on (default 1)", 1);
+    public Input<Integer> excludefromInput = new Input<Integer>("excludefrom", "first site to condition on, default 0", 0);
+    public Input<Integer> excludetoInput = new Input<Integer>("excludeto", "last site to condition on (but excluding this site), default 0", 0);
+    public Input<Integer> excludeeveryInput = new Input<Integer>("excludeevery", "interval between sites to condition on (default 1)", 1);
 
 // RRB: Note that all commented code is stuff to support inclusion-sites,
 // so don't delete them.
@@ -23,22 +23,22 @@ public class AscertainedAlignment extends Alignment {
      * indices of patterns that are excluded from the likelihood calculation
      * and used for ascertainment correction
      */
-    Set<Integer> m_nExcludedPatterns;
+    Set<Integer> excludedPatterns;
 //	List<Integer> m_nIncluded;
 
     @Override
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
-        int iFrom = m_excludefrom.get();
-        int iTo = m_excludeto.get();
-        int iEvery = m_excludeevery.get();
-        m_nExcludedPatterns = new HashSet<Integer>();
+        int iFrom = excludefromInput.get();
+        int iTo = excludetoInput.get();
+        int iEvery = excludeeveryInput.get();
+        excludedPatterns = new HashSet<Integer>();
         for (int i = iFrom; i < iTo; i += iEvery) {
             int iPattern = patternIndex[i];
             // reduce weight, so it does not confuse the tree likelihood
             patternWeight[iPattern] = 0;
-            m_nExcludedPatterns.add(iPattern);
+            excludedPatterns.add(iPattern);
         }
 
 //		iFrom = m_includefrom.get();
@@ -54,11 +54,11 @@ public class AscertainedAlignment extends Alignment {
     } // initAndValidate
 
     public Set<Integer> getExcludedPatternIndices() {
-        return m_nExcludedPatterns;
+        return excludedPatterns;
     }
 
     public int getExcludedPatternCount() {
-        return m_nExcludedPatterns.size();
+        return excludedPatterns.size();
     }
 
 //	public List<Integer> getIncludesIndices() {
@@ -72,7 +72,7 @@ public class AscertainedAlignment extends Alignment {
 //        	includeProb += Math.exp(patternLogProbs[m_nIncluded.get(i)]);
 //        }
 
-        for (int i : m_nExcludedPatterns) {
+        for (int i : excludedPatterns) {
             excludeProb += Math.exp(patternLogProbs[i]);
         }
 

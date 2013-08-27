@@ -162,6 +162,10 @@ public class YabbyMCMC extends Application implements HTTPRequestHandler {
         }
 		HTMLPrintStream.currentLevel = null;
 		
+		while (url.startsWith("/")) {
+			url = url.substring(1);
+		}
+		
 		if (url.startsWith("quitYabby")) {
 			System.err.println("Quiting now");
 			System.exit(0);

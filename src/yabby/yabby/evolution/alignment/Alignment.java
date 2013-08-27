@@ -38,9 +38,6 @@ import yabby.core.Input.Validate;
 import yabby.evolution.datatype.DataType;
 import yabby.util.AddOnManager;
 
-/* Class representing alignment data.
- * **/
-
 @Description("Class representing alignment data")
 public class Alignment extends CalculationNode {
     /**
@@ -56,7 +53,7 @@ public class Alignment extends CalculationNode {
     /**
      * list of data type descriptions, obtained from DataType classes *
      */
-    static List<String> m_sTypes = new ArrayList<String>();
+    static List<String> types = new ArrayList<String>();
 
     static {
     	findDataTypes();
@@ -70,8 +67,8 @@ public class Alignment extends CalculationNode {
                 DataType dataType = (DataType) Class.forName(sDataType).newInstance();
                 if (dataType.isStandard()) {
                     String sDescription = dataType.getDescription();
-                    if (!m_sTypes.contains(sDescription)) {
-                    	m_sTypes.add(sDescription);
+                    if (!types.contains(sDescription)) {
+                    	types.add(sDescription);
                     }
                 }
             } catch (Exception e) {
@@ -85,7 +82,7 @@ public class Alignment extends CalculationNode {
             new Input<List<Sequence>>("sequence", "sequence and meta data for particular taxon", new ArrayList<Sequence>(), Validate.REQUIRED);
     public Input<Integer> stateCountInput = new Input<Integer>("statecount", "maximum number of states in all sequences");
     //public Input<String> m_sDataType = new Input<String>("dataType", "data type, one of " + Arrays.toString(TYPES), NUCLEOTIDE, TYPES);
-    public Input<String> dataTypeInput = new Input<String>("dataType", "data type, one of " + m_sTypes, NUCLEOTIDE, m_sTypes.toArray(new String[0]));
+    public Input<String> dataTypeInput = new Input<String>("dataType", "data type, one of " + types, NUCLEOTIDE, types.toArray(new String[0]));
     public Input<DataType.Base> userDataTypeInput= new Input<DataType.Base>("userDataType", "non-standard, user specified data type, if specified 'dataType' is ignored");
     public Input<Boolean> stripInvariantSitesInput = new Input<Boolean>("strip", "sets weight to zero for sites that are invariant (e.g. all 1, all A or all unkown)", false);
 
@@ -159,9 +156,9 @@ public class Alignment extends CalculationNode {
         if (userDataTypeInput.get() != null) {
             m_dataType = userDataTypeInput.get();
         } else {
-            if (m_sTypes.indexOf(dataTypeInput.get()) < 0) {
+            if (types.indexOf(dataTypeInput.get()) < 0) {
                 throw new Exception("data type + '" + dataTypeInput.get() + "' cannot be found. " +
-                        "Choose one of " + Arrays.toString(m_sTypes.toArray(new String[0])));
+                        "Choose one of " + Arrays.toString(types.toArray(new String[0])));
             }
             List<String> sDataTypes = AddOnManager.find(yabby.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
             for (String sDataType : sDataTypes) {

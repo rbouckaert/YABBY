@@ -225,8 +225,8 @@ public class BeautiSubTemplate extends YABBYObject {
         if (this == doc.beautiConfig.partitionTemplate.get()) {
             // HACK: need to make sure the subst model is of the correct type
             YABBYObject treeLikelihood = doc.pluginmap.get("treeLikelihood." + context.partition);
-            if (treeLikelihood != null && ((GenericTreeLikelihood) treeLikelihood).m_pSiteModel.get() instanceof SiteModel.Base) {
-	            SiteModel.Base siteModel = (SiteModel.Base) ((GenericTreeLikelihood) treeLikelihood).m_pSiteModel.get();
+            if (treeLikelihood != null && ((GenericTreeLikelihood) treeLikelihood).siteModelInput.get() instanceof SiteModel.Base) {
+	            SiteModel.Base siteModel = (SiteModel.Base) ((GenericTreeLikelihood) treeLikelihood).siteModelInput.get();
 	            SubstitutionModel substModel = siteModel.m_pSubstModel.get();
 	            try {
 	                siteModel.canSetSubstModel(substModel);
@@ -245,7 +245,7 @@ public class BeautiSubTemplate extends YABBYObject {
             if (logger != null) {
 	            String fileName = logger.fileNameInput.get();
 	            if (fileName.startsWith("beast.") && treeLikelihood != null) {
-	            	Alignment data = ((GenericTreeLikelihood)treeLikelihood).m_data.get();
+	            	Alignment data = ((GenericTreeLikelihood)treeLikelihood).dataInput.get();
 	            	while (data instanceof FilteredAlignment) {
 	            		data = ((FilteredAlignment) data).alignmentInput.get();
 	            	}

@@ -65,7 +65,7 @@ public class RateStatistic extends YABBYObject implements Loggable, Function {
         tree = treeInput.get();
         branchRateModel = branchRateModelInput.get();
         if (branchRateModel == null) {
-            branchRateModel = likelihoodInput.get().m_pBranchRateModel.get();
+            branchRateModel = likelihoodInput.get().branchRateModelInput.get();
         }
         this.internal = internalInput.get();
         this.external = externalInput.get();

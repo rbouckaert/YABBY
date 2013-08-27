@@ -16,7 +16,7 @@ import yabby.core.util.Log;
 
 public class HTTPPostServer extends Thread {
 
-	static final String HTML_START = "<html>" + "<title>HTTP POST Server in java</title>" + "<body id='body'>";
+	static final String HTML_START = "<html>" + "<title>HTTP POST Server</title>" + "<body id='body'>";
 
 	static final String HTML_END = "</body>" + "</html>";
 

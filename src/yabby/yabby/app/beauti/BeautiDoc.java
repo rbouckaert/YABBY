@@ -872,7 +872,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 			CompoundDistribution likelihood = (CompoundDistribution) pluginmap.get("likelihood");
 			for (Distribution d : likelihood.pDistributions.get()) {
 				if (d instanceof GenericTreeLikelihood) {
-					Tree tree = ((GenericTreeLikelihood) d).m_tree.get();
+					Tree tree = ((GenericTreeLikelihood) d).treeInput.get();
 					try {
 						tree.m_trait.setValue(trait, tree);
 					} catch (Exception e) {
@@ -901,9 +901,9 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		while (clockModels.size() < sPartitionNames.size()) {
 			try {
 				GenericTreeLikelihood treelikelihood = new GenericTreeLikelihood();
-				treelikelihood.m_pBranchRateModel.setValue(new StrictClockModel(), treelikelihood);
+				treelikelihood.branchRateModelInput.setValue(new StrictClockModel(), treelikelihood);
 				List<BeautiSubTemplate> sAvailablePlugins = inputEditorFactory.getAvailableTemplates(
-						treelikelihood.m_pBranchRateModel, treelikelihood, null, this);
+						treelikelihood.branchRateModelInput, treelikelihood, null, this);
 				YABBYObject plugin = sAvailablePlugins.get(0).createSubNet(sPartitionNames.get(clockModels.size()), true);
 				clockModels.add((BranchRateModel.Base) plugin);
 			} catch (Exception e) {
@@ -913,7 +913,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		}
 		int k = 0;
 		for (Distribution d : likelihood.pDistributions.get()) {
-			BranchRateModel clockModel = ((GenericTreeLikelihood) d).m_pBranchRateModel.get();
+			BranchRateModel clockModel = ((GenericTreeLikelihood) d).branchRateModelInput.get();
 			// sanity check
 			Tree tree = null;
 			try {
@@ -923,10 +923,10 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 					}
 
 				}
-				if (tree != null && tree != ((GenericTreeLikelihood) d).m_tree.get()) {
+				if (tree != null && tree != ((GenericTreeLikelihood) d).treeInput.get()) {
 					clockModel = clockModels.get(k);
 					System.err.println("WARNING: unlinking clock model for " + d.getID());
-					((GenericTreeLikelihood) d).m_pBranchRateModel.setValue(clockModel, d);
+					((GenericTreeLikelihood) d).branchRateModelInput.setValue(clockModel, d);
 				}
 			} catch (Exception e) {
 				// ignore
@@ -1031,7 +1031,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
                 }
 			}
 			for (YABBYObject plugin : pPartition[2]) {
-				Tree tree = ((GenericTreeLikelihood) plugin).m_tree.get();
+				Tree tree = ((GenericTreeLikelihood) plugin).treeInput.get();
 				tree.m_bIsEstimated.setValue(true, tree);
             }
 			if (pluginmap.containsKey("Tree.t:Species")) {
@@ -1179,10 +1179,10 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 					GenericTreeLikelihood treeLikelihood = (GenericTreeLikelihood) distr;
 					boolean bNeedsEstimation = false;
 					if (i > 0) {
-						BranchRateModel.Base model = (BranchRateModel.Base) treeLikelihood.m_pBranchRateModel.get();
+						BranchRateModel.Base model = (BranchRateModel.Base) treeLikelihood.branchRateModelInput.get();
 						bNeedsEstimation = (model.meanRateInput.get() != firstClock) || firstClock.m_bIsEstimated.get();
 					} else {
-						Tree tree = treeLikelihood.m_tree.get();
+						Tree tree = treeLikelihood.treeInput.get();
 						// check whether there are tip dates
 						TraitSet trait = tree.m_trait.get();
 						if (trait != null) {
@@ -1198,7 +1198,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 							}
 						}
 					}
-					BranchRateModel.Base model = (BranchRateModel.Base) treeLikelihood.m_pBranchRateModel.get();
+					BranchRateModel.Base model = (BranchRateModel.Base) treeLikelihood.branchRateModelInput.get();
 					if (model != null) {
 						RealParameter clockRate = model.meanRateInput.get();
 						clockRate.m_bIsEstimated.setValue(bNeedsEstimation, clockRate);
@@ -1386,7 +1386,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		for (Distribution distr : likelihood.pDistributions.get()) {
 			if (distr instanceof GenericTreeLikelihood) {
 				GenericTreeLikelihood treeLikelihood = (GenericTreeLikelihood) distr;
-				alignments.add(treeLikelihood.m_data.get());				
+				alignments.add(treeLikelihood.dataInput.get());				
 				PartitionContext context = new PartitionContext(treeLikelihood);
 				sPartitionNames.add(context);
 				boolean found = false;
@@ -1411,7 +1411,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		for (Distribution distr : likelihood.pDistributions.get()) {
 			if (distr instanceof GenericTreeLikelihood) {
 				GenericTreeLikelihood treeLikelihood = (GenericTreeLikelihood) distr;
-				alignments.add(treeLikelihood.m_data.get());
+				alignments.add(treeLikelihood.dataInput.get());
 				treeLikelihoods.add(treeLikelihood);
 			}
 		}
@@ -1422,25 +1422,25 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 					// sync SiteModel, ClockModel and Tree to any changes that
 					// may have occurred
 					// this should only affect the clock model in practice
-					int nPartition = getPartitionNr((YABBYObject) treeLikelihood.m_pSiteModel.get());
+					int nPartition = getPartitionNr((YABBYObject) treeLikelihood.siteModelInput.get());
 					GenericTreeLikelihood treeLikelihood2 = treeLikelihoods.get(nPartition);
-					treeLikelihood.m_pSiteModel.setValue(treeLikelihood2.m_pSiteModel.get(), treeLikelihood);
+					treeLikelihood.siteModelInput.setValue(treeLikelihood2.siteModelInput.get(), treeLikelihood);
 					nCurrentPartitions[0].add(nPartition);
 
-					BranchRateModel rateModel = treeLikelihood.m_pBranchRateModel.get();
+					BranchRateModel rateModel = treeLikelihood.branchRateModelInput.get();
 					if (rateModel != null) {
 						nPartition = getPartitionNr((YABBYObject) rateModel);
 						treeLikelihood2 = treeLikelihoods.get(nPartition);
-						treeLikelihood.m_pBranchRateModel.setValue(treeLikelihood2.m_pBranchRateModel.get(),
+						treeLikelihood.branchRateModelInput.setValue(treeLikelihood2.branchRateModelInput.get(),
 								treeLikelihood);
 						nCurrentPartitions[1].add(nPartition);
 					} else {
 						nCurrentPartitions[1].add(0);
 					}
 
-					nPartition = getPartitionNr(treeLikelihood.m_tree.get());
+					nPartition = getPartitionNr(treeLikelihood.treeInput.get());
 					treeLikelihood2 = treeLikelihoods.get(nPartition);
-					treeLikelihood.m_tree.setValue(treeLikelihood2.m_tree.get(), treeLikelihood);
+					treeLikelihood.treeInput.setValue(treeLikelihood2.treeInput.get(), treeLikelihood);
 					nCurrentPartitions[2].add(nPartition);
 				} catch (Exception e) {
 					e.printStackTrace();
