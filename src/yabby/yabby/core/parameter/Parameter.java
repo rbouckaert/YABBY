@@ -436,7 +436,7 @@ public abstract class Parameter<T> extends StateNode implements Function {
         final T[] tmp = storedValues;
         storedValues = values;
         values = tmp;
-        m_bHasStartedEditing = false;
+        hasStartedEditing = false;
     	if (m_bIsDirty.length != values.length) {
     		m_bIsDirty = new boolean[values.length];
     	}

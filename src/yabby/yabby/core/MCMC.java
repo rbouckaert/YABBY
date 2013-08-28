@@ -239,8 +239,8 @@ public class MCMC extends Runnable {
         // StateNodes, e.g. set up bounds or dimensions
         state.initAndValidate();
         // also, initialise state with the file name to store and set-up whether to resume from file
-        state.setStateFileName(m_sStateFile);
-        operatorSchedule.setStateFileName(m_sStateFile);
+        state.setStateFileName(stateFileName);
+        operatorSchedule.setStateFileName(stateFileName);
 
         burnIn = burnInInput.get();
         chainLength = chainLengthInput.get();

@@ -1027,16 +1027,16 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 			for (YABBYObject plugin : pluginmap.values()) {
 				if (plugin instanceof Tree) {
 					Tree tree = (Tree) plugin;
-					tree.m_bIsEstimated.setValue(false, tree);
+					tree.isEstimatedInput.setValue(false, tree);
                 }
 			}
 			for (YABBYObject plugin : pPartition[2]) {
 				Tree tree = ((GenericTreeLikelihood) plugin).treeInput.get();
-				tree.m_bIsEstimated.setValue(true, tree);
+				tree.isEstimatedInput.setValue(true, tree);
             }
 			if (pluginmap.containsKey("Tree.t:Species")) {
 				Tree tree = (Tree) pluginmap.get("Tree.t:Species");
-				tree.m_bIsEstimated.setValue(true, tree);
+				tree.isEstimatedInput.setValue(true, tree);
 			}
 
 			// go through all templates, and process connectors in relevant ones
@@ -1052,7 +1052,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 						YABBYObject plugin = pluginmap.get(sID);
 						if (plugin instanceof MRCAPrior) {
 							MRCAPrior prior = (MRCAPrior) plugin;
-							if (prior.m_treeInput.get().m_bIsEstimated.get() == false) {
+							if (prior.m_treeInput.get().isEstimatedInput.get() == false) {
 								// disconnect
 								disconnect(plugin, "prior", "distribution");
 							} else {
@@ -1180,7 +1180,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 					boolean bNeedsEstimation = false;
 					if (i > 0) {
 						BranchRateModel.Base model = (BranchRateModel.Base) treeLikelihood.branchRateModelInput.get();
-						bNeedsEstimation = (model.meanRateInput.get() != firstClock) || firstClock.m_bIsEstimated.get();
+						bNeedsEstimation = (model.meanRateInput.get() != firstClock) || firstClock.isEstimatedInput.get();
 					} else {
 						Tree tree = treeLikelihood.treeInput.get();
 						// check whether there are tip dates
@@ -1201,7 +1201,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 					BranchRateModel.Base model = (BranchRateModel.Base) treeLikelihood.branchRateModelInput.get();
 					if (model != null) {
 						RealParameter clockRate = model.meanRateInput.get();
-						clockRate.m_bIsEstimated.setValue(bNeedsEstimation, clockRate);
+						clockRate.isEstimatedInput.setValue(bNeedsEstimation, clockRate);
 						if (firstClock == null) {
 							firstClock = clockRate;
 						}

@@ -15,23 +15,23 @@ import yabby.core.parameter.IntegerParameter;
 
 @Description("calculates sum of a valuable")
 public class Sum extends CalculationNode implements Function, Loggable {
-    public Input<Function> m_value = new Input<Function>("arg", "argument to be summed", Validate.REQUIRED);
+    public Input<Function> functionInput = new Input<Function>("arg", "argument to be summed", Validate.REQUIRED);
 
     enum Mode {integer_mode, double_mode}
 
-    Mode m_mode;
+    Mode mode;
 
-    boolean m_bRecompute = true;
-    double m_fSum = 0;
-    double m_fStoredSum = 0;
+    boolean needsRecompute = true;
+    double sum = 0;
+    double storedSum = 0;
 
     @Override
     public void initAndValidate() {
-        Function valuable = m_value.get();
+        Function valuable = functionInput.get();
         if (valuable instanceof IntegerParameter || valuable instanceof BooleanParameter) {
-            m_mode = Mode.integer_mode;
+            mode = Mode.integer_mode;
         } else {
-            m_mode = Mode.double_mode;
+            mode = Mode.double_mode;
         }
     }
 
@@ -42,22 +42,22 @@ public class Sum extends CalculationNode implements Function, Loggable {
 
     @Override
     public double getArrayValue() {
-        if (m_bRecompute) {
+        if (needsRecompute) {
             compute();
         }
-        return m_fSum;
+        return sum;
     }
 
     /**
      * do the actual work, and reset flag *
      */
     void compute() {
-        m_fSum = 0;
-        final Function v = m_value.get();
+        sum = 0;
+        final Function v = functionInput.get();
         for (int i = 0; i < v.getDimension(); i++) {
-            m_fSum += v.getArrayValue(i);
+            sum += v.getArrayValue(i);
         }
-        m_bRecompute = false;
+        needsRecompute = false;
     }
 
     @Override
@@ -73,19 +73,19 @@ public class Sum extends CalculationNode implements Function, Loggable {
      */
     @Override
     public void store() {
-        m_fStoredSum = m_fSum;
+        storedSum = sum;
         super.store();
     }
 
     @Override
     public void restore() {
-        m_fSum = m_fStoredSum;
+        sum = storedSum;
         super.restore();
     }
 
     @Override
     public boolean requiresRecalculation() {
-        m_bRecompute = true;
+        needsRecompute = true;
         return true;
     }
 
@@ -94,18 +94,18 @@ public class Sum extends CalculationNode implements Function, Loggable {
      */
     @Override
     public void init(PrintStream out) throws Exception {
-        out.print("sum(" + ((YABBYObject) m_value.get()).getID() + ")\t");
+        out.print("sum(" + ((YABBYObject) functionInput.get()).getID() + ")\t");
     }
 
     @Override
     public void log(int nSample, PrintStream out) {
-        Function valuable = m_value.get();
+        Function valuable = functionInput.get();
         final int nDimension = valuable.getDimension();
         double fSum = 0;
         for (int iValue = 0; iValue < nDimension; iValue++) {
             fSum += valuable.getArrayValue(iValue);
         }
-        if (m_mode == Mode.integer_mode) {
+        if (mode == Mode.integer_mode) {
             out.print((int) fSum + "\t");
         } else {
             out.print(fSum + "\t");

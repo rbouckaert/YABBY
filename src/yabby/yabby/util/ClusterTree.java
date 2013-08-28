@@ -91,7 +91,7 @@ public class ClusterTree extends Tree implements StateNodeInitialiser {
     public void initAndValidate() throws Exception {
 
         if (Boolean.valueOf(System.getProperty("beast.resume")) &&
-                (m_bIsEstimated.get() || (m_initial.get() != null && m_initial.get().m_bIsEstimated.get()))) {
+                (isEstimatedInput.get() || (m_initial.get() != null && m_initial.get().isEstimatedInput.get()))) {
             // don't bother creating a cluster tree to save some time, if it is read from file anyway
             // make a caterpillar
             List<String> sTaxa = m_pData.get().getTaxaNames();

@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import netscape.javascript.JSObject;
+
 import org.json.JSONObject;
 
 import beagle.BeagleFlag;
@@ -48,7 +50,7 @@ import yabby.util.XMLParserException;
  * main program for running MCMC analysis as well as other analysis 
  */
 
-public class YabbyMCMC extends Application implements HTTPRequestHandler {
+public class Yabby extends Application implements HTTPRequestHandler {
 	
 	public Input<String> debugInput = new  Input<String> ("debug", "set level of debug messages shown. One of " + Arrays.toString(Log.Level.values()), "info");  
 	public Input<Boolean> optionsInput = new  Input<Boolean> ("options", "Display an options dialog", false);  
@@ -103,8 +105,9 @@ public class YabbyMCMC extends Application implements HTTPRequestHandler {
      */
     Runnable m_runnable;
 
-    public YabbyMCMC() {
+    public Yabby() {
     	defaultInput = inputfileInput;
+    	_main = this;
     }
 
 	@Override
@@ -139,6 +142,19 @@ public class YabbyMCMC extends Application implements HTTPRequestHandler {
         Image image = new Image(url.toString());
         primaryStage.getIcons().add(image);
 	}
+	
+	
+//	Object result = null;
+//	public Object runScript(final String script) {
+//		result = null;
+//	    Platform.runLater(new java.lang.Runnable() {
+//	        @Override public void run() {
+//	        	result = (Object) webEngine.executeScript(script);
+//	          //Update UI here     
+//	        }
+//	      });
+//	    return result;
+//	}
 
 	@Override
 	public String handleRequest(String url, StringBuffer data) throws IOException {
@@ -421,13 +437,27 @@ public class YabbyMCMC extends Application implements HTTPRequestHandler {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) throws Exception {
+    public static Yabby _main;
+    
+	public static void main(final String[] args) throws Exception {
 		try {
-			YabbyMCMC main = new YabbyMCMC();
+			Yabby main = new Yabby();
 			main.parseArgs(args, false);
 			if (main.optionsInput.get()) {
 				port = HTTPPostServer.startServer(main);
+//				new Thread() {
+//					public void run() {
+//						try {
+//							Thread.sleep(1000);
+//							_main.runScript("$(\"#log\").append(\"Hello YABBY!\");");
+//						} catch (Throwable t) {
+//							t.printStackTrace();
+//						}
+//						
+//					};
+//				}.start();
 				launch(args);
+				
 			} else {
 				if (main.initialise()) {
 					main.run();

@@ -689,7 +689,7 @@ public class Tree extends StateNode {
         // necessary for sampled ancestor trees,
         leafNodeCount = root.getLeafNodeCount();
 
-        m_bHasStartedEditing = false;
+        hasStartedEditing = false;
     }
 
     public double getDate(double fHeight) {

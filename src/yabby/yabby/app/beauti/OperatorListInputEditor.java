@@ -150,7 +150,7 @@ public class OperatorListInputEditor extends ListInputEditor {
         sName += ": ";
         try {
             for (YABBYObject plugin2 : operator.listActivePlugins()) {
-                if (plugin2 instanceof StateNode && ((StateNode) plugin2).m_bIsEstimated.get()) {
+                if (plugin2 instanceof StateNode && ((StateNode) plugin2).isEstimatedInput.get()) {
                     sName += plugin2.getID() + " ";
                 }
             }

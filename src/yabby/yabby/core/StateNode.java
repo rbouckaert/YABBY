@@ -18,7 +18,7 @@ public abstract class StateNode extends YABBYObject implements Loggable, Cloneab
      * Flag to indicate the StateNode is not constant.
      * This is particularly useful for Beauti *
      */
-    public Input<Boolean> m_bIsEstimated = new Input<Boolean>("estimate", "whether to estimate this item or keep constant to its initial value", true);
+    public Input<Boolean> isEstimatedInput = new Input<Boolean>("estimate", "whether to estimate this item or keep constant to its initial value", true);
 
     /**
      * @return this StateNode if it is not in the State.
@@ -26,10 +26,10 @@ public abstract class StateNode extends YABBYObject implements Loggable, Cloneab
      *         (i.e. not the stored one).
      */
     public StateNode getCurrent() {
-        if (m_state == null) {
+        if (state == null) {
             return this;
         }
-        return m_state.getStateNode(index);
+        return state.getStateNode(index);
     }
 
     /**
@@ -52,11 +52,11 @@ public abstract class StateNode extends YABBYObject implements Loggable, Cloneab
      * *
      */
     public boolean somethingIsDirty() {
-        return this.m_bHasStartedEditing;
+        return this.hasStartedEditing;
     }
 
     public void setSomethingIsDirty(final boolean isDirty) {
-        this.m_bHasStartedEditing = isDirty;
+        this.hasStartedEditing = isDirty;
     }
 
     /**
@@ -164,10 +164,10 @@ public abstract class StateNode extends YABBYObject implements Loggable, Cloneab
     /**
      * Pointer to state, null if not part of a State.
      */
-    protected State m_state = null;
+    protected State state = null;
 
     public State getState() {
-        return m_state;
+        return state;
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class StateNode extends YABBYObject implements Loggable, Cloneab
      * For multidimensional parameters, there is an internal flag to indicate which
      * dimension is dirty
      */
-    protected boolean m_bHasStartedEditing = false;
+    protected boolean hasStartedEditing = false;
 
     /**
      * The index of the parameter for identifying this StateNode
@@ -194,13 +194,13 @@ public abstract class StateNode extends YABBYObject implements Loggable, Cloneab
      */
     public void startEditing(final Operator operator) {
     	assert (isCalledFromOperator(4));
-        if (m_bHasStartedEditing) {
+        if (hasStartedEditing) {
             // we are already editing
             return;
         }
-        m_bHasStartedEditing = true;
+        hasStartedEditing = true;
         // notify the state
-        m_state.getEditableStateNode(this.index, operator);
+        state.getEditableStateNode(this.index, operator);
         store();
     }
 

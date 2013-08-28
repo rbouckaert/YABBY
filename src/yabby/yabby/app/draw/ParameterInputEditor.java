@@ -139,12 +139,12 @@ public class ParameterInputEditor extends PluginInputEditor {
             
             paramBox.add(Box.createHorizontalGlue());
 
-            m_isEstimatedBox = new JCheckBox(doc.beautiConfig.getInputLabel(parameter, parameter.m_bIsEstimated.getName()));
+            m_isEstimatedBox = new JCheckBox(doc.beautiConfig.getInputLabel(parameter, parameter.isEstimatedInput.getName()));
             m_isEstimatedBox.setName(input.getName() + ".isEstimated");
             if (input.get() != null) {
-                m_isEstimatedBox.setSelected(parameter.m_bIsEstimated.get());
+                m_isEstimatedBox.setSelected(parameter.isEstimatedInput.get());
             }
-            m_isEstimatedBox.setToolTipText(parameter.m_bIsEstimated.getTipText());
+            m_isEstimatedBox.setToolTipText(parameter.isEstimatedInput.getTipText());
 
             boolean bIsClockRate = false;
             for (YABBYObject output : parameter.outputs) {
@@ -160,7 +160,7 @@ public class ParameterInputEditor extends PluginInputEditor {
                 public void actionPerformed(ActionEvent e) {
                     try {
                         RealParameter parameter = (RealParameter) m_input.get();
-                        parameter.m_bIsEstimated.setValue(m_isEstimatedBox.isSelected(), parameter);
+                        parameter.isEstimatedInput.setValue(m_isEstimatedBox.isSelected(), parameter);
                         if (isParametricDistributionParameter) {
                         	String sID = parameter.getID();
                         	
@@ -246,7 +246,7 @@ public class ParameterInputEditor extends PluginInputEditor {
     void refresh() {
         RealParameter parameter = (RealParameter) m_input.get();
         m_entry.setText(parameter.valuesInput.get());
-        m_isEstimatedBox.setSelected(parameter.m_bIsEstimated.get());
+        m_isEstimatedBox.setSelected(parameter.isEstimatedInput.get());
         repaint();
     }
 

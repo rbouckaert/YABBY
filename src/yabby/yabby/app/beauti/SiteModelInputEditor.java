@@ -127,7 +127,7 @@ public class SiteModelInputEditor extends PluginInputEditor {
 			public void validateInput() {
         		super.validateInput();
             	SiteModel sitemodel = (SiteModel) m_plugin; 
-                if (sitemodel.gammaCategoryCount.get() < 2 && ((RealParameter)sitemodel.shapeParameterInput.get()).m_bIsEstimated.get()) {
+                if (sitemodel.gammaCategoryCount.get() < 2 && ((RealParameter)sitemodel.shapeParameterInput.get()).isEstimatedInput.get()) {
                 	m_validateLabel.m_circleColor = Color.orange;
                 	m_validateLabel.setToolTipText("shape parameter is estimated, but not used");
                 	m_validateLabel.setVisible(true);
@@ -184,7 +184,7 @@ public class SiteModelInputEditor extends PluginInputEditor {
 			@Override
             public void validateInput() {
 				RealParameter p = (RealParameter) m_input.get();
-				if (p.m_bIsEstimated.get() && Double.parseDouble(p.valuesInput.get()) <= 0.0) {
+				if (p.isEstimatedInput.get() && Double.parseDouble(p.valuesInput.get()) <= 0.0) {
                     m_validateLabel.setVisible(true);
                     m_validateLabel.setToolTipText("<html><p>Proportion invariant should be non-zero when estimating</p></html>");
                     return;
@@ -221,7 +221,7 @@ public class SiteModelInputEditor extends PluginInputEditor {
 		    		SiteModel siteModel = (SiteModel) treelikelihood.siteModelInput.get();
 		    		RealParameter mutationRate = siteModel.muParameterInput.get();
 		    		//clockRate.m_bIsEstimated.setValue(true, clockRate);
-		    		if (mutationRate.m_bIsEstimated.get()) {
+		    		if (mutationRate.isEstimatedInput.get()) {
 		    			if (commonClockRate < 0) {
 		    				commonClockRate = Double.parseDouble(mutationRate.valuesInput.get());
 		    			} else {
@@ -237,7 +237,7 @@ public class SiteModelInputEditor extends PluginInputEditor {
 
 	    	IntegerParameter weightParameter = new IntegerParameter(weights);
 			weightParameter.setID("weightparameter");
-			weightParameter.m_bIsEstimated.setValue(false, weightParameter);
+			weightParameter.isEstimatedInput.setValue(false, weightParameter);
 	    	operator.input_parameterWeights.setValue(weightParameter, operator);
 		} catch (Exception e) {
 			
@@ -260,7 +260,7 @@ public class SiteModelInputEditor extends PluginInputEditor {
     		    		SiteModel siteModel = (SiteModel) treelikelihood.siteModelInput.get();
     		    		RealParameter mutationRate = siteModel.muParameterInput.get();
     		    		//clockRate.m_bIsEstimated.setValue(true, clockRate);
-    		    		if (mutationRate.m_bIsEstimated.get()) {
+    		    		if (mutationRate.isEstimatedInput.get()) {
     		    			if (commonClockRate < 0) {
     		    				commonClockRate = Double.parseDouble(mutationRate.valuesInput.get());
     		    			} else {

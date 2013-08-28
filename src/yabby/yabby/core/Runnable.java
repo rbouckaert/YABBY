@@ -1,8 +1,5 @@
 package yabby.core;
 
-import java.io.File;
-
-import yabby.core.Input.Validate;
 
 @Description("Entry point for running a Beast task, for instance an MCMC or other probabilistic " +
         "analysis, a simulation, etc.")
@@ -20,12 +17,12 @@ public abstract class Runnable extends YABBYObject {
      */
     public void setStateFile(final String sFileName, final boolean bRestoreFromFile) {
     	if (System.getProperty("state.file.name") != null) {
-    		m_sStateFile = System.getProperty("state.file.name");
+    		stateFileName = System.getProperty("state.file.name");
     	} else {
             if (System.getProperty("file.name.prefix") != null) {
-            	m_sStateFile = System.getProperty("file.name.prefix") + "/" + sFileName;
+            	stateFileName = System.getProperty("file.name.prefix") + "/" + sFileName;
             } else {
-            	m_sStateFile = sFileName;
+            	stateFileName = sFileName;
             }
     	}
         restoreFromFile = bRestoreFromFile;
@@ -39,5 +36,5 @@ public abstract class Runnable extends YABBYObject {
     /**
      * name of the file store the state in *
      */
-    protected String m_sStateFile = "state.backup.xml";
+    protected String stateFileName = "state.backup.xml";
 }

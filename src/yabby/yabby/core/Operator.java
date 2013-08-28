@@ -184,7 +184,7 @@ public abstract class Operator extends YABBYObject {
         for (YABBYObject o : listActivePlugins()) {
             if (o instanceof StateNode) {
                 StateNode stateNode = (StateNode) o;
-                if (stateNode.m_bIsEstimated.get()) {
+                if (stateNode.isEstimatedInput.get()) {
                     list.add(stateNode);
                 }
             }

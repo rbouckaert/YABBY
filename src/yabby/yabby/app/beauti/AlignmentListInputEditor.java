@@ -476,7 +476,7 @@ System.err.println("needsRePartition = " + needsRePartition);
 				}
 				if (tModels.size() == 1) {
 					// remove old tree from model
-					oldTree.m_bIsEstimated.setValue(false, this.likelihoods[iRow].treeInput.get());
+					oldTree.isEstimatedInput.setValue(false, this.likelihoods[iRow].treeInput.get());
 					for (YABBYObject plugin : oldTree.outputs.toArray(new YABBYObject[0])) {
 						for (Input<?> input : plugin.listInputs()) {
 							try {

@@ -11,7 +11,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import yabby.app.YabbyMCMC;
+import yabby.app.Yabby;
 import yabby.core.util.Log;
 
 public class HTTPPostServer extends Thread {
@@ -24,7 +24,7 @@ public class HTTPPostServer extends Thread {
 	BufferedReader inFromClient = null;
 	DataOutputStream outToClient = null;
 
-	HTTPRequestHandler handler = new YabbyMCMC();
+	HTTPRequestHandler handler = new Yabby();
 
 	public HTTPPostServer(Socket client) {
 		connectedClient = client;
@@ -253,6 +253,6 @@ public class HTTPPostServer extends Thread {
 	}
 	
 	public static void main(String args[]) throws Exception {
-		startServer(new YabbyMCMC());
+		startServer(new Yabby());
 	}
 }

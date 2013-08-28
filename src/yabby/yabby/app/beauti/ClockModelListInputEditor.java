@@ -124,7 +124,7 @@ public class ClockModelListInputEditor extends ListInputEditor {
 	    		BranchRateModel.Base clockModel = (BranchRateModel.Base) doc.clockModels.get(i);
 	    		RealParameter clockRate = clockModel.meanRateInput.get();
 	    		//clockRate.m_bIsEstimated.setValue(true, clockRate);
-	    		if (clockRate.m_bIsEstimated.get()) {
+	    		if (clockRate.isEstimatedInput.get()) {
 	    			if (commonClockRate < 0) {
 	    				commonClockRate = Double.parseDouble(clockRate.valuesInput.get());
 	    			} else {
@@ -150,7 +150,7 @@ public class ClockModelListInputEditor extends ListInputEditor {
 
 	    	IntegerParameter weightParameter = new IntegerParameter(weights);
 			weightParameter.setID("weightparameter");
-			weightParameter.m_bIsEstimated.setValue(false, weightParameter);
+			weightParameter.isEstimatedInput.setValue(false, weightParameter);
 	    	operator.input_parameterWeights.setValue(weightParameter, operator);
 	    	if (!bAllClocksAreEqual) {
 	    		fixMeanRatesValidateLabel.setVisible(true);
