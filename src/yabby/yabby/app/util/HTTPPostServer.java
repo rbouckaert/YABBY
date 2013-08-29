@@ -11,6 +11,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.swing.JFrame;
+
 import yabby.app.Yabby;
 import yabby.core.util.Log;
 
@@ -25,6 +27,10 @@ public class HTTPPostServer extends Thread {
 	DataOutputStream outToClient = null;
 
 	HTTPRequestHandler handler = new Yabby();
+	
+	public void setHandler(HTTPRequestHandler handler) {
+		this.handler = handler;
+	}
 
 	public HTTPPostServer(Socket client) {
 		connectedClient = client;
@@ -251,8 +257,9 @@ public class HTTPPostServer extends Thread {
 		Thread.sleep(500);
 		return port;
 	}
-	
+
 	public static void main(String args[]) throws Exception {
+		
 		startServer(new Yabby());
 	}
 }

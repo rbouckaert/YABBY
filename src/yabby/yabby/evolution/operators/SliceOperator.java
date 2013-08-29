@@ -29,7 +29,7 @@ public class SliceOperator extends Operator {
     double W;
 
     double windowSize = 1;
-    Distribution g;
+    Distribution sliceDensity;
 
     public void initAndValidate() {
         totalDelta = 0.0;
@@ -37,7 +37,7 @@ public class SliceOperator extends Operator {
         n_learning_iterations = 100;
         W = 0.0;
         windowSize = windowSizeInput.get();
-        g = sliceDensityInput.get();
+        sliceDensity = sliceDensityInput.get();
     }
 
     boolean in_range(RealParameter X, double x) {
@@ -53,7 +53,7 @@ public class SliceOperator extends Operator {
     }
 
     public Distribution getEvaluatorDistribution() {
-        return g;
+        return sliceDensity;
     }
 
     Double evaluate(Evaluator E) {

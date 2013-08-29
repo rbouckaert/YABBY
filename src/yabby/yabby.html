@@ -27,7 +27,7 @@ var myVar = null;
 function runYabby() {
 $("#log").append("<P>run</P>");
 
-	if ($('fileinput').val() == undefined) {
+	if ($('#inputfile').val() == undefined) {
 		$('#log').append("<span class='logLevelerror'>You need to specify a file to run</span>");
 		$('#inputfilelabel')[0].style.visibility = 'visible';
 		return;
@@ -242,8 +242,8 @@ function processkey(chCode, keydown) {
 <div class='head'>
 <a href='yabby.html'><img width='15%' src='yabby/app/draw/icons/yabby.png'/></a>
 YABBY</div>
-<div class='headp'>Yabby ain't beast but Yabby!</div>
-<div class='headp'>Version 2.0.4</div>
+<div class='headp'>Yabby Ain't Beast But Yet!</div>
+<div class='headp'>Version 2.0.3</div>
 
 
 <hr>
@@ -261,7 +261,7 @@ YABBY</div>
 -->
 <td>
 <input id='inputfile' type='text' oninput='checkInputFile()' size='30'></td><td>
-<input type='button' onclick='getInputFile();' value='Browse'>
+<input id='fileInputButton' type='button' onclick='getInputFile();' value='Browse'>
 <span id='inputfilelabel' style='color:red;font-weight:bold;visibility:hidden;'>*</span>
 <!--
 <input id='inputfile' name='file' type='file' /></td> </tr>

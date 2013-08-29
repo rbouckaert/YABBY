@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import netscape.javascript.JSObject;
@@ -253,33 +255,48 @@ public class Yabby extends Application implements HTTPRequestHandler {
     /**
      * open file dialog for prompting the user to specify an xml script file to process *
      */
+	CountDownLatch countDownLatch;
+	String result;
     String getFileNameByDialog() {
-        JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
-        fc.addChoosableFileFilter(new FileFilter() {
-            public boolean accept(File f) {
-                if (f.isDirectory()) {
-                    return true;
-                }
-                String name = f.getName().toLowerCase();
-                if (name.endsWith(".xml")) {
-                    return true;
-                }
-                return false;
-            }
+    	countDownLatch = new CountDownLatch(1);
+    	SwingUtilities.invokeLater(new java.lang.Runnable() {
+			
+			@Override
+			public void run() {
+		        JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
+		        fc.addChoosableFileFilter(new FileFilter() {
+		            public boolean accept(File f) {
+		                if (f.isDirectory()) {
+		                    return true;
+		                }
+		                String name = f.getName().toLowerCase();
+		                if (name.endsWith(".xml")) {
+		                    return true;
+		                }
+		                return false;
+		            }
 
-            // The description of this filter
-            public String getDescription() {
-                return "xml files";
-            }
-        });
+		            // The description of this filter
+		            public String getDescription() {
+		                return "xml files";
+		            }
+		        });
 
-        fc.setDialogTitle("Load xml file");
-        int rval = fc.showOpenDialog(null);
+		        fc.setDialogTitle("Load xml file");
+		        int rval = fc.showOpenDialog(null);
 
-        if (rval == JFileChooser.APPROVE_OPTION) {
-            return fc.getSelectedFile().toString();
-        }
-        return null;
+		        if (rval == JFileChooser.APPROVE_OPTION) {
+		        	result = fc.getSelectedFile().toString();
+		        	countDownLatch.countDown();
+		        	return;
+		        }
+		        result = null;
+	        	countDownLatch.countDown();
+			}
+		});
+
+    	try {countDownLatch.await();} catch (Throwable t) {}
+    	return result;
     } // getFileNameByDialog
 
 
