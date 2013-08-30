@@ -56,7 +56,7 @@ abstract public class SpeciesTreeDistribution extends TreeDistribution {
     public double calculateLogP() {
         // (Q2R): what if tree intervals?
         // (Q2R): always the same tree, no? so why pass in argument
-        final Tree tree = m_tree.get();
+        final Tree tree = treeInput.get();
         logP = calculateTreeLogLikelihood(tree);
         return logP;
     } // calculateLogP

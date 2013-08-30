@@ -65,10 +65,10 @@ public class BayesianSkyline extends TreeDistribution {
     // }
 
     public void initAndValidate() throws Exception {
-        if (m_tree.get() != null) {
+        if (treeInput.get() != null) {
             throw new Exception("only tree intervals (not tree) should not be specified");
         }
-        intervals = treeIntervals.get();
+        intervals = treeIntervalsInput.get();
         groupSizes = groupSizeParamInput.get();
         popSizes = popSizeParamInput.get();
 

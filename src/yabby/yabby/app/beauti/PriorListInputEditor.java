@@ -73,13 +73,13 @@ public class PriorListInputEditor extends ListInputEditor {
 					// first the tree priors
 					if (o1 instanceof TreeDistribution) {
 						if (o2 instanceof TreeDistribution) {
-							Tree tree1 = ((TreeDistribution)o1).m_tree.get();
+							Tree tree1 = ((TreeDistribution)o1).treeInput.get();
 							if (tree1 == null) {
-								tree1 = ((TreeDistribution)o1).treeIntervals.get().m_tree.get();
+								tree1 = ((TreeDistribution)o1).treeIntervalsInput.get().m_tree.get();
 							}
-							Tree tree2 = ((TreeDistribution)o2).m_tree.get();
+							Tree tree2 = ((TreeDistribution)o2).treeInput.get();
 							if (tree2 == null) {
-								tree2 = ((TreeDistribution)o2).treeIntervals.get().m_tree.get();
+								tree2 = ((TreeDistribution)o2).treeIntervalsInput.get().m_tree.get();
 							}
 							return sID1.compareTo(sID2);
 						} else {

@@ -15,13 +15,13 @@ public class TreeTopFinder extends CalculationNode {
 
     List<Tree> trees;
 
-    double fOldHeight;
-    double fHeight;
+    double oldHeight;
+    double height;
 
     public void initAndValidate() throws Exception {
-        fOldHeight = Double.NaN;
+        oldHeight = Double.NaN;
         trees = treeInputs.get();
-        fHeight = calcHighestTreeHeight();
+        height = calcHighestTreeHeight();
     }
 
     public double getHighestTreeHeight() {
@@ -39,8 +39,8 @@ public class TreeTopFinder extends CalculationNode {
     @Override
     protected boolean requiresRecalculation() {
         double fTop = calcHighestTreeHeight();
-        if (fTop != fHeight) {
-            fHeight = fTop;
+        if (fTop != height) {
+            height = fTop;
             return true;
         }
         return false;
@@ -48,13 +48,13 @@ public class TreeTopFinder extends CalculationNode {
 
     @Override
     protected void store() {
-        fOldHeight = fHeight;
+        oldHeight = height;
         super.store();
     }
 
     @Override
     protected void restore() {
-        fHeight = fOldHeight;
+        height = oldHeight;
         super.restore();
     }
 }

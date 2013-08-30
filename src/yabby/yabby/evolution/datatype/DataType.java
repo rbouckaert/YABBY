@@ -85,31 +85,31 @@ public interface DataType {
         /**
          * size of the state space *
          */
-        int m_nStateCount;
+        int stateCount;
 
         /**
          * maps string encoding to state codes *
          */
-        String m_sCodeMap;
+        String codeMap;
 
         public String getCodeMap() {
-            return m_sCodeMap;
+            return codeMap;
         }
 
         /**
          * length of the encoding, e.g. 1 for nucleotide, 3 for codons *
          */
-        int m_nCodeLength;
+        int codeLength;
 
         /**
          * mapping codes to sets of states *
          */
-        int[][] m_mapCodeToStateSet;
+        int[][] mapCodeToStateSet;
 
         @Override
         public void initAndValidate() throws Exception {
-            if (m_mapCodeToStateSet != null) {
-                if (m_mapCodeToStateSet.length != m_sCodeMap.length() / m_nCodeLength) {
+            if (mapCodeToStateSet != null) {
+                if (mapCodeToStateSet.length != codeMap.length() / codeLength) {
                     throw new Exception("m_sCodeMap and m_mapCodeToStateSet have incompatible lengths");
                 }
             }
@@ -117,23 +117,23 @@ public interface DataType {
 
         @Override
         public int getStateCount() {
-            return m_nStateCount;
+            return stateCount;
         }
 
         /**
          * implementation for single character per state encoding *
          */
         @Override
-        public List<Integer> string2state(String sData) throws Exception {
+        public List<Integer> string2state(String data) throws Exception {
             List<Integer> sequence;
             sequence = new ArrayList<Integer>();
             // remove spaces
-            sData = sData.replaceAll("\\s", "");
-            sData = sData.toUpperCase();
-            if (m_sCodeMap == null) {
-                if (sData.contains(",")) {
+            data = data.replaceAll("\\s", "");
+            data = data.toUpperCase();
+            if (codeMap == null) {
+                if (data.contains(",")) {
                     // assume it is a comma separated string of integers
-                    String[] sStrs = sData.split(",");
+                    String[] sStrs = data.split(",");
                     for (String sStr : sStrs) {
                     	try {
                     		sequence.add(Integer.parseInt(sStr));
@@ -143,7 +143,7 @@ public interface DataType {
                     }
                 } else {
                     // assume it is a string where each character is a state
-                    for (byte c : sData.getBytes()) {
+                    for (byte c : data.getBytes()) {
                     	switch (c) {
                     	case GAP_CHAR:
                     	case MISSING_CHAR:
@@ -155,49 +155,49 @@ public interface DataType {
                     }
                 }
             } else {
-                if (m_nCodeLength == 1) {
+                if (codeLength == 1) {
                     // single character codes
-                    for (int i = 0; i < sData.length(); i++) {
-                        char cCode = sData.charAt(i);
-                        int nState = m_sCodeMap.indexOf(cCode);
+                    for (int i = 0; i < data.length(); i++) {
+                        char cCode = data.charAt(i);
+                        int nState = codeMap.indexOf(cCode);
                         if (nState < 0) {
                             throw new Exception("Unknown code found in sequence: " + cCode);
                         }
                         sequence.add(nState);
                     }
-                } else if (m_nCodeLength > 1) {
+                } else if (codeLength > 1) {
                     // multi-character codes of fixed length
 
                     // use code map to resolve state codes
                     Map<String, Integer> map = new HashMap<String, Integer>();
                     // fixed length code
-                    for (int i = 0; i < m_sCodeMap.length(); i += m_nCodeLength) {
-                        String sCode = m_sCodeMap.substring(i, i + m_nCodeLength);
-                        map.put(sCode, i / m_nCodeLength);
+                    for (int i = 0; i < codeMap.length(); i += codeLength) {
+                        String code = codeMap.substring(i, i + codeLength);
+                        map.put(code, i / codeLength);
                     }
 
-                    for (int i = 0; i < sData.length(); i += m_nCodeLength) {
-                        String sCode = sData.substring(i, i + m_nCodeLength).toUpperCase();
-                        if (map.containsKey(sCode)) {
-                            sequence.add(map.get(sCode));
+                    for (int i = 0; i < data.length(); i += codeLength) {
+                        String code = data.substring(i, i + codeLength).toUpperCase();
+                        if (map.containsKey(code)) {
+                            sequence.add(map.get(code));
                         } else {
-                            throw new Exception("Unknown code found in sequence: " + sCode);
+                            throw new Exception("Unknown code found in sequence: " + code);
                         }
                     }
                 } else {
                     // variable length code of strings
-                    String[] sCodes = m_sCodeMap.toUpperCase().split(",");
-                    for (String sCode : sData.split(",")) {
-                        boolean bFound = false;
-                        for (int iCode = 0; iCode < sCodes.length - 1; iCode++) {
-                            if (sCode.equals(sCodes[iCode])) {
+                    String[] codes = codeMap.toUpperCase().split(",");
+                    for (String code : data.split(",")) {
+                        boolean isFound = false;
+                        for (int iCode = 0; iCode < codes.length - 1; iCode++) {
+                            if (code.equals(codes[iCode])) {
                                 sequence.add(iCode);
-                                bFound = true;
+                                isFound = true;
                                 break;
                             }
                         }
-                        if (!bFound) {
-                            throw new Exception("Could not find code " + sCode + " in codemap");
+                        if (!isFound) {
+                            throw new Exception("Could not find code " + code + " in codemap");
                         }
                     }
                 }
@@ -206,31 +206,31 @@ public interface DataType {
         } // string2state
 
         @Override
-        public String state2string(List<Integer> nStates) {
-            int[] nStates2 = new int[nStates.size()];
-            for (int i = 0; i < nStates2.length; i++) {
-                nStates2[i] = nStates.get(i);
+        public String state2string(List<Integer> nrOfStates) {
+            int[] nrOfStates2 = new int[nrOfStates.size()];
+            for (int i = 0; i < nrOfStates2.length; i++) {
+                nrOfStates2[i] = nrOfStates.get(i);
             }
-            return state2string(nStates2);
+            return state2string(nrOfStates2);
         }
 
         /**
          * implementation for single character per state encoding *
          */
         @Override
-        public String state2string(int[] nStates) {
+        public String state2string(int[] nrOfStates) {
             StringBuffer buf = new StringBuffer();
-            if (m_sCodeMap != null) {
-                for (int iState : nStates) {
-                    String sCode = m_sCodeMap.substring(iState * m_nCodeLength, iState * m_nCodeLength + m_nCodeLength);
+            if (codeMap != null) {
+                for (int iState : nrOfStates) {
+                    String sCode = codeMap.substring(iState * codeLength, iState * codeLength + codeLength);
                     buf.append(sCode);
                 }
             } else {
                 // produce a comma separated string of integers
-                for (int i = 0; i < nStates.length - 1; i++) {
-                    buf.append(nStates[i] + ",");
+                for (int i = 0; i < nrOfStates.length - 1; i++) {
+                    buf.append(nrOfStates[i] + ",");
                 }
-                buf.append(nStates[nStates.length - 1] + "");
+                buf.append(nrOfStates[nrOfStates.length - 1] + "");
             }
             return buf.toString();
         } // state2string
@@ -238,12 +238,12 @@ public interface DataType {
 
         @Override
         public int[] getStatesForCode(int iState) {
-            return m_mapCodeToStateSet[iState];
+            return mapCodeToStateSet[iState];
         }
 
         @Override
         public boolean[] getStateSet(int state) {
-            boolean[] stateSet = new boolean[m_nStateCount];
+            boolean[] stateSet = new boolean[stateCount];
             int[] stateNumbers = getStatesForCode(state);
             for (int i : stateNumbers) {
                 stateSet[i] = true;
@@ -253,7 +253,7 @@ public interface DataType {
 
         @Override
         public boolean isAmbiguousState(int state) {
-            return (state < 0 && state >= m_nStateCount);
+            return (state < 0 && state >= stateCount);
         }
 
         @Override

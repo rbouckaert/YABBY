@@ -61,10 +61,10 @@ public class TreeDistributionInputEditor extends InputEditor.Base {
 
 		TreeDistribution distr = (TreeDistribution) plugin;
 		String sText = ""/* plugin.getID() + ": " */;
-		if (distr.m_tree.get() != null) {
-			sText += distr.m_tree.get().getID();
+		if (distr.treeInput.get() != null) {
+			sText += distr.treeInput.get().getID();
 		} else {
-			sText += distr.treeIntervals.get().m_tree.get().getID();
+			sText += distr.treeIntervalsInput.get().m_tree.get().getID();
 		}
 		JLabel label = new JLabel(sText);
 		label.setMinimumSize(PriorListInputEditor.PREFERRED_SIZE);
@@ -135,9 +135,9 @@ public class TreeDistributionInputEditor extends InputEditor.Base {
 	@Override
 	public void validateInput() {
 		TreeDistribution distr = (TreeDistribution) m_plugin;
-	    Tree tree = distr.m_tree.get();
+	    Tree tree = distr.treeInput.get();
 	    if (tree == null) {
-	    	tree = distr.treeIntervals.get().m_tree.get();
+	    	tree = distr.treeIntervalsInput.get().m_tree.get();
 	    }
         if (tree.m_trait.get() != null) {
         	String traitName = tree.m_trait.get().m_sTraitName.get();

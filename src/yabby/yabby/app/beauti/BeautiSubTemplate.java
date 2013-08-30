@@ -227,13 +227,13 @@ public class BeautiSubTemplate extends YABBYObject {
             YABBYObject treeLikelihood = doc.pluginmap.get("treeLikelihood." + context.partition);
             if (treeLikelihood != null && ((GenericTreeLikelihood) treeLikelihood).siteModelInput.get() instanceof SiteModel.Base) {
 	            SiteModel.Base siteModel = (SiteModel.Base) ((GenericTreeLikelihood) treeLikelihood).siteModelInput.get();
-	            SubstitutionModel substModel = siteModel.m_pSubstModel.get();
+	            SubstitutionModel substModel = siteModel.substModelInput.get();
 	            try {
 	                siteModel.canSetSubstModel(substModel);
 	            } catch (Exception e) {
-	                Object o = doc.createInput(siteModel, siteModel.m_pSubstModel, context);
+	                Object o = doc.createInput(siteModel, siteModel.substModelInput, context);
 	                try {
-	                    siteModel.m_pSubstModel.setValue(o, siteModel);
+	                    siteModel.substModelInput.setValue(o, siteModel);
 	                } catch (Exception ex) {
 	                    ex.printStackTrace();
 	                }

@@ -35,7 +35,7 @@ public interface SiteModelInterface {
 
     @Description(value = "Base implementation of a site model with subtitution model and rate categories.", isInheritable = false)
     public abstract class Base extends CalculationNode implements SiteModelInterface {
-    	public Input<SubstitutionModel.Base> m_pSubstModel =
+    	public Input<SubstitutionModel.Base> substModelInput =
                 new Input<SubstitutionModel.Base>("substModel", "substitution model along branches in the beast.tree", null, Validate.REQUIRED);
 
     	/**
@@ -125,10 +125,10 @@ public interface SiteModelInterface {
          * a TreeLikelihood has to deal with the proportional invariant category
          * separately -- and potentially much more efficiently.
          */
-        public boolean m_bPropInvariantIsCategory = true;
+        public boolean hasPropInvariantCategory = true;
 
         public void setPropInvariantIsCategory(final boolean bPropInvariantIsCategory) {
-            m_bPropInvariantIsCategory = bPropInvariantIsCategory;
+            hasPropInvariantCategory = bPropInvariantIsCategory;
             refresh();
         }
 
@@ -144,7 +144,7 @@ public interface SiteModelInterface {
          * @return the substitution model
          */
         public SubstitutionModel getSubstitutionModel() {
-            return m_pSubstModel.get();
+            return substModelInput.get();
         }
 
 

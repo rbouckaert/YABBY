@@ -382,7 +382,7 @@ public class AlignmentListInputEditor extends ListInputEditor {
 			}
 			SiteModelInterface target = this.likelihoods[iRow].siteModelInput.get();
 			if (target instanceof SiteModel.Base && siteModel instanceof SiteModel.Base) {
-				if (!((SiteModel.Base)target).m_pSubstModel.canSetValue(((SiteModel.Base)siteModel).m_pSubstModel.get(), (SiteModel.Base) target)) {
+				if (!((SiteModel.Base)target).substModelInput.canSetValue(((SiteModel.Base)siteModel).substModelInput.get(), (SiteModel.Base) target)) {
 					throw new Exception("Cannot link site model: substitution models are incompatible");
 				}
 			} else {

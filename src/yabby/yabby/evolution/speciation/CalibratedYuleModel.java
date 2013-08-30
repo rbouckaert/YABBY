@@ -45,17 +45,17 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
     }
 
     // Q2R does this makes sense, or it has to be a realParameter??
-    public Input<RealParameter> birthRate =
+    public Input<RealParameter> birthRateInput =
             new Input<RealParameter>("birthRate", "birth rate of splitting a linage into two", Validate.REQUIRED);
 
-    public Input<List<CalibrationPoint>> calibrations =
+    public Input<List<CalibrationPoint>> calibrationsInput =
             new Input<List<CalibrationPoint>>("calibrations", "Set of calibrated nodes", new ArrayList<CalibrationPoint>());//,Input.Validate.REQUIRED);
 
-    public Input<Type> correctionType = new Input<Type>("type", "Type of correction (default all). However, 'all'" +
+    public Input<Type> correctionTypeInput = new Input<Type>("type", "Type of correction (default all). However, 'all'" +
             " is possible only in a few special cases (a single clade or two nested clades).",
             Type.OVER_ALL_TOPOS, Type.values());
 
-    public Input<RPNcalculator> userMar = new Input<RPNcalculator>("logMarginal",
+    public Input<RPNcalculator> userMarInput = new Input<RPNcalculator>("logMarginal",
             "Used provided correction (log of marginal) for special cases.", (RPNcalculator) null);
 
     // Which correction to apply
@@ -85,12 +85,12 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
-        type = correctionType.get();
+        type = correctionTypeInput.get();
 
-        final Tree tree = m_tree.get();
+        final Tree tree = treeInput.get();
 
         // shallow copy. we will be changing cals later
-        final List<CalibrationPoint> cals = new ArrayList<CalibrationPoint>(calibrations.get());
+        final List<CalibrationPoint> cals = new ArrayList<CalibrationPoint>(calibrationsInput.get());
         int nCals = cals.size();
         final List<TaxonSet> taxaSets = new ArrayList<TaxonSet>(nCals);
         if (cals.size() > 0) {
@@ -117,8 +117,8 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
                                 }
                                 // create CalibrationPoint from MRCAPrior
                                 CalibrationPoint cal = new CalibrationPoint();
-                                cal.m_distInput.setValue(_MRCAPrior.m_distInput.get(), cal);
-                                cal.m_taxonset.setValue(_MRCAPrior.m_taxonset.get(), cal);
+                                cal.distInput.setValue(_MRCAPrior.m_distInput.get(), cal);
+                                cal.taxonsetInput.setValue(_MRCAPrior.m_taxonset.get(), cal);
                                 cal.initAndValidate();
                                 cals.add(cal);
                                 taxaSets.add(cal.taxa());
@@ -223,7 +223,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
             }
         }
 
-        userPDF = userMar.get();
+        userPDF = userMarInput.get();
         if (userPDF == null) {
 
             if (type == Type.OVER_ALL_TOPOS) {
@@ -232,7 +232,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
                 } else {
                     boolean anyParent = false;
                     for (final CalibrationPoint c : orderedCalibrations) {
-                        if (c.m_forParent.get()) {
+                        if (c.forParentInput.get()) {
                             anyParent = true;
                         }
                     }
@@ -295,7 +295,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
             }
         }
 
-        final Tree tree = m_tree.get();
+        final Tree tree = treeInput.get();
         final int nNodes = tree.getLeafNodeCount();
         final boolean[] used = new boolean[nNodes];
 
@@ -366,7 +366,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
 
     @Override
     double calculateTreeLogLikelihood(final Tree tree) {
-        final double lam = birthRate.get().getArrayValue();
+        final double lam = birthRateInput.get().getArrayValue();
 
         double logL = calculateYuleLikelihood(tree, lam);
 
@@ -838,7 +838,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
     public void log(final int nSample, final PrintStream out) {
         out.print(getCurrentLogP() + "\t");
         if (calcCalibrations) {
-            final Tree tree = m_tree.get();
+            final Tree tree = treeInput.get();
             for (int k = 0; k < orderedCalibrations.length; ++k) {
                 final CalibrationPoint cal = orderedCalibrations[k];
                 Node c;
@@ -862,7 +862,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
 
     @Override
     protected boolean requiresRecalculation() {
-        return super.requiresRecalculation() || birthRate.get().somethingIsDirty();
+        return super.requiresRecalculation() || birthRateInput.get().somethingIsDirty();
     }
     
     @Override

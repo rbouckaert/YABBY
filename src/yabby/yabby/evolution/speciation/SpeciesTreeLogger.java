@@ -16,23 +16,23 @@ import yabby.evolution.tree.Tree;
 
 @Description("Logs tree annotated with metadata in starBeast format")
 public class SpeciesTreeLogger extends YABBYObject implements Loggable {
-    public Input<Tree> m_tree = new Input<Tree>("tree", "tree to be logged", Validate.REQUIRED);
-    public Input<Function> m_parameter = new Input<Function>("popSize", "population size parameter associated with tree nodes", Validate.REQUIRED);
-    public Input<Function> m_parameterTop = new Input<Function>("popSizeTop", "population size parameter associated with top of tree branches, only used for non-constant *beast analysis");
-    public Input<SpeciesTreePrior> speciesTreePrior = new Input<SpeciesTreePrior>("speciesTreePrior", "species tree prior, used to find which Population Size Function is used. If not specified, assumes 'constant'");
-    public Input<TreeTopFinder> treeTopFinder = new Input<TreeTopFinder>("treetop", "calculates height of species tree", Validate.REQUIRED);
+    public Input<Tree> treeInput = new Input<Tree>("tree", "tree to be logged", Validate.REQUIRED);
+    public Input<Function> parameterInput = new Input<Function>("popSize", "population size parameter associated with tree nodes", Validate.REQUIRED);
+    public Input<Function> parameterTopInput = new Input<Function>("popSizeTop", "population size parameter associated with top of tree branches, only used for non-constant *beast analysis");
+    public Input<SpeciesTreePrior> speciesTreePriorInput = new Input<SpeciesTreePrior>("speciesTreePrior", "species tree prior, used to find which Population Size Function is used. If not specified, assumes 'constant'");
+    public Input<TreeTopFinder> treeTopFinderInput = new Input<TreeTopFinder>("treetop", "calculates height of species tree", Validate.REQUIRED);
 
     PopSizeFunction popSizeFunction;
-    String m_sMetaDataLabel;
+    String metaDataLabel;
 
     static final String dmv = "dmv";
     static final String dmt = "dmt";
 
     @Override
     public void initAndValidate() {
-        m_sMetaDataLabel = "[&" + dmv + "=";
-        if (speciesTreePrior.get() != null) {
-            popSizeFunction = speciesTreePrior.get().m_popFunctionInput.get();
+        metaDataLabel = "[&" + dmv + "=";
+        if (speciesTreePriorInput.get() != null) {
+            popSizeFunction = speciesTreePriorInput.get().popFunctionInput.get();
         } else {
             popSizeFunction = PopSizeFunction.constant;
         }
@@ -40,18 +40,18 @@ public class SpeciesTreeLogger extends YABBYObject implements Loggable {
 
     @Override
     public void init(final PrintStream out) throws Exception {
-        m_tree.get().init(out);
+        treeInput.get().init(out);
     }
 
     @Override
     public void log(final int nSample, final PrintStream out) {
         // make sure we get the current version of the inputs
-        final Tree tree = (Tree) m_tree.get().getCurrent();
-        Function metadata = m_parameter.get();
+        final Tree tree = (Tree) treeInput.get().getCurrent();
+        Function metadata = parameterInput.get();
         if (metadata instanceof StateNode) {
             metadata = ((StateNode) metadata).getCurrent();
         }
-        Function metadataTop = m_parameterTop.get();
+        Function metadataTop = parameterTopInput.get();
         if (metadataTop != null && metadataTop instanceof StateNode) {
             metadataTop = ((StateNode) metadataTop).getCurrent();
         }
@@ -91,7 +91,7 @@ public class SpeciesTreeLogger extends YABBYObject implements Loggable {
                 buf.append(dmt + "=");
                 final double b;
                 if (node.isRoot()) {
-                    b = treeTopFinder.get().getHighestTreeHeight() - node.getHeight();
+                    b = treeTopFinderInput.get().getHighestTreeHeight() - node.getHeight();
                 } else {
                     b = node.getLength();
                 }
@@ -132,7 +132,7 @@ public class SpeciesTreeLogger extends YABBYObject implements Loggable {
 
     @Override
     public void close(final PrintStream out) {
-        m_tree.get().close(out);
+        treeInput.get().close(out);
     }
 
 }

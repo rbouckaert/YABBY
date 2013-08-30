@@ -4,7 +4,6 @@ import yabby.core.Citation;
 import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.parameter.IntegerParameter;
-import yabby.core.parameter.RealParameter;
 import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
 import yabby.math.distributions.ParametricDistribution;
@@ -30,7 +29,7 @@ public class DiscretizedBranchRates extends BranchRateModel.Base {
     private double normalizeBranchRateTo = Double.NaN;
     private double scaleFactor = 1.0;
     private Tree tree;
-    private double logDensityNormalizationConstant;
+    //private double logDensityNormalizationConstant;
 
 	boolean recompute = true;
 
@@ -62,7 +61,7 @@ public class DiscretizedBranchRates extends BranchRateModel.Base {
         this.normalize = normalizeInput.get();
 
         this.distributionModel = rateDistInput.get();
-        this.normalizeBranchRateTo = normalizeBranchRateTo;
+        //this.normalizeBranchRateTo = normalizeBranchRateTo;
 
         Integer [] rates = new Integer[rateCategories.getDimension()];
         for (int i = 0; i < rateCategories.getDimension(); i++) {
@@ -78,7 +77,7 @@ public class DiscretizedBranchRates extends BranchRateModel.Base {
 
         // Each parameter take any value in [1, \ldots, categoryCount]
         // NB But this depends on the transition kernel employed.  Using swap-only results in a different constant
-        logDensityNormalizationConstant = -rateCategories.getDimension() * Math.log(categoryCount);
+        //logDensityNormalizationConstant = -rateCategories.getDimension() * Math.log(categoryCount);
     }
 
     // compute scale factor

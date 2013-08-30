@@ -28,7 +28,7 @@ public class Coalescent extends TreeDistribution {
 
     @Override
     public void initAndValidate() throws Exception {
-        intervals = treeIntervals.get();
+        intervals = treeIntervalsInput.get();
         if (intervals == null) {
             throw new Exception("Expected treeIntervals to be specified");
         }
@@ -61,7 +61,7 @@ public class Coalescent extends TreeDistribution {
      * @return a list of unique ids for the state nodes that form the argument
      */
     public List<String> getArguments() {
-        return Collections.singletonList(treeIntervals.get().getID());
+        return Collections.singletonList(treeIntervalsInput.get().getID());
     }
 
     /**

@@ -93,7 +93,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         }
         m_siteModel = (SiteModel.Base) siteModelInput.get();
         m_siteModel.setDataType(dataInput.get().getDataType());
-        substitutionModel = m_siteModel.m_pSubstModel.get();
+        substitutionModel = m_siteModel.substModelInput.get();
         branchRateModel = branchRateModelInput.get();
         if (branchRateModel == null) {
         	branchRateModel = new StrictClockModel();

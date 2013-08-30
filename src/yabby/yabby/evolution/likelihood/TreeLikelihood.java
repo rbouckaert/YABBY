@@ -143,7 +143,7 @@ public class TreeLikelihood extends GenericTreeLikelihood {
         }
         m_siteModel = (SiteModel.Base) siteModelInput.get();
         m_siteModel.setDataType(dataInput.get().getDataType());
-        substitutionModel = (SubstitutionModel.Base) m_siteModel.m_pSubstModel.get();
+        substitutionModel = (SubstitutionModel.Base) m_siteModel.substModelInput.get();
 
         if (branchRateModelInput.get() != null) {
             branchRateModel = branchRateModelInput.get();

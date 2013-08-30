@@ -25,10 +25,10 @@ public class TipDatesRandomWalker extends TreeOperator {
     /**
      * node indices of taxa to choose from *
      */
-    int[] m_iTaxa;
+    int[] taxonIndices;
 
     double windowSize = 1;
-    boolean m_bUseGaussian;
+    boolean useGaussian;
 
     /**
      * whether to reflect random values from boundaries or absorb *
@@ -38,7 +38,7 @@ public class TipDatesRandomWalker extends TreeOperator {
     @Override
     public void initAndValidate() throws Exception {
         windowSize = windowSizeInput.get();
-        m_bUseGaussian = useGaussianInput.get();
+        useGaussian = useGaussianInput.get();
 
         // determine taxon set to choose from
         if (m_taxonsetInput.get() != null) {
@@ -49,19 +49,19 @@ public class TipDatesRandomWalker extends TreeOperator {
 
             List<String> set = m_taxonsetInput.get().asStringList();
             int nNrOfTaxa = set.size();
-            m_iTaxa = new int[nNrOfTaxa];
+            taxonIndices = new int[nNrOfTaxa];
             int k = 0;
             for (String sTaxon : set) {
                 int iTaxon = sTaxaNames.indexOf(sTaxon);
                 if (iTaxon < 0) {
                     throw new Exception("Cannot find taxon " + sTaxon + " in tree");
                 }
-                m_iTaxa[k++] = iTaxon;
+                taxonIndices[k++] = iTaxon;
             }
         } else {
-            m_iTaxa = new int[treeInput.get().getTaxaNames().length];
-            for (int i = 0; i < m_iTaxa.length; i++) {
-                m_iTaxa[i] = i;
+            taxonIndices = new int[treeInput.get().getTaxaNames().length];
+            for (int i = 0; i < taxonIndices.length; i++) {
+                taxonIndices[i] = i;
             }
         }
     }
@@ -69,12 +69,12 @@ public class TipDatesRandomWalker extends TreeOperator {
     @Override
     public double proposal() {
         // randomly select leaf node
-        int i = Randomizer.nextInt(m_iTaxa.length);
-        Node node = treeInput.get().getNode(m_iTaxa[i]);
+        int i = Randomizer.nextInt(taxonIndices.length);
+        Node node = treeInput.get().getNode(taxonIndices[i]);
 
         double value = node.getHeight();
         double newValue = value;
-        if (m_bUseGaussian) {
+        if (useGaussian) {
             newValue += Randomizer.nextGaussian() * windowSize;
         } else {
             newValue += Randomizer.nextDouble() * 2 * windowSize - windowSize;

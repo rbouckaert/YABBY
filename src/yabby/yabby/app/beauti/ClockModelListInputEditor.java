@@ -151,7 +151,7 @@ public class ClockModelListInputEditor extends ListInputEditor {
 	    	IntegerParameter weightParameter = new IntegerParameter(weights);
 			weightParameter.setID("weightparameter");
 			weightParameter.isEstimatedInput.setValue(false, weightParameter);
-	    	operator.input_parameterWeights.setValue(weightParameter, operator);
+	    	operator.parameterWeightsInput.setValue(weightParameter, operator);
 	    	if (!bAllClocksAreEqual) {
 	    		fixMeanRatesValidateLabel.setVisible(true);
 	    		fixMeanRatesValidateLabel.m_circleColor = Color.orange;

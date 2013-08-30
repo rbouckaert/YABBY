@@ -10,14 +10,14 @@ import yabby.util.Randomizer;
 		"then reconstructs the tree from node heights. " +
 		"Works on single trees (no gene trees required) and uses scaling to determine new node height.")
 public class NodeReheight2 extends TreeOperator {
-    public Input<Double> m_pScaleFactor = new Input<Double>("scaleFactor", "scaling factor: larger means more bold proposals", 1.0);
+    public Input<Double> scaleFactorInput = new Input<Double>("scaleFactor", "scaling factor: larger means more bold proposals", 1.0);
     /**  shadows input **/
-    double m_fScaleFactor;
+    double scaleFactor;
 	Node[] m_nodes;
 	
 	@Override
 	public void initAndValidate() throws Exception {
-        m_fScaleFactor = m_pScaleFactor.get();
+        scaleFactor = scaleFactorInput.get();
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class NodeReheight2 extends TreeOperator {
 			iNode = Randomizer.nextInt(fHeights.length);
 		}
 
-		double fScale =  (m_fScaleFactor + (Randomizer.nextDouble() * ((1.0 / m_fScaleFactor) - m_fScaleFactor)));
+		double fScale =  (scaleFactor + (Randomizer.nextDouble() * ((1.0 / scaleFactor) - scaleFactor)));
 		fHeights[iNode] *= fScale;
 
 		m_nodes[iReverseOrder[iNode]].setHeight(fHeights[iNode]);
@@ -153,8 +153,8 @@ public class NodeReheight2 extends TreeOperator {
     @Override
     public void optimize(double logAlpha) {
         double fDelta = calcDelta(logAlpha);
-        fDelta += Math.log(1.0 / m_fScaleFactor - 1.0);
-        m_fScaleFactor = 1.0 / (Math.exp(fDelta) + 1.0);
+        fDelta += Math.log(1.0 / scaleFactor - 1.0);
+        scaleFactor = 1.0 / (Math.exp(fDelta) + 1.0);
     }
 
 } // class NodeReheight

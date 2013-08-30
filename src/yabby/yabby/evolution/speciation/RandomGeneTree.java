@@ -15,7 +15,7 @@ import yabby.evolution.tree.coalescent.PopulationFunction;
         "that the root of the species tree is lower than any coalescent events in " +
         "the gene tree")
 public class RandomGeneTree extends RandomTree {
-    public Input<Tree> m_speciesTree = new Input<Tree>("speciesTree", "The species tree in which this random gene tree needs to fit", Validate.REQUIRED);
+    public Input<Tree> speciesTreeInput = new Input<Tree>("speciesTree", "The species tree in which this random gene tree needs to fit", Validate.REQUIRED);
 
     @Override
     public void initAndValidate() throws Exception {
@@ -34,7 +34,7 @@ public class RandomGeneTree extends RandomTree {
             throw new IllegalArgumentException("empty nodes set");
         }
 
-        double fLowestHeight = m_speciesTree.get().getRoot().getHeight();
+        double fLowestHeight = speciesTreeInput.get().getRoot().getHeight();
 
         for (int attempts = 0; attempts < 1000; ++attempts) {
             try {

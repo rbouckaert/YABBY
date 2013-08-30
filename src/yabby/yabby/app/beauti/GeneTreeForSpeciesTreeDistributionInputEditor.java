@@ -97,7 +97,7 @@ public class GeneTreeForSpeciesTreeDistributionInputEditor extends InputEditor.B
 			}
 			
 		};
-		editor.init(((GeneTreeForSpeciesTreeDistribution)m_plugin).m_ploidy, 
+		editor.init(((GeneTreeForSpeciesTreeDistribution)m_plugin).ploidyInput, 
 			m_plugin, -1, ExpandOption.FALSE, true);
 		return editor;
 	}

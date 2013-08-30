@@ -238,7 +238,7 @@ public class SiteModelInputEditor extends PluginInputEditor {
 	    	IntegerParameter weightParameter = new IntegerParameter(weights);
 			weightParameter.setID("weightparameter");
 			weightParameter.isEstimatedInput.setValue(false, weightParameter);
-	    	operator.input_parameterWeights.setValue(weightParameter, operator);
+	    	operator.parameterWeightsInput.setValue(weightParameter, operator);
 		} catch (Exception e) {
 			
 		}
