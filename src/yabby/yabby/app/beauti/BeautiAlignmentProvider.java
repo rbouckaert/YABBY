@@ -29,7 +29,7 @@ import yabby.util.NexusParser;
 import yabby.util.XMLParser;
 
 
-@Description("Class for createing new alignments to be edited by AlignmentListInputEditor")
+@Description("Class for creating new alignments to be edited by AlignmentListInputEditor")
 public class BeautiAlignmentProvider extends YABBYObject {
 	
 	public Input<BeautiSubTemplate> template = new Input<BeautiSubTemplate>("template", "template to be used after creating a new alignment. ", Validate.REQUIRED); 

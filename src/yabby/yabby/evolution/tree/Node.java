@@ -713,4 +713,12 @@ public class Node extends YABBYObject {
         n.setRight(right);
         return n;
     }
+
+    /** 
+     * is true if this leaf actually represents a direct ancestor (i.e. is on the end of a zero-length branch) 
+     */
+	public boolean isDirectAncestor() {
+		return (!isRoot() && this.getParent().getHeight() == this.getHeight());
+	}
+	
 } // class Node

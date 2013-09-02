@@ -26,6 +26,7 @@ package yabby.evolution.tree;
 
 
 
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +36,6 @@ import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.StateNode;
 import yabby.core.StateNodeInitialiser;
-import yabby.core.YABBYObject;
 import yabby.evolution.alignment.TaxonSet;
 import yabby.util.TreeParser;
 
@@ -756,4 +756,14 @@ public class Tree extends StateNode {
         return new Node();
     }
 
+    public int getDirectAncestorNodeCount() {
+		int directAncestorNodeCount = 0;
+		for (int i = 0; i < leafNodeCount; i++) {
+			if (this.getNode(i).isDirectAncestor()) {
+				directAncestorNodeCount += 1;
+			}
+		}
+		return directAncestorNodeCount;
+	}
+    
 } // class Tree
