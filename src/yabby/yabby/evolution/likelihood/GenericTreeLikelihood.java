@@ -1,5 +1,6 @@
 package yabby.evolution.likelihood;
 
+
 import java.util.List;
 import java.util.Random;
 
@@ -11,7 +12,6 @@ import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.branchratemodel.BranchRateModel;
 import yabby.evolution.sitemodel.SiteModelInterface;
-import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TreeInterface;
 
 

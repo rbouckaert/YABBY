@@ -3,17 +3,16 @@ package yabby.evolution.tree;
 import yabby.evolution.alignment.TaxonSet;
 
 public interface TreeInterface {
-	int getLeafNodeCount();
+    String getID();
+
+    int getLeafNodeCount();
 	int getInternalNodeCount();
 	int getNodeCount();
 
 	Node getRoot();
-    Node [] getNodesAsArray();
     Node getNode(int i);
-    
-    String getID();
+    Node [] getNodesAsArray();
 
-    //String [] getTaxaNames();
     TaxonSet getTaxonset();
     
 	boolean somethingIsDirty();

@@ -50,7 +50,6 @@ import yabby.evolution.branchratemodel.BranchRateModel;
 import yabby.evolution.likelihood.GenericTreeLikelihood;
 import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.sitemodel.SiteModelInterface;
-import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TreeInterface;
 
 
@@ -416,10 +415,10 @@ public class AlignmentListInputEditor extends ListInputEditor {
 			// make sure that *if* the clock model has a tree as input, it is
 			// the same as
 			// for the likelihood
-			Tree tree = null;
+			TreeInterface tree = null;
 			for (Input<?> input : ((YABBYObject) clockModel).listInputs()) {
 				if (input.getName().equals("tree")) {
-					tree = (Tree) input.get();
+					tree = (TreeInterface) input.get();
 				}
 
 			}
@@ -441,10 +440,10 @@ public class AlignmentListInputEditor extends ListInputEditor {
 											// iRow) {
 				tree = treeLikelihood.treeInput.get();
 			} else {
-				tree = (Tree) doc.pluginmap.get("Tree.t:" + sPartition);
+				tree = (TreeInterface) doc.pluginmap.get("Tree.t:" + sPartition);
 				if (tree != likelihoods[iRow].treeInput.get()) {
 					PartitionContext context = getPartitionContext(iRow);
-					tree = (Tree) BeautiDoc.deepCopyPlugin((YABBYObject) likelihoods[iRow].treeInput.get(), likelihoods[iRow],
+					tree = (TreeInterface) BeautiDoc.deepCopyPlugin((YABBYObject) likelihoods[iRow].treeInput.get(), likelihoods[iRow],
 							(MCMC) doc.mcmc.get(), context, doc, null);
 				}
 			}
@@ -479,7 +478,7 @@ System.err.println("needsRePartition = " + needsRePartition);
 				}
 				if (tModels.size() == 1) {
 					// remove old tree from model
-					((Tree)oldTree).isEstimatedInput.setValue(false, (Tree) this.likelihoods[iRow].treeInput.get());
+					((YABBYObject)oldTree).setInputValue("estimate", false);
 					for (YABBYObject plugin : ((YABBYObject) oldTree).outputs.toArray(new YABBYObject[0])) {
 						for (Input<?> input : plugin.listInputs()) {
 							try {
