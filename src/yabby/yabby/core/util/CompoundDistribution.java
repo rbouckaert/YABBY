@@ -25,6 +25,7 @@
 package yabby.core.util;
 
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +33,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
-import yabby.app.BeastMCMC;
+import yabby.app.Yabby;
 import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Distribution;
@@ -64,7 +65,7 @@ public class CompoundDistribution extends Distribution {
     @Override
     public void initAndValidate() throws Exception {
         super.initAndValidate();
-        useThreads = useThreadsInput.get() && (BeastMCMC.m_nThreads > 1);
+        useThreads = useThreadsInput.get() && (Yabby.m_nThreads > 1);
         ignore = ignoreInput.get();
 
         if (pDistributions.get().size() == 0) {
@@ -142,7 +143,7 @@ public class CompoundDistribution extends Distribution {
             for (Distribution dists : pDistributions.get()) {
                 if (dists.isDirtyCalculation()) {
                     CoreRunnable coreRunnable = new CoreRunnable(dists);
-                    BeastMCMC.g_exec.execute(coreRunnable);
+                    Yabby.g_exec.execute(coreRunnable);
                 }
             }
             m_nCountDown.await();
@@ -155,7 +156,7 @@ public class CompoundDistribution extends Distribution {
             useThreads = false;
             System.err.println("Stop using threads: " + e.getMessage());
             // refresh thread pool
-            BeastMCMC.g_exec = Executors.newFixedThreadPool(BeastMCMC.m_nThreads);
+            Yabby.g_exec = Executors.newFixedThreadPool(Yabby.m_nThreads);
             return calculateLogP();
         }
     }

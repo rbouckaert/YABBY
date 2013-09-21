@@ -93,11 +93,11 @@ public class Yabby extends Application implements HTTPRequestHandler {
     /**
      * number of threads used to run the likelihood beast.core *
      */
-    //static public int m_nThreads = 1;
+    static public int m_nThreads = 1;
     /**
      * thread pool *
      */
-    //public static ExecutorService g_exec = Executors.newFixedThreadPool(BeastMCMC.m_nThreads);
+    public static ExecutorService g_exec = Executors.newFixedThreadPool(m_nThreads);
     /**
      * random number seed used to initialise Randomizer *
      */
@@ -376,8 +376,8 @@ public class Yabby extends Application implements HTTPRequestHandler {
             resume = true;
         }
 
-        BeastMCMC.m_nThreads = threadsInput.get();
-        BeastMCMC.g_exec = Executors.newFixedThreadPool(BeastMCMC.m_nThreads);
+        m_nThreads = threadsInput.get();
+        g_exec = Executors.newFixedThreadPool(m_nThreads);
         
         // BEAGLE options
         long beagleFlags = 0;
@@ -426,7 +426,7 @@ public class Yabby extends Application implements HTTPRequestHandler {
         	return false;
         }
 
-        System.err.println("File: " + yabbyFile.getName() + " seed: " + m_nSeed + " threads: " + BeastMCMC.m_nThreads);
+        System.err.println("File: " + yabbyFile.getName() + " seed: " + m_nSeed + " threads: " + m_nThreads);
         if (resume) {
             System.out.println("Resuming from file");
         }
@@ -444,10 +444,10 @@ public class Yabby extends Application implements HTTPRequestHandler {
     } // init
 
     public void run() throws Exception {
-    	BeastMCMC.g_exec = Executors.newFixedThreadPool(BeastMCMC.m_nThreads);
+    	g_exec = Executors.newFixedThreadPool(m_nThreads);
         m_runnable.run();
-        BeastMCMC.g_exec.shutdown();
-        BeastMCMC.g_exec.shutdownNow();
+        g_exec.shutdown();
+        g_exec.shutdownNow();
     } // run	
 	
     
