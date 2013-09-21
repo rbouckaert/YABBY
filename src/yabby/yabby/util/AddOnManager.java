@@ -35,7 +35,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import yabby.app.BEASTVersion;
+import yabby.app.YABBYVersion;
 import yabby.app.util.Arguments;
 import yabby.app.util.Utils;
 import yabby.core.util.Log;
@@ -575,7 +575,7 @@ public class AddOnManager {
         }
 
         HashMap<String, Double> addonVersion = new HashMap<String, Double>();
-        BEASTVersion beastVersion = new BEASTVersion();
+        YABBYVersion beastVersion = new YABBYVersion();
         addonVersion.put("beast2", parseVersion(beastVersion.getVersion()));
         List<AddonDependency> dependencies = new ArrayList<AddonDependency>();
 

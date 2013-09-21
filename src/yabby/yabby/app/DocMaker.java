@@ -83,7 +83,7 @@ public class DocMaker {
 
     Set<String> m_sLoggables;
     
-    BEASTVersion version = new BEASTVersion();
+    YABBYVersion version = new YABBYVersion();
     
     public DocMaker(String[] args) {
         this();

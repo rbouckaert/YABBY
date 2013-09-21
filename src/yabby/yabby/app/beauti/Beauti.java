@@ -11,7 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import yabby.app.BEASTVersion;
+import yabby.app.YABBYVersion;
 import yabby.app.beauti.BeautiDoc.ActionOnExit;
 import yabby.app.beauti.BeautiDoc.DOC_STATUS;
 import yabby.app.draw.*;
@@ -568,7 +568,7 @@ public class Beauti extends JTabbedPane implements BeautiDocListener {
         } // c'tor
 
         public void actionPerformed(ActionEvent ae) {
-            BEASTVersion version = new BEASTVersion();
+            YABBYVersion version = new YABBYVersion();
             JOptionPane.showMessageDialog(null, version.getCredits(),
                     "About Beauti 2", JOptionPane.PLAIN_MESSAGE,
                     BeautiPanel.getIcon(BEAUTI_ICON));

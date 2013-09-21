@@ -26,7 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import yabby.app.BEASTVersion;
+import yabby.app.YABBYVersion;
 import yabby.app.util.Utils;
 import yabby.app.util.WholeNumberField;
 import yabby.evolution.tree.coalescent.CompoundPopulationFunction;
@@ -356,7 +356,7 @@ public class EBSPAnalyser {
      * @param args
      */
     public static void main(String[] args) {
-        BEASTVersion version = new BEASTVersion();
+        YABBYVersion version = new YABBYVersion();
         final String versionString = version.getVersionString();
         String nameString = "EBSP Analyser " + versionString;
         String aboutString = "<html><center><p>" + versionString + ", " + version.getDateString() + "</p>" +
