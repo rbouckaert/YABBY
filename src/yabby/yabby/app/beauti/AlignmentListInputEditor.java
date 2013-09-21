@@ -51,6 +51,7 @@ import yabby.evolution.likelihood.GenericTreeLikelihood;
 import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.sitemodel.SiteModelInterface;
 import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.TreeInterface;
 
 
 
@@ -434,7 +435,7 @@ public class AlignmentListInputEditor extends ListInputEditor {
 		}
 			break;
 		case TREE_COLUMN: {
-			Tree tree = null;
+			TreeInterface tree = null;
 			if (treeLikelihood != null) { // getDoc().getPartitionNr(sPartition,
 											// BeautiDoc.TREEMODEL_PARTITION) !=
 											// iRow) {
@@ -443,14 +444,14 @@ public class AlignmentListInputEditor extends ListInputEditor {
 				tree = (Tree) doc.pluginmap.get("Tree.t:" + sPartition);
 				if (tree != likelihoods[iRow].treeInput.get()) {
 					PartitionContext context = getPartitionContext(iRow);
-					tree = (Tree) BeautiDoc.deepCopyPlugin(likelihoods[iRow].treeInput.get(), likelihoods[iRow],
+					tree = (Tree) BeautiDoc.deepCopyPlugin((YABBYObject) likelihoods[iRow].treeInput.get(), likelihoods[iRow],
 							(MCMC) doc.mcmc.get(), context, doc, null);
 				}
 			}
 			// sanity check: make sure taxon sets are compatible
-			String[] taxa = tree.getTaxaNames();
+			List<String> taxa = tree.getTaxonset().asStringList();
 			List<String> taxa2 = this.likelihoods[iRow].dataInput.get().getTaxaNames();
-			if (taxa.length != taxa2.size()) {
+			if (taxa.size() != taxa2.size()) {
 				throw new Exception("Cannot link trees: incompatible taxon sets");
 			}
 			for (String taxon : taxa) {
@@ -469,8 +470,8 @@ public class AlignmentListInputEditor extends ListInputEditor {
 			needsRePartition = (this.likelihoods[iRow].treeInput.get() != tree);
 System.err.println("needsRePartition = " + needsRePartition);			
 			if (needsRePartition) {
-				Tree oldTree = this.likelihoods[iRow].treeInput.get();
-				List<Tree> tModels = new ArrayList<Tree>();
+				TreeInterface oldTree = this.likelihoods[iRow].treeInput.get();
+				List<TreeInterface> tModels = new ArrayList<TreeInterface>();
 				for (GenericTreeLikelihood likelihood : likelihoods) {
 					if (likelihood.treeInput.get() == oldTree) {
 						tModels.add(likelihood.treeInput.get());
@@ -478,8 +479,8 @@ System.err.println("needsRePartition = " + needsRePartition);
 				}
 				if (tModels.size() == 1) {
 					// remove old tree from model
-					oldTree.isEstimatedInput.setValue(false, this.likelihoods[iRow].treeInput.get());
-					for (YABBYObject plugin : oldTree.outputs.toArray(new YABBYObject[0])) {
+					((Tree)oldTree).isEstimatedInput.setValue(false, (Tree) this.likelihoods[iRow].treeInput.get());
+					for (YABBYObject plugin : ((YABBYObject) oldTree).outputs.toArray(new YABBYObject[0])) {
 						for (Input<?> input : plugin.listInputs()) {
 							try {
 							if (input.get() == oldTree && input.getRule() != Input.Validate.REQUIRED) {
@@ -1053,7 +1054,7 @@ System.err.println("needsRePartition = " + needsRePartition);
 			// check whether any of the models are linked
 			BranchRateModel.Base clockModel = likelihoods[iRow].branchRateModelInput.get();
 			SiteModelInterface siteModel = likelihoods[iRow].siteModelInput.get();
-			Tree tree = likelihoods[iRow].treeInput.get();
+			TreeInterface tree = likelihoods[iRow].treeInput.get();
 			List<GenericTreeLikelihood> cModels = new ArrayList<GenericTreeLikelihood>();
 			List<GenericTreeLikelihood> sModels = new ArrayList<GenericTreeLikelihood>();
 			List<GenericTreeLikelihood> tModels = new ArrayList<GenericTreeLikelihood>();
@@ -1096,7 +1097,7 @@ System.err.println("needsRePartition = " + needsRePartition);
 				
 				if (tModels.size() > 0) {
 					// tree is linked, so we need to unlink
-					if (doc.getPartitionNr(tree) != iRow) {
+					if (doc.getPartitionNr((YABBYObject) tree) != iRow) {
 						tableData[iRow][TREE_COLUMN] = getDoc().sPartitionNames.get(iRow).partition;
 					} else {
 						int iFreePartition = doc.getPartitionNr(tModels.get(0));

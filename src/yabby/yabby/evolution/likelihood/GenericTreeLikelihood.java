@@ -12,6 +12,7 @@ import yabby.evolution.alignment.Alignment;
 import yabby.evolution.branchratemodel.BranchRateModel;
 import yabby.evolution.sitemodel.SiteModelInterface;
 import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.TreeInterface;
 
 
 
@@ -27,7 +28,7 @@ public class GenericTreeLikelihood extends Distribution {
     
     public Input<Alignment> dataInput = new Input<Alignment>("data", "sequence data for the beast.tree", Validate.REQUIRED);
 
-    public Input<Tree> treeInput = new Input<Tree>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
+    public Input<TreeInterface> treeInput = new Input<TreeInterface>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
 
     public Input<SiteModelInterface> siteModelInput = new Input<SiteModelInterface>("siteModel", "site model for leafs in the beast.tree", Validate.REQUIRED);
     

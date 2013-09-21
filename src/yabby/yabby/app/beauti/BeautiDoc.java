@@ -57,6 +57,7 @@ import yabby.evolution.branchratemodel.StrictClockModel;
 import yabby.evolution.likelihood.GenericTreeLikelihood;
 import yabby.evolution.tree.TraitSet;
 import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.TreeInterface;
 import yabby.math.distributions.MRCAPrior;
 import yabby.util.JSONProducer;
 import yabby.util.NexusParser;
@@ -895,8 +896,9 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 			CompoundDistribution likelihood = (CompoundDistribution) pluginmap.get("likelihood");
 			for (Distribution d : likelihood.pDistributions.get()) {
 				if (d instanceof GenericTreeLikelihood) {
-					Tree tree = ((GenericTreeLikelihood) d).treeInput.get();
 					try {
+						// TODO: this might not be a valid type conversion from TreeInterface to Tree 
+						Tree tree = (Tree) ((GenericTreeLikelihood) d).treeInput.get();
 						tree.m_trait.setValue(trait, tree);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1054,7 +1056,8 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
                 }
 			}
 			for (YABBYObject plugin : pPartition[2]) {
-				Tree tree = ((GenericTreeLikelihood) plugin).treeInput.get();
+				// TODO: this might not be a valid type conversion from TreeInterface to Tree 
+				Tree tree = (Tree) ((GenericTreeLikelihood) plugin).treeInput.get();
 				tree.isEstimatedInput.setValue(true, tree);
             }
 			if (pluginmap.containsKey("Tree.t:Species")) {
@@ -1205,7 +1208,8 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 						BranchRateModel.Base model = (BranchRateModel.Base) treeLikelihood.branchRateModelInput.get();
 						bNeedsEstimation = (model.meanRateInput.get() != firstClock) || firstClock.isEstimatedInput.get();
 					} else {
-						Tree tree = treeLikelihood.treeInput.get();
+						// TODO: this might not be a valid type conversion from TreeInterface to Tree 
+						Tree tree = (Tree) treeLikelihood.treeInput.get();
 						// check whether there are tip dates
 						TraitSet trait = tree.m_trait.get();
 						if (trait != null) {
@@ -1461,7 +1465,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 						nCurrentPartitions[1].add(0);
 					}
 
-					nPartition = getPartitionNr(treeLikelihood.treeInput.get());
+					nPartition = getPartitionNr((YABBYObject) treeLikelihood.treeInput.get());
 					treeLikelihood2 = treeLikelihoods.get(nPartition);
 					treeLikelihood.treeInput.setValue(treeLikelihood2.treeInput.get(), treeLikelihood);
 					nCurrentPartitions[2].add(nPartition);

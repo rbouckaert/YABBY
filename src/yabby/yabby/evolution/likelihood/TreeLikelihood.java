@@ -43,6 +43,7 @@ import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.substitutionmodel.SubstitutionModel;
 import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.TreeInterface;
 
 
 
@@ -304,7 +305,7 @@ public class TreeLikelihood extends GenericTreeLikelihood {
             logP = beagle.calculateLogP();
             return logP;
         }
-        final Tree tree = treeInput.get();
+        final TreeInterface tree = treeInput.get();
 
         if (traverse(tree.getRoot()) != Tree.IS_CLEAN)
             calcLogP();

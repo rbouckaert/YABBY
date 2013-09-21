@@ -49,7 +49,7 @@ import yabby.util.TreeParser;
 
 @Description("Tree (the T in BEAST) representing gene beast.tree, species beast.tree, language history, or " +
         "other time-beast.tree relationships among sequence data.")
-public class Tree extends StateNode {
+public class Tree extends StateNode implements TreeInterface {
     public Input<Tree> m_initial = new Input<Tree>("initial", "tree to start with");
     public Input<TraitSet> m_trait = new Input<TraitSet>("trait", "trait information for initializing traits (like node dates) in the tree");
     public Input<TaxonSet> m_taxonset = new Input<TaxonSet>("taxonset", "set of taxa that correspond to the leafs in the tree");
@@ -767,5 +767,10 @@ public class Tree extends StateNode {
 		}
 		return directAncestorNodeCount;
 	}
-    
+   
+
+	@Override
+	public TaxonSet getTaxonset() {
+    	return m_taxonset.get();
+	}
 } // class Tree
