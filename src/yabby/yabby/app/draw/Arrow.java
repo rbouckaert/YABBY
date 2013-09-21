@@ -39,7 +39,7 @@ import org.w3c.dom.Node;
 public class Arrow extends Shape {
     String m_sHeadID;
     String m_sTailID;
-    public BEASTObjectShape m_tailShape;
+    public YABBYObjectShape m_tailShape;
     public InputShape m_headShape;
 //	String m_sPenStyle;
 
@@ -49,7 +49,7 @@ public class Arrow extends Shape {
     }
 
     /* c'tor for creating arrow when starting to draw new one **/
-    public Arrow(BEASTObjectShape tailShape, int x, int y) {
+    public Arrow(YABBYObjectShape tailShape, int x, int y) {
         m_sTailID = tailShape.getID();
         m_x = x;
         m_y = y;
@@ -60,7 +60,7 @@ public class Arrow extends Shape {
 
     /* c'tor for creating arrow with all fields set properly
       * Used when arrows are created by Document.recalcArrows */
-    public Arrow(BEASTObjectShape tailShape, BEASTObjectShape headShape, String sInputName) {
+    public Arrow(YABBYObjectShape tailShape, YABBYObjectShape headShape, String sInputName) {
 	        m_sTailID = tailShape.getID();
 	        m_tailShape = tailShape;
 	        InputShape input = headShape.getInputShape(sInputName);

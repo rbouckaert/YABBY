@@ -29,7 +29,7 @@ import yabby.math.distributions.Prior;
 
 
 
-public class ParameterInputEditor extends BEASTObjectInputEditor {
+public class ParameterInputEditor extends YABBYObjectInputEditor {
 	boolean isParametricDistributionParameter = false;
 	
     //public ParameterInputEditor() {}

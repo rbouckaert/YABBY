@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import yabby.app.draw.BEASTObjectPanel;
+import yabby.app.draw.YABBYObjectPanel;
 import yabby.app.draw.InputEditor;
 import yabby.core.YABBYObject;
 import yabby.core.Description;
@@ -112,7 +112,7 @@ public class BeautiPanelConfig extends YABBYObject {
         }
         inputs = new ArrayList<YABBYObject>();
         startInputs = new ArrayList<YABBYObject>();
-        BEASTObjectPanel.getID(this);
+        YABBYObjectPanel.getID(this);
     }
 
     /**

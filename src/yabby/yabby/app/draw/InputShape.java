@@ -55,13 +55,13 @@ public class InputShape extends Shape {
         //TODO: set inputName
     }
 
-    public BEASTObjectShape m_pluginShape = null;
+    public YABBYObjectShape m_pluginShape = null;
 
-    BEASTObjectShape getPluginShape() {
+    YABBYObjectShape getPluginShape() {
         return m_pluginShape;
     }
 
-    void setPluginShape(BEASTObjectShape function) {
+    void setPluginShape(YABBYObjectShape function) {
         m_pluginShape = function;
     }
 

@@ -26,7 +26,7 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import yabby.app.draw.BEASTObjectInputEditor;
+import yabby.app.draw.YABBYObjectInputEditor;
 import yabby.core.YABBYObject;
 import yabby.core.Input;
 import yabby.evolution.alignment.Taxon;
@@ -38,7 +38,7 @@ import yabby.evolution.tree.Tree;
 
 
 
-public class TipDatesInputEditor extends BEASTObjectInputEditor {
+public class TipDatesInputEditor extends YABBYObjectInputEditor {
 
 	public TipDatesInputEditor(BeautiDoc doc) {
 		super(doc);

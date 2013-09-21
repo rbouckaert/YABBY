@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 
 import org.apache.commons.math.MathException;
 
-import yabby.app.draw.BEASTObjectInputEditor;
+import yabby.app.draw.YABBYObjectInputEditor;
 import yabby.core.YABBYObject;
 import yabby.core.Input;
 import yabby.evolution.tree.TreeDistribution;
@@ -28,7 +28,7 @@ import yabby.math.distributions.ParametricDistribution;
 
 
 
-public class ParametricDistributionInputEditor extends BEASTObjectInputEditor {
+public class ParametricDistributionInputEditor extends YABBYObjectInputEditor {
 
     public ParametricDistributionInputEditor(BeautiDoc doc) {
 		super(doc);

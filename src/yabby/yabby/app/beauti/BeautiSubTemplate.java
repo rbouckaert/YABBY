@@ -10,7 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.xml.sax.InputSource;
 
-import yabby.app.draw.BEASTObjectPanel;
+import yabby.app.draw.YABBYObjectPanel;
 import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;

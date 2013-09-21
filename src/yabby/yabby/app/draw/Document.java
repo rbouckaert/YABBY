@@ -135,8 +135,8 @@ public class Document {
      */
     void adjustInputs() {
         for (Shape shape : m_objects) {
-            if (shape instanceof BEASTObjectShape) {
-                ((BEASTObjectShape) shape).adjustInputs();
+            if (shape instanceof YABBYObjectShape) {
+                ((YABBYObjectShape) shape).adjustInputs();
             }
         }
     }
@@ -256,7 +256,7 @@ public class Document {
         return sID;
     }
 
-    void setPluginID(BEASTObjectShape shape) {
+    void setPluginID(YABBYObjectShape shape) {
         if (shape.m_plugin.getID() != null && shape.m_plugin.getID().length() > 0) {
             return;
         }
@@ -285,15 +285,15 @@ public class Document {
             if (shape instanceof Arrow) {
                 ((Arrow) shape).setID(getNewID(null));
             }
-            if (shape instanceof BEASTObjectShape) {
-                setPluginID((BEASTObjectShape) shape);
+            if (shape instanceof YABBYObjectShape) {
+                setPluginID((YABBYObjectShape) shape);
             }
         }
         m_objects.add(shape);
-        if (shape instanceof BEASTObjectShape) {
+        if (shape instanceof YABBYObjectShape) {
             List<Integer> iObjects = new ArrayList<Integer>();
             iObjects.add(m_objects.size() - 1);
-            checkForOtherPluginShapes(iObjects, (BEASTObjectShape) shape);
+            checkForOtherPluginShapes(iObjects, (YABBYObjectShape) shape);
             if (iObjects.size() == 1) {
                 addUndoAction(new PluginAction(m_objects.size() - 1, UndoAction.ADD_PLUGIN_ACTION));
             } else {
@@ -304,14 +304,14 @@ public class Document {
         }
     } // addNewShape
 
-    void checkForOtherPluginShapes(List<Integer> iObjects, BEASTObjectShape shape) {
+    void checkForOtherPluginShapes(List<Integer> iObjects, YABBYObjectShape shape) {
         // check whether we need to create any input plugins
         try {
-            List<Input<?>> inputs = ((BEASTObjectShape) shape).m_plugin.listInputs();
+            List<Input<?>> inputs = ((YABBYObjectShape) shape).m_plugin.listInputs();
             for (Input<?> input : inputs) {
                 if (input.get() instanceof YABBYObject) {
                     YABBYObject plugin = (YABBYObject) input.get();
-                    BEASTObjectShape pluginShape = new BEASTObjectShape(plugin, this);
+                    YABBYObjectShape pluginShape = new YABBYObjectShape(plugin, this);
                     pluginShape.m_x = Math.max(shape.m_x - DX, 0);
                     pluginShape.m_y = shape.m_y;
                     pluginShape.m_w = 100;
@@ -319,7 +319,7 @@ public class Document {
                     setPluginID(pluginShape);
                     m_objects.add(pluginShape);
                     iObjects.add(m_objects.size() - 1);
-                    Arrow arrow = new Arrow(pluginShape, (BEASTObjectShape) shape, input.getName());
+                    Arrow arrow = new Arrow(pluginShape, (YABBYObjectShape) shape, input.getName());
                     m_objects.add(arrow);
                     iObjects.add(m_objects.size() - 1);
                     // recurse
@@ -403,8 +403,8 @@ public class Document {
             if (shape instanceof Arrow) {
                 ((Arrow) shape).setID(getNewID(tabulist));
             }
-            if (shape instanceof BEASTObjectShape) {
-                setPluginID((BEASTObjectShape) shape);
+            if (shape instanceof YABBYObjectShape) {
+                setPluginID((YABBYObjectShape) shape);
             }
         }
         tabulist.add(shape.getID());
@@ -420,9 +420,9 @@ public class Document {
             if (shape instanceof Arrow) {
                 ((Arrow) shape).setID(getNewID(null));
             }
-            if (shape instanceof BEASTObjectShape) {
-                ((BEASTObjectShape) shape).m_plugin.setID(null);
-                setPluginID((BEASTObjectShape) shape);
+            if (shape instanceof YABBYObjectShape) {
+                ((YABBYObjectShape) shape).m_plugin.setID(null);
+                setPluginID((YABBYObjectShape) shape);
                 // ensure the new shape does not overlap exactly with an existing shape
                 int nOffset = 0;
                 boolean bMatch = false;
@@ -487,7 +487,7 @@ public class Document {
         if (shape instanceof InputShape) {
             findInputs((InputShape) shape, selection);
         } else {
-            for (InputShape ellipse : ((BEASTObjectShape) shape).m_inputs) {
+            for (InputShape ellipse : ((YABBYObjectShape) shape).m_inputs) {
                 findInputs(ellipse, selection);
             }
         }
@@ -597,7 +597,7 @@ public class Document {
     public void setID(String sID, int iObject) {
         addUndoAction(new UndoAction(iObject, UndoAction.SET_LABEL_ACTION));
         Shape shape = (Shape) m_objects.get(iObject);
-        ((BEASTObjectShape) shape).m_plugin.setID(sID);
+        ((YABBYObjectShape) shape).m_plugin.setID(sID);
     }
 
     public void toggleFilled(int iObject) {
@@ -606,7 +606,7 @@ public class Document {
         shape.toggleFilled();
     }
 
-    void setInputValue(BEASTObjectShape pluginShape, String sInput, String sValue) throws Exception {
+    void setInputValue(YABBYObjectShape pluginShape, String sInput, String sValue) throws Exception {
         addUndoAction(new SetInputAction(pluginShape, sInput, sValue));
         //pluginShape.m_plugin.setInputValue(sInput, sValue);
     }
@@ -615,11 +615,11 @@ public class Document {
      * action representing assignment of value to a primitive input *
      */
     class SetInputAction extends UndoAction {
-        BEASTObjectShape m_pluginShape;
+        YABBYObjectShape m_pluginShape;
         String m_sInput;
         String m_sValue;
 
-        SetInputAction(BEASTObjectShape pluginShape, String sInput, String sValue) {
+        SetInputAction(YABBYObjectShape pluginShape, String sInput, String sValue) {
             m_pluginShape = pluginShape;
             m_sInput = sInput;
             m_sValue = sValue;
@@ -966,7 +966,7 @@ public class Document {
         /* single selection undo actions **/
 
         public UndoAction(int nSelection, int nActionType) {
-            if (!(m_objects.get(nSelection) instanceof BEASTObjectShape)) {
+            if (!(m_objects.get(nSelection) instanceof YABBYObjectShape)) {
                 return;
             }
             m_nActionType = nActionType;
@@ -980,7 +980,7 @@ public class Document {
             m_nActionType = nActionType;
             m_nPositions = new ArrayList<Integer>();
             for (int i = 0; i < selection.size(); i++) {
-                if (m_objects.get(selection.get(i)) instanceof BEASTObjectShape) {
+                if (m_objects.get(selection.get(i)) instanceof YABBYObjectShape) {
                     m_nPositions.add(new Integer(((Integer) selection.get(i)).intValue()));
                 }
             }
@@ -999,7 +999,7 @@ public class Document {
         boolean isSelection(List<Integer> nPositions) {
             int nMatches = 0;
             for (Integer i : nPositions) {
-                if (m_objects.get(i) instanceof BEASTObjectShape) {
+                if (m_objects.get(i) instanceof YABBYObjectShape) {
                     if (m_nPositions.contains(i)) {
                         nMatches++;
                     } else {
@@ -1041,7 +1041,7 @@ public class Document {
                 int iShape = ((Integer) m_nPositions.get(i)).intValue();
                 Shape originalShape = m_objects.get(iShape);
                 Shape shape = (Shape) shapes.get(i);
-                ((BEASTObjectShape) shape).m_plugin = ((BEASTObjectShape) originalShape).m_plugin;
+                ((YABBYObjectShape) shape).m_plugin = ((YABBYObjectShape) originalShape).m_plugin;
                 originalShape.assignFrom(shape);
             }
             m_sXML = sXML;
@@ -1057,7 +1057,7 @@ public class Document {
         public PluginAction(int nPosition, int nActionType) {
             // assumes pluginShape + all its inputs has just been added
             m_nActionType = nActionType;
-            BEASTObjectShape pluginShape = (BEASTObjectShape) m_objects.get(nPosition);
+            YABBYObjectShape pluginShape = (YABBYObjectShape) m_objects.get(nPosition);
             m_nPositions = new ArrayList<Integer>();
             m_nPositions.add(nPosition);
             nPosition--;
@@ -1206,7 +1206,7 @@ public class Document {
             List<Integer> iPluginsShapes = new ArrayList<Integer>();
             for (int i : nPositions) {
                 Shape shape = m_objects.get(i);
-                if (shape instanceof BEASTObjectShape) {
+                if (shape instanceof YABBYObjectShape) {
                     iPluginsShapes.add(i);
                 } else if (shape instanceof Arrow) {
                     iArrows.add(i);
@@ -1340,11 +1340,11 @@ public class Document {
     } // redo
 
 
-    BEASTObjectShape getPluginShapeWithLabel(String sLabel) {
+    YABBYObjectShape getPluginShapeWithLabel(String sLabel) {
         for (Shape shape : m_objects) {
-            if (shape instanceof BEASTObjectShape) {
+            if (shape instanceof YABBYObjectShape) {
                 if (shape.getLabel() != null && shape.getLabel().equals(sLabel)) {
-                    return (BEASTObjectShape) shape;
+                    return (YABBYObjectShape) shape;
                 }
             }
         }
@@ -1365,11 +1365,11 @@ public class Document {
     final static int DX = 120;
     final static int DY = 80;
 
-    void addInput(BEASTObjectShape shape, Object o2, int nDepth, String sInput) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    void addInput(YABBYObjectShape shape, Object o2, int nDepth, String sInput) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         if (o2 instanceof YABBYObject) {
-            BEASTObjectShape shape2 = getPluginShapeWithLabel(((YABBYObject) o2).getID());
+            YABBYObjectShape shape2 = getPluginShapeWithLabel(((YABBYObject) o2).getID());
             if (shape2 == null) {
-                shape2 = new BEASTObjectShape((YABBYObject) o2, this);
+                shape2 = new YABBYObjectShape((YABBYObject) o2, this);
                 shape2.m_x = nDepth * DX;
                 shape2.m_w = DY;
                 shape2.m_plugin = (YABBYObject) o2;
@@ -1380,7 +1380,7 @@ public class Document {
         }
     }
 
-    void process(BEASTObjectShape shape, int nDepth) throws IllegalArgumentException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    void process(YABBYObjectShape shape, int nDepth) throws IllegalArgumentException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         YABBYObject plugin = shape.m_plugin;
         List<Input<?>> sInputs = plugin.listInputs();
         for (Input<?> input_ : sInputs) {
@@ -1438,13 +1438,13 @@ public class Document {
 
     public void init(YABBYObject plugin0) {
         try {
-            if (plugin0 instanceof BEASTObjectSet) {
-                List<YABBYObject> set = ((BEASTObjectSet) plugin0).m_plugins.get();
+            if (plugin0 instanceof YABBYObjectSet) {
+                List<YABBYObject> set = ((YABBYObjectSet) plugin0).m_plugins.get();
                 if (set == null) {
                     return;
                 }
                 for (YABBYObject plugin : set) {
-                    BEASTObjectShape shape = new BEASTObjectShape(plugin, this);
+                    YABBYObjectShape shape = new YABBYObjectShape(plugin, this);
                     shape.m_plugin = plugin;
                     setPluginID(shape);
                     m_objects.add(shape);
@@ -1456,7 +1456,7 @@ public class Document {
                     shape.m_h = 50;
                 }
             } else {
-                BEASTObjectShape shape = new BEASTObjectShape(plugin0, this);
+                YABBYObjectShape shape = new YABBYObjectShape(plugin0, this);
                 shape.m_plugin = plugin0;
                 setPluginID(shape);
                 m_objects.add(shape);
@@ -1515,14 +1515,14 @@ public class Document {
         } else if (node.getNodeName().equals(ARROW_ELEMENT) && bReconstructPlugins) {
             shape = new Arrow(node, doc, bReconstructPlugins);
         } else if (node.getNodeName().equals(PLUGIN_SHAPE_ELEMENT)) {
-            shape = new BEASTObjectShape(node, doc, bReconstructPlugins);
+            shape = new YABBYObjectShape(node, doc, bReconstructPlugins);
         }
         return shape;
     } // parseNode
 
     public String toXML() {
         XMLProducer xmlProducer = new XMLProducer();
-        BEASTObjectSet pluginSet = calcPluginSet();
+        YABBYObjectSet pluginSet = calcPluginSet();
         if (pluginSet.m_plugins.get().size() == 1) {
             return xmlProducer.toXML(pluginSet.m_plugins.get().get(0));
         }
@@ -1533,13 +1533,13 @@ public class Document {
     /**
      * collect all objects and put all top-level plugins in a PluginSet
      */
-    BEASTObjectSet calcPluginSet() {
+    YABBYObjectSet calcPluginSet() {
         // collect all plug-ins
         Collection<YABBYObject> plugins = getPlugins();
         // calc outputs
-        HashMap<YABBYObject, List<YABBYObject>> outputs = BEASTObjectPanel.getOutputs(plugins);
+        HashMap<YABBYObject, List<YABBYObject>> outputs = YABBYObjectPanel.getOutputs(plugins);
         // put all plugins with no ouputs in the PluginSet
-        BEASTObjectSet pluginSet = new BEASTObjectSet();
+        YABBYObjectSet pluginSet = new YABBYObjectSet();
         for (YABBYObject plugin : outputs.keySet()) {
             if (outputs.get(plugin).size() == 0) {
                 try {
@@ -1558,8 +1558,8 @@ public class Document {
     Collection<YABBYObject> getPlugins() {
         Collection<YABBYObject> plugins = new HashSet<YABBYObject>();
         for (Shape shape : m_objects) {
-            if (shape instanceof BEASTObjectShape) {
-                plugins.add(((BEASTObjectShape) shape).m_plugin);
+            if (shape instanceof YABBYObjectShape) {
+                plugins.add(((YABBYObjectShape) shape).m_plugin);
             }
         }
         return plugins;
@@ -1570,7 +1570,7 @@ public class Document {
      */
     boolean isAscendant(YABBYObject source, YABBYObject target) {
         Collection<YABBYObject> plugins = getPlugins();
-        List<YABBYObject> ascendants = BEASTObjectPanel.listAscendants(target, plugins);
+        List<YABBYObject> ascendants = YABBYObjectPanel.listAscendants(target, plugins);
         return ascendants.contains(source);
     }
 
@@ -1596,19 +1596,19 @@ public class Document {
      */
     void layout() {
         // first construct input map for ease of navigation
-        HashMap<BEASTObjectShape, List<BEASTObjectShape>> inputMap = new HashMap<BEASTObjectShape, List<BEASTObjectShape>>();
-        HashMap<BEASTObjectShape, List<BEASTObjectShape>> outputMap = new HashMap<BEASTObjectShape, List<BEASTObjectShape>>();
+        HashMap<YABBYObjectShape, List<YABBYObjectShape>> inputMap = new HashMap<YABBYObjectShape, List<YABBYObjectShape>>();
+        HashMap<YABBYObjectShape, List<YABBYObjectShape>> outputMap = new HashMap<YABBYObjectShape, List<YABBYObjectShape>>();
         for (Shape shape : m_objects) {
-            if (shape instanceof BEASTObjectShape && shape.m_bNeedsDrawing) {
-                inputMap.put((BEASTObjectShape) shape, new ArrayList<BEASTObjectShape>());
-                outputMap.put((BEASTObjectShape) shape, new ArrayList<BEASTObjectShape>());
+            if (shape instanceof YABBYObjectShape && shape.m_bNeedsDrawing) {
+                inputMap.put((YABBYObjectShape) shape, new ArrayList<YABBYObjectShape>());
+                outputMap.put((YABBYObjectShape) shape, new ArrayList<YABBYObjectShape>());
             }
         }
         for (Shape shape : m_objects) {
             if (shape instanceof Arrow && shape.m_bNeedsDrawing) {
                 Shape headShape = ((Arrow) shape).m_headShape;
-                BEASTObjectShape pluginShape = ((InputShape) headShape).m_pluginShape;
-                BEASTObjectShape inputShape = ((Arrow) shape).m_tailShape;
+                YABBYObjectShape pluginShape = ((InputShape) headShape).m_pluginShape;
+                YABBYObjectShape inputShape = ((Arrow) shape).m_tailShape;
                 inputMap.get(pluginShape).add(inputShape);
                 outputMap.get(inputShape).add(pluginShape);
             }
@@ -1665,24 +1665,24 @@ public class Document {
      * Adjust y-coordinate of PluginShapes so they don't overlap
      * and are close to their inputs. Helper method for layout() *
      */
-    void layoutAdjustY(HashMap<BEASTObjectShape, List<BEASTObjectShape>> inputMap) {
+    void layoutAdjustY(HashMap<YABBYObjectShape, List<YABBYObjectShape>> inputMap) {
         // next, optimise top down order
         boolean bProgress = true;
         int iX = DX;
         while (bProgress) {
-            List<BEASTObjectShape> shapes = new ArrayList<BEASTObjectShape>();
+            List<YABBYObjectShape> shapes = new ArrayList<YABBYObjectShape>();
             // find shapes with same x-coordinate
-            for (BEASTObjectShape shape : inputMap.keySet()) {
+            for (YABBYObjectShape shape : inputMap.keySet()) {
                 if (shape.m_x == iX) {
                     shapes.add(shape);
                 }
             }
             int k = 1;
-            HashMap<Integer, BEASTObjectShape> ycoordMap = new HashMap<Integer, BEASTObjectShape>();
+            HashMap<Integer, YABBYObjectShape> ycoordMap = new HashMap<Integer, YABBYObjectShape>();
             // set y-coordinate as mean of inputs
             // if there are no inputs, order them top to bottom at DY intervals
-            for (BEASTObjectShape shape : shapes) {
-                List<BEASTObjectShape> inputs = inputMap.get(shape);
+            for (YABBYObjectShape shape : shapes) {
+                List<YABBYObjectShape> inputs = inputMap.get(shape);
                 if (inputs.size() == 0) {
                     shape.m_y = k * DY;
                 } else {
@@ -1705,7 +1705,7 @@ public class Document {
             Collections.sort(yCoords);
             int dY = 0;
             for (Integer i : yCoords) {
-                BEASTObjectShape shape = ycoordMap.get(i);
+                YABBYObjectShape shape = ycoordMap.get(i);
                 if (shape.m_y < nPrevY + DY) {
                     dY = nPrevY + DY - shape.m_y;
                     shape.m_y = nPrevY + DY;
@@ -1715,7 +1715,7 @@ public class Document {
             // upwards correction
             if (dY > 0) {
                 dY /= shapes.size();
-                for (BEASTObjectShape shape : shapes) {
+                for (YABBYObjectShape shape : shapes) {
                     shape.m_y -= dY;
                 }
             }
@@ -1809,12 +1809,12 @@ public class Document {
         }
         // Step 2: repulse (pairwise)
         for (Shape shape1 : objects) {
-            if (shape1 instanceof BEASTObjectShape) {
+            if (shape1 instanceof YABBYObjectShape) {
                 int p1x = shape1.m_x + shape1.m_w / 2;
                 int p1y = shape1.m_y + shape1.m_h / 2;
                 double dx = 0, dy = 0;
                 for (Shape shape2 : objects) {
-                    if (shape2 instanceof BEASTObjectShape) {
+                    if (shape2 instanceof YABBYObjectShape) {
                         int p2x = shape2.m_x + shape2.m_w / 2;
                         int p2y = shape2.m_y + shape2.m_h / 2;
                         double vx = p1x - p2x;
@@ -1837,8 +1837,8 @@ public class Document {
 
         // Step 3: move dependent objects in place
         for (Shape shape : objects) {
-            if (shape instanceof BEASTObjectShape) {
-                ((BEASTObjectShape) shape).adjustInputs();
+            if (shape instanceof YABBYObjectShape) {
+                ((YABBYObjectShape) shape).adjustInputs();
             }
         }
         adjustArrows();
@@ -1853,7 +1853,7 @@ public class Document {
             STATUS_EMPTY_MODEL = 3, STATUS_ORPHANS_IN_MODEL = 4;
 
     int isValidModel() {
-        BEASTObjectSet pluginSet = calcPluginSet();
+        YABBYObjectSet pluginSet = calcPluginSet();
         if (pluginSet.m_plugins.get().size() == 0) {
             return STATUS_EMPTY_MODEL;
         }
@@ -1884,24 +1884,24 @@ public class Document {
             }
         }
         // build map for quick resolution of PluginShapes
-        HashMap<YABBYObject, BEASTObjectShape> map = new HashMap<YABBYObject, BEASTObjectShape>();
+        HashMap<YABBYObject, YABBYObjectShape> map = new HashMap<YABBYObject, YABBYObjectShape>();
         for (Shape shape : m_objects) {
-            if (shape instanceof BEASTObjectShape) {
-                map.put(((BEASTObjectShape) shape).m_plugin, (BEASTObjectShape) shape);
+            if (shape instanceof YABBYObjectShape) {
+                map.put(((YABBYObjectShape) shape).m_plugin, (YABBYObjectShape) shape);
             }
         }
         // re-insert arrows, if any
         for (int i = m_objects.size() - 1; i >= 0; i--) {
             Shape shape = m_objects.get(i);
-            if (shape instanceof BEASTObjectShape) {
-                BEASTObjectShape headShape = ((BEASTObjectShape) shape);
+            if (shape instanceof YABBYObjectShape) {
+                YABBYObjectShape headShape = ((YABBYObjectShape) shape);
                 YABBYObject plugin = headShape.m_plugin;
                 try {
                     List<Input<?>> inputs = plugin.listInputs();
                     for (Input<?> input : inputs) {
                         if (input.get() != null) {
                             if (input.get() instanceof YABBYObject) {
-                                BEASTObjectShape tailShape = map.get((YABBYObject) input.get());
+                                YABBYObjectShape tailShape = map.get((YABBYObject) input.get());
                                 try {
 	                                Arrow arrow = new Arrow(tailShape, headShape, input.getName());
 	                                arrow.setID(getNewID(null));
@@ -1913,7 +1913,7 @@ public class Document {
                             if (input.get() instanceof List<?>) {
                                 for (Object o : (List<?>) input.get()) {
                                     if (o != null && o instanceof YABBYObject) {
-                                        BEASTObjectShape tailShape = map.get((YABBYObject) o);
+                                        YABBYObjectShape tailShape = map.get((YABBYObject) o);
                                         try {
 	                                        Arrow arrow = new Arrow(tailShape, headShape, input.getName());
 	                                        arrow.setID(getNewID(null));

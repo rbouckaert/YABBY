@@ -9,7 +9,7 @@ import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
-import yabby.app.draw.BEASTObjectInputEditor;
+import yabby.app.draw.YABBYObjectInputEditor;
 import yabby.core.YABBYObject;
 import yabby.core.Input;
 import yabby.core.parameter.RealParameter;
@@ -19,7 +19,7 @@ import yabby.evolution.substitutionmodel.Frequencies;
 
 
 
-public class FrequenciesInputEditor extends BEASTObjectInputEditor {
+public class FrequenciesInputEditor extends YABBYObjectInputEditor {
     RealParameter freqsParameter;
     Alignment alignment;
 

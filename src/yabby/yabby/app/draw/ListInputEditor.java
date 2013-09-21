@@ -268,7 +268,7 @@ public class ListInputEditor extends InputEditor.Base {
 
 
         } else {
-            if (BEASTObjectPanel.countInputs(plugin, doc) == 0) {
+            if (YABBYObjectPanel.countInputs(plugin, doc) == 0) {
                 editButton.setVisible(false);
             }
         }
@@ -346,7 +346,7 @@ public class ListInputEditor extends InputEditor.Base {
         void processEntry() {
             String sOldID = m_plugin.getID();
             m_plugin.setID(m_entry.getText());
-            BEASTObjectPanel.renamePluginID(m_plugin, sOldID, m_plugin.getID(), doc);
+            YABBYObjectPanel.renamePluginID(m_plugin, sOldID, m_plugin.getID(), doc);
             validateAllEditors();
             m_entry.requestFocusInWindow();
         }
@@ -380,7 +380,7 @@ public class ListInputEditor extends InputEditor.Base {
     protected Object editItem(Object o) {
         int i = ((List<?>) m_input.get()).indexOf(o);
         YABBYObject plugin = (YABBYObject) ((List<?>) m_input.get()).get(i);
-        BEASTObjectDialog dlg = new BEASTObjectDialog(plugin, m_input.getType(), doc);
+        YABBYbjectDialog dlg = new YABBYbjectDialog(plugin, m_input.getType(), doc);
         if (dlg.showDialog()) {
             //m_labels.get(i).setText(dlg.m_panel.m_plugin.getID());
             m_entries.get(i).setText(dlg.m_panel.m_plugin.getID());
@@ -388,8 +388,8 @@ public class ListInputEditor extends InputEditor.Base {
             dlg.accept((YABBYObject) o, doc);
             refreshPanel();
         }
-        BEASTObjectPanel.m_position.x -= 20;
-        BEASTObjectPanel.m_position.y -= 20;
+        YABBYObjectPanel.m_position.x -= 20;
+        YABBYObjectPanel.m_position.y -= 20;
         //checkValidation();
         validateAllEditors();
         updateState();
@@ -457,7 +457,7 @@ public class ListInputEditor extends InputEditor.Base {
         /* create new plugin */
         try {
             YABBYObject plugin = (YABBYObject) Class.forName(sClassName.substring(4)).newInstance();
-            BEASTObjectPanel.addPluginToMap(plugin, doc);
+            YABBYObjectPanel.addPluginToMap(plugin, doc);
             selectedPlugins.add(plugin);
             return selectedPlugins;
         } catch (Exception ex) {

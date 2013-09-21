@@ -193,7 +193,7 @@ System.err.println(inputEditor.getClass().getName() + " (CUSTOM EDITOR)");
         		inputClass2 = inputClass2.getSuperclass(); 
         	}
         	if (inputClass2 == null) {
-        		inputEditor = new BEASTObjectInputEditor(doc);
+        		inputEditor = new YABBYObjectInputEditor(doc);
         	} else {
 	            // handle Plugin-input with custom input editors
 	            String sInputEditor = inputEditorMap.get(inputClass2);
@@ -276,7 +276,7 @@ System.err.println(inputEditor.getClass().getName());
             sTabuList = new ArrayList<String>();
         }
         if (!doc.isExpertMode()) {
-            for (YABBYObject plugin : BEASTObjectPanel.listAscendants(parent, doc.pluginmap.values())) {
+            for (YABBYObject plugin : YABBYObjectPanel.listAscendants(parent, doc.pluginmap.values())) {
                 sTabuList.add(plugin.getID());
             }
         }

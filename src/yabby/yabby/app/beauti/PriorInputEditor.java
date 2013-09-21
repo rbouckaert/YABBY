@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-import yabby.app.draw.BEASTObjectDialog;
+import yabby.app.draw.YABBYbjectDialog;
 import yabby.app.draw.InputEditor;
 import yabby.core.YABBYObject;
 import yabby.core.Input;
@@ -98,7 +98,7 @@ public class PriorInputEditor extends InputEditor.Base {
                     List<?> list = (List<?>) m_input.get();
                     Prior prior = (Prior) list.get(itemNr);
                     RealParameter p = (RealParameter) prior.m_x.get();
-                    BEASTObjectDialog dlg = new BEASTObjectDialog(p, RealParameter.class, doc);
+                    YABBYbjectDialog dlg = new YABBYbjectDialog(p, RealParameter.class, doc);
                     if (dlg.showDialog()) {
                         dlg.accept(p, doc);
                         rangeButton.setText(paramToString(p));

@@ -18,7 +18,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-import yabby.app.draw.BEASTObjectPanel;
+import yabby.app.draw.YABBYObjectPanel;
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.ListInputEditor;
 import yabby.app.draw.SmallButton;
@@ -264,7 +264,7 @@ public class PriorListInputEditor extends ListInputEditor {
                 return null;
             }
             taxonSet = dlg.taxonSet;
-            BEASTObjectPanel.addPluginToMap(taxonSet, doc);
+            YABBYObjectPanel.addPluginToMap(taxonSet, doc);
             prior.taxonsetInput.setValue(taxonSet, prior);
             prior.setID(taxonSet.getID() + ".prior");
             // this sets up the type

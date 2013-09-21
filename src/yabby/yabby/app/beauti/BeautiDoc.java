@@ -37,7 +37,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import yabby.app.draw.BEASTObjectPanel;
+import yabby.app.draw.YABBYObjectPanel;
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.InputEditorFactory;
 import yabby.core.YABBYObject;
@@ -335,7 +335,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 	public void newAnalysis() {
 		try {
 			clear();
-			BEASTObjectPanel.init();
+			YABBYObjectPanel.init();
 			beautiConfig.clear();
 			String sXML = processTemplate(templateFileName);
 			loadTemplate(sXML);
@@ -768,7 +768,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		XMLParser parser = new XMLParser();
 		YABBYObject MCMC = parser.parseFragment(sXML, true);
 		mcmc.setValue(MCMC, this);
-		BEASTObjectPanel.addPluginToMap(MCMC, this);
+		YABBYObjectPanel.addPluginToMap(MCMC, this);
 
 		// reconstruct all objects from templates
 		try {
@@ -872,7 +872,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 	void loadTemplate(String sXML) throws Exception {
 		// load the template and its beauti configuration parts
 		XMLParser parser = new XMLParser();
-		BEASTObjectPanel.init();
+		YABBYObjectPanel.init();
 		List<YABBYObject> plugins = parser.parseTemplate(sXML, new HashMap<String, YABBYObject>(), true);
 		for (YABBYObject plugin : plugins) {
 			if (plugin instanceof yabby.core.Runnable) {
@@ -883,7 +883,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 			} else {
 				System.err.println("template item " + plugin.getID() + " is ignored");
 			}
-			BEASTObjectPanel.addPluginToMap(plugin, this);
+			YABBYObjectPanel.addPluginToMap(plugin, this);
 		}
 	}
 
@@ -1240,17 +1240,17 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		// @Override
 		// public void run() {
 		//
-		BEASTObjectPanel.addPluginToMap(plugin, this);
+		YABBYObjectPanel.addPluginToMap(plugin, this);
 		try {
 			for (Input<?> input : plugin.listInputs()) {
 				if (input.get() != null) {
 					if (input.get() instanceof YABBYObject) {
-						BEASTObjectPanel.addPluginToMap((YABBYObject) input.get(), this);
+						YABBYObjectPanel.addPluginToMap((YABBYObject) input.get(), this);
 					}
 					if (input.get() instanceof List<?>) {
 						for (Object o : (List<?>) input.get()) {
 							if (o instanceof YABBYObject) {
-								BEASTObjectPanel.addPluginToMap((YABBYObject) o, this);
+								YABBYObjectPanel.addPluginToMap((YABBYObject) o, this);
 							}
 						}
 					}

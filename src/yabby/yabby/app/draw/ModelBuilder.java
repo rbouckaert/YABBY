@@ -1292,13 +1292,13 @@ public class ModelBuilder extends JPanel implements ComponentListener {
             if (shape.m_bNeedsDrawing) {
                 shape.m_bNeedsDrawing = true;
             }
-            if (shape instanceof BEASTObjectShape) {
-                YABBYObject plugin = ((BEASTObjectShape) shape).m_plugin;
+            if (shape instanceof YABBYObjectShape) {
+                YABBYObject plugin = ((YABBYObjectShape) shape).m_plugin;
                 if (needsDrawing(plugin)) {
                     shape.m_bNeedsDrawing = true;
                 }
             } else if (shape instanceof InputShape) {
-                BEASTObjectShape pluginShape = ((InputShape) shape).m_pluginShape;
+                YABBYObjectShape pluginShape = ((InputShape) shape).m_pluginShape;
                 if (pluginShape != null) {
                     if (needsDrawing(pluginShape.m_plugin)) {
                         shape.m_bNeedsDrawing = true;
@@ -1309,13 +1309,13 @@ public class ModelBuilder extends JPanel implements ComponentListener {
             } else if (shape instanceof Arrow) {
                 Shape tail = ((Arrow) shape).m_tailShape;
                 boolean bNeedsDrawing = true;
-                if (tail instanceof BEASTObjectShape) {
-                    bNeedsDrawing = needsDrawing(((BEASTObjectShape) tail).m_plugin);
+                if (tail instanceof YABBYObjectShape) {
+                    bNeedsDrawing = needsDrawing(((YABBYObjectShape) tail).m_plugin);
                 }
                 if (bNeedsDrawing) {
                     Shape head = ((Arrow) shape).m_headShape;
                     if (head instanceof InputShape) {
-                        BEASTObjectShape pluginShape = ((InputShape) head).m_pluginShape;
+                        YABBYObjectShape pluginShape = ((InputShape) head).m_pluginShape;
                         if (pluginShape != null) {
                             bNeedsDrawing = needsDrawing(pluginShape.m_plugin);
                         }
@@ -1466,10 +1466,10 @@ public class ModelBuilder extends JPanel implements ComponentListener {
                         repaint();
                         break;
                     case MODE_FUNCTION:
-                        yabby.app.draw.BEASTObjectShape function = (yabby.app.draw.BEASTObjectShape) m_drawShape;
+                        yabby.app.draw.YABBYObjectShape function = (yabby.app.draw.YABBYObjectShape) m_drawShape;
 
                         if (m_drawShape == null) {
-                            function = new yabby.app.draw.BEASTObjectShape();
+                            function = new yabby.app.draw.YABBYObjectShape();
                             function.m_x = me.getX();
                             function.m_y = me.getY();
                             function.m_w = 1;
@@ -1506,7 +1506,7 @@ public class ModelBuilder extends JPanel implements ComponentListener {
                             if (shape instanceof InputShape) {
                                 shape = ((InputShape) shape).m_pluginShape;
                             }
-                            arrow = new Arrow((BEASTObjectShape) shape, me.getX(), me
+                            arrow = new Arrow((YABBYObjectShape) shape, me.getX(), me
                                     .getY());
                             arrow.m_w = 1;
                             arrow.m_h = 1;
@@ -1555,8 +1555,8 @@ public class ModelBuilder extends JPanel implements ComponentListener {
                     Shape shape = (Shape) m_doc.m_objects.get(i);
                     if (shape.m_bNeedsDrawing
                             && shape.intersects(me.getX(), me.getY())) {
-                        if (shape instanceof BEASTObjectShape) {
-                            BEASTObjectShape plugin = (BEASTObjectShape) shape;
+                        if (shape instanceof YABBYObjectShape) {
+                            YABBYObjectShape plugin = (YABBYObjectShape) shape;
                             try {
                                 String sToolTip = "<html>";
                                 for (InputShape input : plugin.m_inputs) {
@@ -1727,25 +1727,25 @@ public class ModelBuilder extends JPanel implements ComponentListener {
                 propertiesItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         Shape shape = m_Selection.getSingleSelectionShape();
-                        if (shape instanceof BEASTObjectShape) {
-                            YABBYObject plugin = ((BEASTObjectShape) shape).m_plugin;
+                        if (shape instanceof YABBYObjectShape) {
+                            YABBYObject plugin = ((YABBYObjectShape) shape).m_plugin;
 
                             List<YABBYObject> plugins = new ArrayList<YABBYObject>();
                             for (Shape shape2 : m_doc.m_objects) {
-                                if (shape2 instanceof BEASTObjectShape) {
-                                    plugins.add(((BEASTObjectShape) shape2).m_plugin);
+                                if (shape2 instanceof YABBYObjectShape) {
+                                    plugins.add(((YABBYObjectShape) shape2).m_plugin);
                                 }
                             }
-                            BEASTObjectDialog dlg = new BEASTObjectDialog(plugin, plugin.getClass(), plugins, null);
+                            YABBYbjectDialog dlg = new YABBYbjectDialog(plugin, plugin.getClass(), plugins, null);
                             if (dlg.showDialog()) {
                                 // add newly created Plug-ins
                                 int nNewShapes = 0;
-                                if (plugins.size() < BEASTObjectPanel.g_plugins.size()) {
-                                    for (YABBYObject plugin2 : BEASTObjectPanel.g_plugins.values()) {
+                                if (plugins.size() < YABBYObjectPanel.g_plugins.size()) {
+                                    for (YABBYObject plugin2 : YABBYObjectPanel.g_plugins.values()) {
                                         if (!plugins.contains(plugin2)) {
                                             try {
                                                 nNewShapes++;
-                                                Shape shape2 = new BEASTObjectShape(plugin2, m_doc);
+                                                Shape shape2 = new YABBYObjectShape(plugin2, m_doc);
                                                 shape2.m_x = 10;
                                                 shape2.m_y = nNewShapes * 50;
                                                 shape2.m_w = 80;
@@ -1773,7 +1773,7 @@ public class ModelBuilder extends JPanel implements ComponentListener {
                 saveAsItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         Shape shape = m_Selection.getSingleSelectionShape();
-                        YABBYObject plugin = ((BEASTObjectShape) shape).m_plugin;
+                        YABBYObject plugin = ((YABBYObjectShape) shape).m_plugin;
                         JFileChooser fc = new JFileChooser(m_sDir);
                         fc.addChoosableFileFilter(ef1);
                         fc.setDialogTitle("Save Plugin As");
@@ -1851,7 +1851,7 @@ public class ModelBuilder extends JPanel implements ComponentListener {
                         updateStatus();
                         return;
                     case MODE_FUNCTION:
-                        BEASTObjectShape function = (BEASTObjectShape) m_drawShape;
+                        YABBYObjectShape function = (YABBYObjectShape) m_drawShape;
                         if (function == null) {
                             return;
                         }
