@@ -9,15 +9,17 @@ import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
-import yabby.app.draw.PluginInputEditor;
-import yabby.core.Input;
+import yabby.app.draw.BEASTObjectInputEditor;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.core.parameter.RealParameter;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.substitutionmodel.Frequencies;
 
 
-public class FrequenciesInputEditor extends PluginInputEditor {
+
+
+public class FrequenciesInputEditor extends BEASTObjectInputEditor {
     RealParameter freqsParameter;
     Alignment alignment;
 
@@ -46,18 +48,18 @@ public class FrequenciesInputEditor extends PluginInputEditor {
         Frequencies freqs = (Frequencies) input.get();
 
         JComboBox comboBox = new JComboBox(new String[]{"Estimated", "Empirical", "All equal"});
-        if (freqs.frequencies.get() != null) {
+        if (freqs.frequenciesInput.get() != null) {
             comboBox.setSelectedIndex(0);
-            freqsParameter = freqs.frequencies.get();
-            alignment = (Alignment) getCandidate(freqs.m_data, freqs);
-        } else if (freqs.m_bEstimate.get()) {
+            freqsParameter = freqs.frequenciesInput.get();
+            alignment = (Alignment) getCandidate(freqs.dataInput, freqs);
+        } else if (freqs.estimateInput.get()) {
             comboBox.setSelectedIndex(1);
-            alignment = freqs.m_data.get();
-            freqsParameter = (RealParameter) getCandidate(freqs.frequencies, freqs);
+            alignment = freqs.dataInput.get();
+            freqsParameter = (RealParameter) getCandidate(freqs.frequenciesInput, freqs);
         } else {
             comboBox.setSelectedIndex(2);
-            alignment = freqs.m_data.get();
-            freqsParameter = (RealParameter) getCandidate(freqs.frequencies, freqs);
+            alignment = freqs.dataInput.get();
+            freqsParameter = (RealParameter) getCandidate(freqs.frequenciesInput, freqs);
         }
         comboBox.addActionListener(new ActionListener() {
             @Override
@@ -68,18 +70,18 @@ public class FrequenciesInputEditor extends PluginInputEditor {
                 try {
                     switch (iSelected) {
                         case 0:
-                            freqs.frequencies.setValue(freqsParameter, freqs);
-                            freqs.m_data.setValue(null, freqs);
+                            freqs.frequenciesInput.setValue(freqsParameter, freqs);
+                            freqs.dataInput.setValue(null, freqs);
                             break;
                         case 1:
-                            freqs.frequencies.setValue(null, freqs);
-                            freqs.m_data.setValue(alignment, freqs);
-                            freqs.m_bEstimate.setValue(true, freqs);
+                            freqs.frequenciesInput.setValue(null, freqs);
+                            freqs.dataInput.setValue(alignment, freqs);
+                            freqs.estimateInput.setValue(true, freqs);
                             break;
                         case 2:
-                            freqs.frequencies.setValue(null, freqs);
-                            freqs.m_data.setValue(alignment, freqs);
-                            freqs.m_bEstimate.setValue(false, freqs);
+                            freqs.frequenciesInput.setValue(null, freqs);
+                            freqs.dataInput.setValue(alignment, freqs);
+                            freqs.estimateInput.setValue(false, freqs);
                             break;
                     }
                 } catch (Exception e2) {

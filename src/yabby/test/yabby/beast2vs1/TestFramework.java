@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.util.List;
 
+
 import test.yabby.beast2vs1.trace.Expectation;
 import test.yabby.beast2vs1.trace.LogAnalyser;
 import yabby.core.Logger;

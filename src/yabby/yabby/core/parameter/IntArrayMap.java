@@ -6,6 +6,8 @@ import java.util.List;
 import yabby.core.Description;
 import yabby.core.Input;
 
+
+
 @Description("Maps names to list of integers, e.g. taxon names to a sequence")
 public class IntArrayMap extends Map<List<Integer>>{
 	protected Class<?> mapType() {return List.class;}

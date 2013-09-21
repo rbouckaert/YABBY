@@ -11,9 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import yabby.app.YabbyVersion;
+import yabby.app.BEASTVersion;
 import yabby.app.util.Utils;
 import yabby.core.util.ESS;
+
+
 
 
 public class LogAnalyser {
@@ -440,7 +442,7 @@ public class LogAnalyser {
         try {
             LogAnalyser analyser;
             if (args.length == 0) {
-                YabbyVersion version = new YabbyVersion();
+                BEASTVersion version = new BEASTVersion();
                 File file = Utils.getLoadFile("LogAnalyser " + version.getVersionString() + " - Select log file to analyse",
                         null, "BEAST log (*.log) Files", "log", "txt");
                 if (file == null) {

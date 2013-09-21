@@ -13,6 +13,8 @@ import yabby.evolution.tree.TraitSet;
 import yabby.evolution.tree.Tree;
 
 
+
+
 //TODO: handle taxon sets
 //begin sets;
 //taxset junk1 = P._articulata P._gracilis P._fimbriata;
@@ -27,17 +29,17 @@ public class NexusParser {
     /**
      * keep track of nexus file line number, to report when the file does not parse *
      */
-    int m_nLineNr;
+    int lineNr;
 
     /**
      * Beast II objects reconstructed from the file*
      */
     public Alignment m_alignment;
-    public List<Alignment> m_filteredAlignments = new ArrayList<Alignment>();
-    public TraitSet m_traitSet;
+    public List<Alignment> filteredAlignments = new ArrayList<Alignment>();
+    public TraitSet traitSet;
 
-    public List<String> m_taxa;
-    public List<Tree> m_trees;
+    public List<String> taxa;
+    public List<Tree> trees;
 
     static Set<String> g_sequenceIDs;
 
@@ -45,7 +47,7 @@ public class NexusParser {
         g_sequenceIDs = new HashSet<String>();
     }
 
-    public List<TaxonSet> m_taxonsets = new ArrayList<TaxonSet>();
+    public List<TaxonSet> taxonsets = new ArrayList<TaxonSet>();
 
     private List<NexusParserListener> listeners = new ArrayList<NexusParserListener>();
 
@@ -71,7 +73,7 @@ public class NexusParser {
      * @param reader a reader to parse from
      */
     public void parseFile(String id, Reader reader) throws Exception {
-        m_nLineNr = 0;
+        lineNr = 0;
         BufferedReader fin = null;
         if (reader instanceof BufferedReader) {
             fin = (BufferedReader) reader;
@@ -88,7 +90,7 @@ public class NexusParser {
                     m_alignment = parseDataBlock(fin);
                     m_alignment.setID(id);
                 } else if (sStr.toLowerCase().matches("^\\s*begin\\s+calibration;\\s*$")) {
-                    m_traitSet = parseCalibrationsBlock(fin);
+                    traitSet = parseCalibrationsBlock(fin);
                 } else if (sStr.toLowerCase().matches("^\\s*begin\\s+assumptions;\\s*$") ||
                         sStr.toLowerCase().matches("^\\s*begin\\s+sets;\\s*$") ||
                         sStr.toLowerCase().matches("^\\s*begin\\s+mrbayes;\\s*$")) {
@@ -101,12 +103,12 @@ public class NexusParser {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("Around line " + m_nLineNr + "\n" + e.getMessage());
+            throw new Exception("Around line " + lineNr + "\n" + e.getMessage());
         }
     } // parseFile
 
     private void parseTreesBlock(BufferedReader fin) throws Exception {
-        m_trees = new ArrayList<Tree>();
+        trees = new ArrayList<Tree>();
         // read to first non-empty line within trees block
         String sStr = fin.readLine().trim();
         while (sStr.equals("")) {
@@ -121,7 +123,7 @@ public class NexusParser {
             translationMap = parseTranslateBlock(fin);
             origin = getIndexedTranslationMapOrigin(translationMap);
             if (origin != -1) {
-                m_taxa = getIndexedTranslationMap(translationMap, origin);
+                taxa = getIndexedTranslationMap(translationMap, origin);
             }
         }
 
@@ -135,12 +137,12 @@ public class NexusParser {
                 TreeParser treeParser = null;
 
                 if (origin != -1) {
-                    treeParser = new TreeParser(m_taxa, sStr, origin, false);
+                    treeParser = new TreeParser(taxa, sStr, origin, false);
                 } else {
                     try {
-                        treeParser = new TreeParser(m_taxa, sStr, 0, false);
+                        treeParser = new TreeParser(taxa, sStr, 0, false);
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        treeParser = new TreeParser(m_taxa, sStr, 1, false);
+                        treeParser = new TreeParser(taxa, sStr, 1, false);
                     }
                 }
 //                catch (NullPointerException e) {
@@ -148,12 +150,12 @@ public class NexusParser {
 //                }
 
                 for (NexusParserListener listener : listeners) {
-                    listener.treeParsed(m_trees.size(), treeParser);
+                    listener.treeParsed(trees.size(), treeParser);
                 }
 
                 if (translationMap != null) treeParser.translateLeafIds(translationMap);
 
-                m_trees.add(treeParser);
+                trees.add(treeParser);
 
 //				Node tree = treeParser.getRoot();
 //				tree.sort();
@@ -226,7 +228,7 @@ public class NexusParser {
     }
 
     private void parseTaxaBlock(BufferedReader fin) throws Exception {
-        m_taxa = new ArrayList<String>();
+        taxa = new ArrayList<String>();
         int nTaxaExpected = -1;
         String sStr;
         do {
@@ -242,13 +244,13 @@ public class NexusParser {
                     sStr = sStr.trim();
                     if (sStr.length() > 0 && !sStr.toLowerCase().equals("end")) {
                         for (String taxon : sStr.split("\\s+")) {
-                            m_taxa.add(taxon);
+                            taxa.add(taxon);
                         }
                     }
                 } while (!sStr.toLowerCase().equals("end"));
             }
         } while (!sStr.toLowerCase().equals("end"));
-        if (nTaxaExpected >= 0 && m_taxa.size() != nTaxaExpected) {
+        if (nTaxaExpected >= 0 && taxa.size() != nTaxaExpected) {
             throw new Exception("Taxa block: # taxa is not equal to dimension");
         }
     }
@@ -258,7 +260,7 @@ public class NexusParser {
      */
     TraitSet parseCalibrationsBlock(BufferedReader fin) throws Exception {
         TraitSet traitSet = new TraitSet();
-        traitSet.m_sTraitName.setValue("date", traitSet);
+        traitSet.traitNameInput.setValue("date", traitSet);
         String sStr = null;
         do {
             sStr = nextLine(fin);
@@ -267,7 +269,7 @@ public class NexusParser {
                 if (sScale.endsWith("s")) {
                     sScale = sScale.substring(0, sScale.length() - 1);
                 }
-                traitSet.m_sUnits.setValue(sScale, traitSet);
+                traitSet.unitsInput.setValue(sScale, traitSet);
             }
         } while (sStr.toLowerCase().contains("tipcalibration"));
 
@@ -293,10 +295,10 @@ public class NexusParser {
             }
         }
         sText = sText.substring(0, sText.length() - 2);
-        traitSet.m_traits.setValue(sText, traitSet);
+        traitSet.traitsInput.setValue(sText, traitSet);
         TaxonSet taxa = new TaxonSet();
         taxa.initByName("alignment", m_alignment);
-        traitSet.m_taxa.setValue(taxa, traitSet);
+        traitSet.taxaInput.setValue(taxa, traitSet);
 
         traitSet.initAndValidate();
         return traitSet;
@@ -500,7 +502,7 @@ public class NexusParser {
                 alignment.alignmentInput.setValue(m_alignment, alignment);
                 alignment.filterInput.setValue(sRange, alignment);
                 alignment.initAndValidate();
-                m_filteredAlignments.add(alignment);
+                filteredAlignments.add(alignment);
             }
         } while (!sStr.toLowerCase().contains("end;"));
     }
@@ -531,7 +533,7 @@ public class NexusParser {
                     taxon.setID(sID);
                     set.taxonsetInput.setValue(taxon, set);
                 }
-                m_taxonsets.add(set);
+                taxonsets.add(set);
             }
         } while (!sStr.toLowerCase().contains("end;"));
     }
@@ -554,7 +556,7 @@ public class NexusParser {
         if (!fin.ready()) {
             return null;
         }
-        m_nLineNr++;
+        lineNr++;
         return fin.readLine();
     }
 
@@ -605,19 +607,19 @@ public class NexusParser {
         try {
             NexusParser parser = new NexusParser();
             parser.parseFile(new File(args[0]));
-            if (parser.m_taxa != null) {
-                System.out.println(parser.m_taxa.size() + " taxa");
-                System.out.println(Arrays.toString(parser.m_taxa.toArray(new String[0])));
+            if (parser.taxa != null) {
+                System.out.println(parser.taxa.size() + " taxa");
+                System.out.println(Arrays.toString(parser.taxa.toArray(new String[0])));
             }
-            if (parser.m_trees != null) {
-                System.out.println(parser.m_trees.size() + " trees");
+            if (parser.trees != null) {
+                System.out.println(parser.trees.size() + " trees");
             }
             if (parser.m_alignment != null) {
                 String sXML = new XMLProducer().toXML(parser.m_alignment);
                 System.out.println(sXML);
             }
-            if (parser.m_traitSet != null) {
-                String sXML = new XMLProducer().toXML(parser.m_traitSet);
+            if (parser.traitSet != null) {
+                String sXML = new XMLProducer().toXML(parser.traitSet);
                 System.out.println(sXML);
             }
         } catch (Exception e) {

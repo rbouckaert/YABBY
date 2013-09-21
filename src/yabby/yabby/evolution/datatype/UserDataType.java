@@ -10,6 +10,8 @@ import yabby.core.Input.Validate;
 import yabby.evolution.datatype.DataType.Base;
 
 
+
+
 @Description("User defined datatype. Allows custom symbols to map onto statesets.")
 public class UserDataType extends Base {
     public Input<Integer> stateCountInput = new Input<Integer>("states", "total number of states", Validate.REQUIRED);

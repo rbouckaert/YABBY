@@ -2,16 +2,18 @@ package yabby.evolution.speciation;
 
 import java.io.PrintStream;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
+import yabby.core.Function;
 import yabby.core.Input;
 import yabby.core.Loggable;
-import yabby.core.YABBYObject;
 import yabby.core.StateNode;
-import yabby.core.Function;
 import yabby.core.Input.Validate;
 import yabby.evolution.speciation.SpeciesTreePrior.PopSizeFunction;
 import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
+
+
 
 
 @Description("Logs tree annotated with metadata in starBeast format")

@@ -41,6 +41,8 @@ import javax.swing.event.HyperlinkListener;
 import yabby.app.DocMaker;
 
 
+
+
 /**
  * Dialog for showing HTML help, with hyperlinks and some browser
  * functionality to navigate around the Plugin help facilities.

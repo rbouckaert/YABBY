@@ -7,8 +7,10 @@ import javax.swing.Box;
 import javax.swing.JCheckBox;
 
 import yabby.app.beauti.BeautiDoc;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
+
+
 
 
 public class BooleanInputEditor extends InputEditor.Base {

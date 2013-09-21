@@ -37,14 +37,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import yabby.app.draw.BEASTObjectPanel;
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.InputEditorFactory;
-import yabby.app.draw.PluginPanel;
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Distribution;
 import yabby.core.Input;
 import yabby.core.MCMC;
-import yabby.core.YABBYObject;
 import yabby.core.StateNode;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.RealParameter;
@@ -58,10 +58,13 @@ import yabby.evolution.likelihood.GenericTreeLikelihood;
 import yabby.evolution.tree.TraitSet;
 import yabby.evolution.tree.Tree;
 import yabby.math.distributions.MRCAPrior;
+import yabby.util.JSONProducer;
 import yabby.util.NexusParser;
 import yabby.util.XMLParser;
 import yabby.util.XMLProducer;
 import yabby.util.XMLParser.RequiredInputProvider;
+
+
 
 
 @Description("Beauti document in doc-view pattern, not useful in models")
@@ -199,15 +202,15 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 					String fileName = args[i + 1];
 					NexusParser parser = new NexusParser();
 					parser.parseFile(new File(fileName));
-					if (parser.m_filteredAlignments.size() > 0) {
-						for (Alignment data : parser.m_filteredAlignments) {
+					if (parser.filteredAlignments.size() > 0) {
+						for (Alignment data : parser.filteredAlignments) {
 							alignments.add(data);
 						}
 					} else {
 						alignments.add(parser.m_alignment);
 					}
 					i += 2;
-					traitset = parser.m_traitSet;
+					traitset = parser.traitSet;
 				} else if (args[i].equals("-xmldata")) {
 					// NB: multiple -xmldata/-nex commands can be processed!
 					String fileName = args[i + 1];
@@ -332,7 +335,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 	public void newAnalysis() {
 		try {
 			clear();
-			PluginPanel.init();
+			BEASTObjectPanel.init();
 			beautiConfig.clear();
 			String sXML = processTemplate(templateFileName);
 			loadTemplate(sXML);
@@ -360,15 +363,15 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 	public void importNexus(File file) throws Exception {
 		NexusParser parser = new NexusParser();
 		parser.parseFile(file);
-		if (parser.m_filteredAlignments.size() > 0) {
-			for (Alignment data : parser.m_filteredAlignments) {
+		if (parser.filteredAlignments.size() > 0) {
+			for (Alignment data : parser.filteredAlignments) {
 				addAlignmentWithSubnet(data);
 			}
 		} else {
 			addAlignmentWithSubnet(parser.m_alignment);
 		}
 		connectModel();
-		addTraitSet(parser.m_traitSet);
+		addTraitSet(parser.traitSet);
 		fireDocHasChanged();
 	}
 
@@ -680,12 +683,32 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		determinePartitions();
 		scrubAll(false, false);
 		// String sXML = new XMLProducer().toXML(mcmc.get(), );
-		String sXML = toXML();
+		String spec = null;
+		if (file.getPath().toLowerCase().endsWith(".json")) {
+			spec = toJSON();
+		} else {
+			spec = toXML();
+		}
 		FileWriter outfile = new FileWriter(file);
-		outfile.write(sXML);
+		outfile.write(spec);
 		outfile.close();
 	} // save
 
+	private String toJSON() {
+		Set<YABBYObject> plugins = new HashSet<YABBYObject>();
+		String json = new JSONProducer().toJSON(mcmc.get(), plugins);
+		
+		String beautiStatus = "";
+		if (!bAutoSetClockRate) {
+			beautiStatus = "noAutoSetClockRate";
+		}
+		if (bAllowLinking) {
+			beautiStatus += (beautiStatus.length() > 0 ? "|" : "") + "allowLinking";			
+		}
+		json = json.replaceFirst("\\{", "{ beautitemplate:\"" + templateName + "\", beautistatus:\"" + beautiStatus + "\", ");
+		return json + "\n";
+	}
+	
 	public String toXML() {
 		Set<YABBYObject> plugins = new HashSet<YABBYObject>();
 //		for (Plugin plugin : pluginmap.values()) {
@@ -745,7 +768,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		XMLParser parser = new XMLParser();
 		YABBYObject MCMC = parser.parseFragment(sXML, true);
 		mcmc.setValue(MCMC, this);
-		PluginPanel.addPluginToMap(MCMC, this);
+		BEASTObjectPanel.addPluginToMap(MCMC, this);
 
 		// reconstruct all objects from templates
 		try {
@@ -849,7 +872,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 	void loadTemplate(String sXML) throws Exception {
 		// load the template and its beauti configuration parts
 		XMLParser parser = new XMLParser();
-		PluginPanel.init();
+		BEASTObjectPanel.init();
 		List<YABBYObject> plugins = parser.parseTemplate(sXML, new HashMap<String, YABBYObject>(), true);
 		for (YABBYObject plugin : plugins) {
 			if (plugin instanceof yabby.core.Runnable) {
@@ -860,7 +883,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 			} else {
 				System.err.println("template item " + plugin.getID() + " is ignored");
 			}
-			PluginPanel.addPluginToMap(plugin, this);
+			BEASTObjectPanel.addPluginToMap(plugin, this);
 		}
 	}
 
@@ -1052,7 +1075,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 						YABBYObject plugin = pluginmap.get(sID);
 						if (plugin instanceof MRCAPrior) {
 							MRCAPrior prior = (MRCAPrior) plugin;
-							if (prior.m_treeInput.get().isEstimatedInput.get() == false) {
+							if (prior.treeInput.get().isEstimatedInput.get() == false) {
 								// disconnect
 								disconnect(plugin, "prior", "distribution");
 							} else {
@@ -1192,7 +1215,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 						for (YABBYObject plugin : tree.outputs) {
 							if (plugin instanceof MRCAPrior) {
 								MRCAPrior prior = (MRCAPrior) plugin;
-								if (prior.m_distInput.get() != null) {
+								if (prior.distInput.get() != null) {
 									bNeedsEstimation = true;
 								}
 							}
@@ -1217,17 +1240,17 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		// @Override
 		// public void run() {
 		//
-		PluginPanel.addPluginToMap(plugin, this);
+		BEASTObjectPanel.addPluginToMap(plugin, this);
 		try {
 			for (Input<?> input : plugin.listInputs()) {
 				if (input.get() != null) {
 					if (input.get() instanceof YABBYObject) {
-						PluginPanel.addPluginToMap((YABBYObject) input.get(), this);
+						BEASTObjectPanel.addPluginToMap((YABBYObject) input.get(), this);
 					}
 					if (input.get() instanceof List<?>) {
 						for (Object o : (List<?>) input.get()) {
 							if (o instanceof YABBYObject) {
-								PluginPanel.addPluginToMap((YABBYObject) o, this);
+								BEASTObjectPanel.addPluginToMap((YABBYObject) o, this);
 							}
 						}
 					}

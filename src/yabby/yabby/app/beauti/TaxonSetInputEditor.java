@@ -22,12 +22,14 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import yabby.app.draw.InputEditor;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.Sequence;
 import yabby.evolution.alignment.Taxon;
 import yabby.evolution.alignment.TaxonSet;
+
+
 
 
 public class TaxonSetInputEditor extends InputEditor.Base {

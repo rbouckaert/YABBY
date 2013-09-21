@@ -9,6 +9,8 @@ import yabby.evolution.datatype.Nucleotide;
 import yabby.evolution.tree.Node;
 
 
+
+
 @Description("Jukes Cantor substitution model: all rates equal and " + "uniformly distributed frequencies")
 public class JukesCantor extends SubstitutionModel.Base {
 

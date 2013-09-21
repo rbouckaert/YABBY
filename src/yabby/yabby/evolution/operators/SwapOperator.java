@@ -14,6 +14,8 @@ import yabby.core.parameter.RealParameter;
 import yabby.util.Randomizer;
 
 
+
+
 @Description("A generic operator swapping a one or more pairs in a multi-dimensional parameter")
 public class SwapOperator extends Operator {
     public Input<RealParameter> parameterInput = new Input<RealParameter>("parameter", "a real parameter to swap individual values for");

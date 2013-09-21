@@ -8,11 +8,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.tree.TraitSet;
 
-import yabby.core.Input;
-import yabby.core.YABBYObject;
+
+
 
 /*
  * Why JSON:
@@ -49,7 +51,7 @@ public class JSONProducer {
      */
     int indentCount;
 
-    final public static String DEFAULT_NAMESPACE = "yabby.core:yabby.evolution.alignment:yabby.evolution.tree.coalescent:yabby.core.util:yabby.evolution.nuc:yabby.evolution.operators:yabby.evolution.sitemodel:yabby.evolution.substitutionmodel:yabby.evolution.likelihood";
+    final public static String DEFAULT_NAMESPACE = "beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood";
 
     public JSONProducer() {
         super();
@@ -319,7 +321,6 @@ public class JSONProducer {
                         } else if (input.get() instanceof YABBYObject) {
                         	if (!input.get().equals(input.defaultValue)) {
 	                            if (isShort && isDone.contains((YABBYObject) input.get())) {
-	                                //buf.append(" \"" + input0 + "\": \"@" + ((YABBYObject) input.get()).getID() + "\"");
 	                                buf.append(" " + input0 + ": \"@" + ((YABBYObject) input.get()).getID() + "\"");
 	                                isInputsDone.add(input);
 	                            }
@@ -386,7 +387,7 @@ public class JSONProducer {
 
 	
 	public static void main(String[] args) throws Exception {
-		// convert BEAST 2 XML to YABBY json file
+		// convert BEAST 2 XML to BEAST json file
 		XMLParser parser = new XMLParser();
 		YABBYObject plugin = parser.parseFile(new File(args[0]));
 

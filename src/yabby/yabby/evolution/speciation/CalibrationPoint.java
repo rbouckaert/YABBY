@@ -1,8 +1,8 @@
 package yabby.evolution.speciation;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.evolution.alignment.TaxonSet;
 import yabby.math.distributions.ParametricDistribution;
 

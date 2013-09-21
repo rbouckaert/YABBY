@@ -7,6 +7,8 @@ import java.io.PrintStream;
 
 import yabby.core.util.Log;
 
+
+
 public class HTMLPrintStream extends PrintStream {
 	public static Log.Level currentLevel = null;
 	

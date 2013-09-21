@@ -13,15 +13,17 @@ import javax.swing.JTextField;
 
 import yabby.app.draw.ListInputEditor;
 import yabby.app.draw.SmallLabel;
+import yabby.core.YABBYObject;
 import yabby.core.Input;
 import yabby.core.MCMC;
 import yabby.core.Operator;
-import yabby.core.YABBYObject;
 import yabby.core.parameter.IntegerParameter;
 import yabby.core.parameter.RealParameter;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.branchratemodel.BranchRateModel;
 import yabby.evolution.operators.DeltaExchangeOperator;
+
+
 
 
 public class ClockModelListInputEditor extends ListInputEditor {

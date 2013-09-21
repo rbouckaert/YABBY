@@ -6,18 +6,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Distribution;
-import yabby.core.Input;
-import yabby.core.YABBYObject;
-import yabby.core.State;
 import yabby.core.Function;
+import yabby.core.Input;
+import yabby.core.State;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.IntegerParameter;
 import yabby.evolution.speciation.SpeciesTreeDistribution;
 import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TreeDistribution;
 import yabby.math.Binomial;
+
+
 
 
 /**
@@ -73,7 +75,7 @@ public class BayesianSkyline extends TreeDistribution {
         popSizes = popSizeParamInput.get();
 
         // make sure that the sum of groupsizes == number of coalescent events
-        int events = intervals.m_tree.get().getInternalNodeCount();
+        int events = intervals.treeInput.get().getInternalNodeCount();
         if (groupSizes.getDimension() > events) {
             throw new IllegalArgumentException("There are more groups than coalescent nodes in the tree.");
         }

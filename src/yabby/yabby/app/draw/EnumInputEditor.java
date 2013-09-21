@@ -9,8 +9,10 @@ import javax.swing.Box;
 import javax.swing.JComboBox;
 
 import yabby.app.beauti.BeautiDoc;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
+
+
 
 
 /**

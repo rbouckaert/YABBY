@@ -10,6 +10,8 @@ import yabby.core.parameter.IntegerParameter;
 import yabby.evolution.datatype.DataType;
 
 
+
+
 @Description("Alignemnt based on a filter operation on another alignment")
 public class FilteredAlignment extends Alignment {
     public Input<String> filterInput = new Input<String>("filter", "specifies which of the sites in the input alignment should be selected " +

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import yabby.core.YABBYObject;
 import yabby.core.Citation;
 import yabby.core.Description;
 import yabby.core.Distribution;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.RealParameter;
 import yabby.core.util.CompoundDistribution;
@@ -19,6 +19,8 @@ import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
 import yabby.math.distributions.MRCAPrior;
 import yabby.math.statistic.RPNcalculator;
+
+
 
 
 @Description("Yule with calibrated monophyletic clades. With this prior, the marginal distribution of the" +
@@ -110,15 +112,15 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
                         if (distr instanceof MRCAPrior) {
                             MRCAPrior _MRCAPrior = (MRCAPrior) distr;
                             // make sure MRCAPrior is monophyletic
-                            if (_MRCAPrior.m_distInput.get() != null) {
+                            if (_MRCAPrior.distInput.get() != null) {
                                 // make sure MRCAPrior is monophyletic
-                                if (!_MRCAPrior.m_bIsMonophyleticInput.get()) {
+                                if (!_MRCAPrior.isMonophyleticInput.get()) {
                                     throw new Exception("MRCAPriors must be monophyletic for Calibrated Yule prior");
                                 }
                                 // create CalibrationPoint from MRCAPrior
                                 CalibrationPoint cal = new CalibrationPoint();
-                                cal.distInput.setValue(_MRCAPrior.m_distInput.get(), cal);
-                                cal.taxonsetInput.setValue(_MRCAPrior.m_taxonset.get(), cal);
+                                cal.distInput.setValue(_MRCAPrior.distInput.get(), cal);
+                                cal.taxonsetInput.setValue(_MRCAPrior.taxonsetInput.get(), cal);
                                 cal.initAndValidate();
                                 cals.add(cal);
                                 taxaSets.add(cal.taxa());
@@ -126,7 +128,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
                                 nCals++;
                                 calcCalibrations = false;
                             } else {
-                                if (_MRCAPrior.m_bIsMonophyleticInput.get()) {
+                                if (_MRCAPrior.isMonophyleticInput.get()) {
                                     System.err.println("WARNING: MRCAPriors must have a distribution when monophyletic for Calibrated Yule prior");
                                 }
                             }

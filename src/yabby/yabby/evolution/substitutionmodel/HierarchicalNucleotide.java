@@ -3,98 +3,100 @@ package yabby.evolution.substitutionmodel;
 import java.util.Arrays;
 
 import yabby.core.Description;
-import yabby.core.Input;
 import yabby.core.Function;
+import yabby.core.Input;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.IntegerParameter;
 import yabby.evolution.datatype.DataType;
 import yabby.evolution.datatype.Nucleotide;
 
 
+
+
 @Description("Substitution model for nucleotides that changes where the count input " +
 		"determines the number of parameters used in a hierarchy of models")
 public class HierarchicalNucleotide extends GeneralSubstitutionModel {
-	public Input<IntegerParameter> m_countInput = new Input<IntegerParameter>("count", "model number used 0 = JC, 5 and higher if GTR (default 0)", Validate.REQUIRED);
+	public Input<IntegerParameter> countInput = new Input<IntegerParameter>("count", "model number used 0 = JC, 5 and higher if GTR (default 0)", Validate.REQUIRED);
 	
-	Function m_rate;
-	IntegerParameter m_count;
+	Function rate;
+	IntegerParameter count;
 	
 	@Override
 	public void initAndValidate() throws Exception {
-		m_count = m_countInput.get();
-		m_rate = m_rates.get();
-		if (m_rate.getDimension() != 5) {
+		count = countInput.get();
+		rate = ratesInput.get();
+		if (rate.getDimension() != 5) {
 			throw new Exception("rate input must have dimension 5");
 		}
 		
-    	m_frequencies = frequenciesInput.get();
+    	frequencies = frequenciesInput.get();
         updateMatrix = true;
-        m_nStates = m_frequencies.getFreqs().length;
-    	if (m_nStates != 4) {
-    		throw new Exception("Frequencies has wrong size. Expected 4, but got " + m_nStates);
+        nrOfStates = frequencies.getFreqs().length;
+    	if (nrOfStates != 4) {
+    		throw new Exception("Frequencies has wrong size. Expected 4, but got " + nrOfStates);
     	}
 
         eigenSystem = createEigenSystem();
-        m_rateMatrix = new double[m_nStates][m_nStates];
-        relativeRates = new double[m_nStates * (m_nStates - 1)];
-        storedRelativeRates = new double[m_nStates * (m_nStates - 1)];
+        rateMatrix = new double[nrOfStates][nrOfStates];
+        relativeRates = new double[nrOfStates * (nrOfStates - 1)];
+        storedRelativeRates = new double[nrOfStates * (nrOfStates - 1)];
 	}
 
 	@Override
     protected void setupRelativeRates() {
-		switch (m_count.getValue()) {
+		switch (count.getValue()) {
 		case 0: // JC96
 			Arrays.fill(relativeRates, 1.0);
 			break;
 		case 1: // HKY
-	    	relativeRates[0] = m_rate.getArrayValue(0); // A->C
+	    	relativeRates[0] = rate.getArrayValue(0); // A->C
 	    	relativeRates[1] = 1; // A->G
-	    	relativeRates[2] = m_rate.getArrayValue(0); // A->T
+	    	relativeRates[2] = rate.getArrayValue(0); // A->T
 
-	    	relativeRates[4] = m_rate.getArrayValue(0); // C->G
+	    	relativeRates[4] = rate.getArrayValue(0); // C->G
 	    	relativeRates[5] = 1; // C->T
 
-	    	relativeRates[8] = m_rate.getArrayValue(0); // G->T
+	    	relativeRates[8] = rate.getArrayValue(0); // G->T
 			break;
 		case 2: // K3P
-	    	relativeRates[0] = m_rate.getArrayValue(0); // A->C
-	    	relativeRates[1] = m_rate.getArrayValue(1); // A->G
-	    	relativeRates[2] = m_rate.getArrayValue(0); // A->T
+	    	relativeRates[0] = rate.getArrayValue(0); // A->C
+	    	relativeRates[1] = rate.getArrayValue(1); // A->G
+	    	relativeRates[2] = rate.getArrayValue(0); // A->T
 
-	    	relativeRates[4] = m_rate.getArrayValue(0); // C->G
+	    	relativeRates[4] = rate.getArrayValue(0); // C->G
 	    	relativeRates[5] = 1; // C->T
 
-	    	relativeRates[8] = m_rate.getArrayValue(0); // G->T
+	    	relativeRates[8] = rate.getArrayValue(0); // G->T
 			break;
 		case 3: // TIM
-	    	relativeRates[0] = m_rate.getArrayValue(0); // A->C
-	    	relativeRates[1] = m_rate.getArrayValue(1); // A->G
-	    	relativeRates[2] = m_rate.getArrayValue(2); // A->T
+	    	relativeRates[0] = rate.getArrayValue(0); // A->C
+	    	relativeRates[1] = rate.getArrayValue(1); // A->G
+	    	relativeRates[2] = rate.getArrayValue(2); // A->T
 
-	    	relativeRates[4] = m_rate.getArrayValue(2); // C->G
+	    	relativeRates[4] = rate.getArrayValue(2); // C->G
 	    	relativeRates[5] = 1; // C->T
 
-	    	relativeRates[8] = m_rate.getArrayValue(0); // G->T
+	    	relativeRates[8] = rate.getArrayValue(0); // G->T
 			break;
 		case 4: // new model 
-	    	relativeRates[0] = m_rate.getArrayValue(0); // A->C
-	    	relativeRates[1] = m_rate.getArrayValue(1); // A->G
-	    	relativeRates[2] = m_rate.getArrayValue(2); // A->T
+	    	relativeRates[0] = rate.getArrayValue(0); // A->C
+	    	relativeRates[1] = rate.getArrayValue(1); // A->G
+	    	relativeRates[2] = rate.getArrayValue(2); // A->T
 
-	    	relativeRates[4] = m_rate.getArrayValue(3); // C->G
+	    	relativeRates[4] = rate.getArrayValue(3); // C->G
 	    	relativeRates[5] = 1; // C->T
 
-	    	relativeRates[8] = m_rate.getArrayValue(0); // G->T
+	    	relativeRates[8] = rate.getArrayValue(0); // G->T
 			break;
 		default: // GTR
-	    	relativeRates[0] = m_rate.getArrayValue(0); // A->C
-	    	relativeRates[1] = m_rate.getArrayValue(1); // A->G
-	    	relativeRates[2] = m_rate.getArrayValue(2); // A->T
+	    	relativeRates[0] = rate.getArrayValue(0); // A->C
+	    	relativeRates[1] = rate.getArrayValue(1); // A->G
+	    	relativeRates[2] = rate.getArrayValue(2); // A->T
 
-	    	relativeRates[4] = m_rate.getArrayValue(3); // C->G
+	    	relativeRates[4] = rate.getArrayValue(3); // C->G
 	    	relativeRates[5] = 1; // C->T
 
-	    	relativeRates[8] = m_rate.getArrayValue(4); // G->T
+	    	relativeRates[8] = rate.getArrayValue(4); // G->T
 			break;
 		}
 

@@ -36,6 +36,8 @@ import yabby.core.util.Log;
 import yabby.util.Randomizer;
 
 
+
+
 @Description("MCMC chain. This is the main element that controls which posterior " +
         "to calculate, how long to run the chain and all other properties, " +
         "which operators to apply on the state space and where to log results.")
@@ -249,6 +251,9 @@ public class MCMC extends Runnable {
         posterior = posteriorInput.get();
 
         if (restoreFromFile) {
+            for (StateNodeInitialiser initialiser : initilisersInput.get()) {
+                initialiser.initStateNodes();
+            }
             state.restoreFromFile();
             operatorSchedule.restoreFromFile();
             burnIn = 0;

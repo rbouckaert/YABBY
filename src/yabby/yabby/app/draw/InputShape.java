@@ -35,8 +35,10 @@ import javax.swing.JPanel;
 
 import org.w3c.dom.Node;
 
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
+
+
 
 
 public class InputShape extends Shape {
@@ -53,13 +55,13 @@ public class InputShape extends Shape {
         //TODO: set inputName
     }
 
-    public PluginShape m_pluginShape = null;
+    public BEASTObjectShape m_pluginShape = null;
 
-    PluginShape getPluginShape() {
+    BEASTObjectShape getPluginShape() {
         return m_pluginShape;
     }
 
-    void setPluginShape(PluginShape function) {
+    void setPluginShape(BEASTObjectShape function) {
         m_pluginShape = function;
     }
 

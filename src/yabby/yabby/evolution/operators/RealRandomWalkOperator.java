@@ -11,6 +11,8 @@ import yabby.util.Randomizer;
 
 
 
+
+
 @Description("A random walk operator that selects a random dimension of the real parameter and perturbs the value a " +
         "random amount within +/- windowSize.")
 public class RealRandomWalkOperator extends Operator {

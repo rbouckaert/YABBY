@@ -34,6 +34,8 @@ import yabby.app.beauti.BeautiPanel;
 import yabby.util.AddOnManager;
 
 
+
+
 /**
  * launch applications specific to add-ons installed, for example utilities for
  * post-processing add-on specific data.

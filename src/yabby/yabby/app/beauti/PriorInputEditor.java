@@ -11,12 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+import yabby.app.draw.BEASTObjectDialog;
 import yabby.app.draw.InputEditor;
-import yabby.app.draw.PluginDialog;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.core.parameter.RealParameter;
 import yabby.math.distributions.Prior;
+
+
 
 
 public class PriorInputEditor extends InputEditor.Base {
@@ -48,11 +50,11 @@ public class PriorInputEditor extends InputEditor.Base {
         itemBox.add(label);
 
 
-        List<BeautiSubTemplate> sAvailablePlugins = doc.getInpuEditorFactory().getAvailableTemplates(prior.m_distInput, prior, null, doc);
+        List<BeautiSubTemplate> sAvailablePlugins = doc.getInpuEditorFactory().getAvailableTemplates(prior.distInput, prior, null, doc);
         JComboBox comboBox = new JComboBox(sAvailablePlugins.toArray());
         comboBox.setName(sText+".distr");
 
-        String sID = prior.m_distInput.get().getID();
+        String sID = prior.distInput.get().getID();
         System.err.println("id=" + sID);
         sID = sID.substring(0, sID.indexOf('.'));
         for (BeautiSubTemplate template : sAvailablePlugins) {
@@ -73,7 +75,7 @@ public class PriorInputEditor extends InputEditor.Base {
                 PartitionContext context = doc.getContextFor((YABBYObject) list.get(itemNr));
                 Prior prior = (Prior) list.get(itemNr);
                 try {
-                    template.createSubNet(context, prior, prior.m_distInput, true);
+                    template.createSubNet(context, prior, prior.distInput, true);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -96,7 +98,7 @@ public class PriorInputEditor extends InputEditor.Base {
                     List<?> list = (List<?>) m_input.get();
                     Prior prior = (Prior) list.get(itemNr);
                     RealParameter p = (RealParameter) prior.m_x.get();
-                    PluginDialog dlg = new PluginDialog(p, RealParameter.class, doc);
+                    BEASTObjectDialog dlg = new BEASTObjectDialog(p, RealParameter.class, doc);
                     if (dlg.showDialog()) {
                         dlg.accept(p, doc);
                         rangeButton.setText(paramToString(p));

@@ -16,11 +16,13 @@ import javax.swing.SwingUtilities;
 
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.SmallLabel;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.evolution.tree.TraitSet;
 import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TreeDistribution;
+
+
 
 //import beast.evolution.speciation.BirthDeathGernhard08Model;
 //import beast.evolution.speciation.YuleModel;
@@ -64,7 +66,7 @@ public class TreeDistributionInputEditor extends InputEditor.Base {
 		if (distr.treeInput.get() != null) {
 			sText += distr.treeInput.get().getID();
 		} else {
-			sText += distr.treeIntervalsInput.get().m_tree.get().getID();
+			sText += distr.treeIntervalsInput.get().treeInput.get().getID();
 		}
 		JLabel label = new JLabel(sText);
 		label.setMinimumSize(PriorListInputEditor.PREFERRED_SIZE);
@@ -137,10 +139,10 @@ public class TreeDistributionInputEditor extends InputEditor.Base {
 		TreeDistribution distr = (TreeDistribution) m_plugin;
 	    Tree tree = distr.treeInput.get();
 	    if (tree == null) {
-	    	tree = distr.treeIntervalsInput.get().m_tree.get();
+	    	tree = distr.treeIntervalsInput.get().treeInput.get();
 	    }
         if (tree.m_trait.get() != null) {
-        	String traitName = tree.m_trait.get().m_sTraitName.get();
+        	String traitName = tree.m_trait.get().traitNameInput.get();
         	if (traitName.equals(TraitSet.DATE_TRAIT) ||
         		traitName.equals(TraitSet.DATE_BACKWARD_TRAIT) ||
         		traitName.equals(TraitSet.DATE_FORWARD_TRAIT)) {

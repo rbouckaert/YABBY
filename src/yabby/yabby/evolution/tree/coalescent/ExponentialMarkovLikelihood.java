@@ -15,6 +15,8 @@ import yabby.core.Input.Validate;
 import yabby.core.parameter.RealParameter;
 
 
+
+
 /** Ported from Beast 1.7 */
 @Description("A class that produces a distribution chaining values in a parameter through the Gamma distribution. " +
 		"The value of a parameter is assumed to be Gamma distributed with mean as the previous value in the parameter. " +
@@ -22,9 +24,9 @@ import yabby.core.parameter.RealParameter;
 		"Handy for population parameters. ")
 public class ExponentialMarkovLikelihood extends Distribution {
 
-	public Input<Boolean> bIsJeffreysInput = new Input<Boolean>("jeffreys", "use Jeffrey's prior (default false)", false);
-	public Input<Boolean> bIsReverseInput = new Input<Boolean>("reverse", "parameter in reverse (default false)", false);
-	public Input<Double> fShapeInput = new Input<Double>("shape", "shape parameter of the Gamma distribution (default 1.0 = exponential distribution)", 1.0);
+	public Input<Boolean> isJeffreysInput = new Input<Boolean>("jeffreys", "use Jeffrey's prior (default false)", false);
+	public Input<Boolean> isReverseInput = new Input<Boolean>("reverse", "parameter in reverse (default false)", false);
+	public Input<Double> shapeInput = new Input<Double>("shape", "shape parameter of the Gamma distribution (default 1.0 = exponential distribution)", 1.0);
 	public Input<RealParameter> parameterInput = new Input<RealParameter>("parameter", "chain parameter to calculate distribution over", Validate.REQUIRED);
 	
     // **************************************************************
@@ -38,9 +40,9 @@ public class ExponentialMarkovLikelihood extends Distribution {
 
 	@Override
 	public void initAndValidate() throws Exception {
-		reverse = bIsReverseInput.get();
-		jeffreys = bIsJeffreysInput.get();
-		shape = fShapeInput.get();
+		reverse = isReverseInput.get();
+		jeffreys = isJeffreysInput.get();
+		shape = shapeInput.get();
 		chainParameter = parameterInput.get();
 		gamma = new GammaDistributionImpl(shape, 1);
 	}

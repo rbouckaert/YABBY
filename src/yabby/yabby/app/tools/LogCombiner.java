@@ -17,9 +17,11 @@ import java.util.Locale;
 
 import javax.swing.JFrame;
 
-import yabby.app.YabbyVersion;
+import yabby.app.BEASTVersion;
 import yabby.app.tools.LogCombinerDialog;
 import yabby.util.LogAnalyser;
+
+
 
 
 /**
@@ -393,7 +395,7 @@ public class LogCombiner extends LogAnalyser {
      * @param args
      */
     public static void main(String[] args) {
-        YabbyVersion version = new YabbyVersion();
+        BEASTVersion version = new BEASTVersion();
         final String versionString = version.getVersionString();
         String nameString = "LogCombiner " + versionString;
         String aboutString = "<html><center><p>" + versionString + ", " + version.getDateString() + "</p>" +

@@ -1,7 +1,7 @@
 package yabby.evolution.alignment.distance;
 
-import yabby.core.Description;
 import yabby.core.YABBYObject;
+import yabby.core.Description;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.TaxonSet;
 import yabby.evolution.datatype.DataType;

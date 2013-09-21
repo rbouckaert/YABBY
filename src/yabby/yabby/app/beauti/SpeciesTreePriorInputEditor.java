@@ -3,13 +3,15 @@ package yabby.app.beauti;
 import javax.swing.Box;
 import javax.swing.JComponent;
 
-import yabby.app.draw.PluginInputEditor;
-import yabby.core.Input;
+import yabby.app.draw.BEASTObjectInputEditor;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.evolution.speciation.SpeciesTreePrior;
 
 
-public class SpeciesTreePriorInputEditor extends PluginInputEditor {
+
+
+public class SpeciesTreePriorInputEditor extends BEASTObjectInputEditor {
 	private static final long serialVersionUID = 1L;
 
 	public SpeciesTreePriorInputEditor(BeautiDoc doc) {

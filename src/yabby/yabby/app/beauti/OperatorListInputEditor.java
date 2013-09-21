@@ -13,10 +13,12 @@ import javax.swing.event.DocumentListener;
 
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.ListInputEditor;
+import yabby.core.YABBYObject;
 import yabby.core.Input;
 import yabby.core.Operator;
-import yabby.core.YABBYObject;
 import yabby.core.StateNode;
+
+
 
 
 public class OperatorListInputEditor extends ListInputEditor {

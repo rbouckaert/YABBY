@@ -18,15 +18,17 @@ import javax.swing.JPanel;
 
 import org.apache.commons.math.MathException;
 
-import yabby.app.draw.PluginInputEditor;
-import yabby.core.Input;
+import yabby.app.draw.BEASTObjectInputEditor;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.evolution.tree.TreeDistribution;
 import yabby.math.distributions.MRCAPrior;
 import yabby.math.distributions.ParametricDistribution;
 
 
-public class ParametricDistributionInputEditor extends PluginInputEditor {
+
+
+public class ParametricDistributionInputEditor extends BEASTObjectInputEditor {
 
     public ParametricDistributionInputEditor(BeautiDoc doc) {
 		super(doc);
@@ -182,7 +184,7 @@ public class ParametricDistributionInputEditor extends PluginInputEditor {
             // draw ticks on edge
             Font smallFont = new Font(font.getName(), font.getStyle(), 8);
             g.setFont(smallFont);
-            fMinValue += m_distr.m_offset.get();
+            fMinValue += m_distr.offsetInput.get();
             for (int i = 0; i <= NR_OF_TICKS_X; i++) {
                 int x = graphoffset + i * nGraphWidth / NR_OF_TICKS_X;
                 g.drawLine(x, graphoffset + nGraphHeight, x, graphoffset + nGraphHeight + 5);
@@ -201,7 +203,7 @@ public class ParametricDistributionInputEditor extends PluginInputEditor {
                 Double[] fQuantiles = new Double[]{0.025, 0.05, 0.5, 0.95, 0.975};
                 for (k = 0; k < 5; k++) {
                 	try {
-                		g.drawString(format(m_distr.m_offset.get() +  m_distr.inverseCumulativeProbability(fQuantiles[k])), nGraphWidth / 2 + graphoffset, graphoffset + nGraphHeight + 20 + k * 10);
+                		g.drawString(format(m_distr.offsetInput.get() +  m_distr.inverseCumulativeProbability(fQuantiles[k])), nGraphWidth / 2 + graphoffset, graphoffset + nGraphHeight + 20 + k * 10);
                     } catch (MathException e) {
                     	g.drawString("not available", nGraphWidth / 2 + graphoffset, graphoffset + nGraphHeight + 20 + k * 10);
                     }

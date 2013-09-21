@@ -37,12 +37,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import yabby.core.YABBYObject;
 import yabby.core.Citation;
 import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.Loggable;
-import yabby.core.YABBYObject;
 import yabby.util.AddOnManager;
+
+
 
 
 /**
@@ -81,7 +83,7 @@ public class DocMaker {
 
     Set<String> m_sLoggables;
     
-    YabbyVersion version = new YabbyVersion();
+    BEASTVersion version = new BEASTVersion();
     
     public DocMaker(String[] args) {
         this();

@@ -6,14 +6,16 @@ import java.io.PrintStream;
 
 import yabby.core.CalculationNode;
 import yabby.core.Description;
+import yabby.core.Function;
 import yabby.core.Input;
 import yabby.core.Loggable;
-import yabby.core.Function;
 import yabby.core.Input.Validate;
+
+
 
 @Description("Logger to report height of a tree")
 public class TreeHeightLogger extends CalculationNode implements Loggable, Function {
-    public Input<Tree> m_tree = new Input<Tree>("tree", "tree to report height for.", Validate.REQUIRED);
+    public Input<Tree> treeInput = new Input<Tree>("tree", "tree to report height for.", Validate.REQUIRED);
 
     @Override
     public void initAndValidate() {
@@ -22,7 +24,7 @@ public class TreeHeightLogger extends CalculationNode implements Loggable, Funct
 
     @Override
     public void init(PrintStream out) throws Exception {
-        final Tree tree = m_tree.get();
+        final Tree tree = treeInput.get();
         if (getID() == null || getID().matches("\\s*")) {
             out.print(tree.getID() + ".height\t");
         } else {
@@ -32,7 +34,7 @@ public class TreeHeightLogger extends CalculationNode implements Loggable, Funct
 
     @Override
     public void log(int nSample, PrintStream out) {
-        final Tree tree = m_tree.get();
+        final Tree tree = treeInput.get();
         out.print(tree.getRoot().getHeight() + "\t");
     }
 
@@ -48,11 +50,11 @@ public class TreeHeightLogger extends CalculationNode implements Loggable, Funct
 
     @Override
     public double getArrayValue() {
-        return m_tree.get().getRoot().getHeight();
+        return treeInput.get().getRoot().getHeight();
     }
 
     @Override
     public double getArrayValue(int iDim) {
-        return m_tree.get().getRoot().getHeight();
+        return treeInput.get().getRoot().getHeight();
     }
 }

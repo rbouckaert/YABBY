@@ -3,34 +3,12 @@ package yabby.evolution.tree.coalescent;
 
 import java.util.Collections;
 import java.util.List;
-/*
- * ConstantPopulation.java
- *
- * Copyright (C) 2002-2006 Alexei Drummond and Andrew Rambaut
- *
- * This file is part of BEAST.
- * See the NOTICE file distributed with this work for additional
- * information regarding copyright ownership and licensing.
- *
- * BEAST is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- *  BEAST is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with BEAST; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
- * Boston, MA  02110-1301  USA
- */
 
 import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.parameter.RealParameter;
+
+
 
 /**
  * @author Andrew Rambaut
@@ -39,9 +17,9 @@ import yabby.core.parameter.RealParameter;
  */
 @Description("Coalescent intervals for a exponentially growing population.")
 public class ExponentialGrowth extends PopulationFunction.Abstract {
-    public Input<RealParameter> popSizeParameter = new Input<RealParameter>("popSize",
+    public Input<RealParameter> popSizeParameterInput = new Input<RealParameter>("popSize",
             "present-day population size (defaults to 1.0). ");
-    public Input<RealParameter> growthRateParameter = new Input<RealParameter>("growthRate",
+    public Input<RealParameter> growthRateParameterInput = new Input<RealParameter>("growthRate",
             "growth rate is the exponent of the exponential growth");
 
     //
@@ -49,10 +27,10 @@ public class ExponentialGrowth extends PopulationFunction.Abstract {
     //
 
     public void initAndValidate() throws Exception {
-        if (popSizeParameter.get() != null) {
-            popSizeParameter.get().setBounds(
-            		Math.max(0.0, popSizeParameter.get().getLower()), 
-            		popSizeParameter.get().getUpper());
+        if (popSizeParameterInput.get() != null) {
+            popSizeParameterInput.get().setBounds(
+            		Math.max(0.0, popSizeParameterInput.get().getLower()), 
+            		popSizeParameterInput.get().getUpper());
         }
 //        if (growthRateParameter.get() != null) {
 //            growthRateParameter.get().setBounds(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
@@ -63,7 +41,7 @@ public class ExponentialGrowth extends PopulationFunction.Abstract {
      * @return initial population size.
      */
     public double getN0() {
-        return popSizeParameter.get().getValue();
+        return popSizeParameterInput.get().getValue();
     }
 
     /**
@@ -79,7 +57,7 @@ public class ExponentialGrowth extends PopulationFunction.Abstract {
      * @return growth rate.
      */
     public final double getGrowthRate() {
-        return growthRateParameter.get().getValue();
+        return growthRateParameterInput.get().getValue();
     }
 
     /**
@@ -148,7 +126,7 @@ public class ExponentialGrowth extends PopulationFunction.Abstract {
     // Implementation of abstract methods
 
     public List<String> getParameterIds() {
-        return Collections.singletonList(popSizeParameter.get().getID());
+        return Collections.singletonList(popSizeParameterInput.get().getID());
     }
 
 //    public int getNumArguments() {

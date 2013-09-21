@@ -33,6 +33,8 @@ import yabby.core.Input.Validate;
 import yabby.core.util.Evaluator;
 
 
+
+
 @Description("Proposes a move in state space.")
 public abstract class Operator extends YABBYObject {
     public Input<Double> m_pWeight = new Input<Double>("weight", "weight with which this operator is selected", Validate.REQUIRED);

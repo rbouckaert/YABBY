@@ -14,16 +14,16 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import yabby.app.draw.BEASTObjectInputEditor;
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.IntegerInputEditor;
 import yabby.app.draw.ParameterInputEditor;
-import yabby.app.draw.PluginInputEditor;
 import yabby.app.draw.SmallLabel;
+import yabby.core.YABBYObject;
 import yabby.core.Distribution;
 import yabby.core.Input;
 import yabby.core.MCMC;
 import yabby.core.Operator;
-import yabby.core.YABBYObject;
 import yabby.core.parameter.IntegerParameter;
 import yabby.core.parameter.RealParameter;
 import yabby.core.util.CompoundDistribution;
@@ -34,7 +34,9 @@ import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.sitemodel.SiteModelInterface;
 
 
-public class SiteModelInputEditor extends PluginInputEditor {
+
+
+public class SiteModelInputEditor extends BEASTObjectInputEditor {
     private static final long serialVersionUID = 1L;
 
     IntegerInputEditor categoryCountEditor;

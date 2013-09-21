@@ -10,11 +10,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.xml.sax.InputSource;
 
-import yabby.app.draw.PluginPanel;
+import yabby.app.draw.BEASTObjectPanel;
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.Logger;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.FilteredAlignment;
@@ -22,6 +22,8 @@ import yabby.evolution.likelihood.GenericTreeLikelihood;
 import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.substitutionmodel.SubstitutionModel;
 import yabby.util.XMLParser;
+
+
 
 //import beast.app.beauti.BeautiConnector.ConnectCondition;
 

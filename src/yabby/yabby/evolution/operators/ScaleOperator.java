@@ -37,6 +37,8 @@ import yabby.evolution.tree.Tree;
 import yabby.util.Randomizer;
 
 
+
+
 @Description("Scales a parameter or a complete beast.tree (depending on which of the two is specified.")
 public class ScaleOperator extends Operator {
 
@@ -56,7 +58,7 @@ public class ScaleOperator extends Operator {
     public Input<Integer> degreesOfFreedomInput = new Input<Integer>("degreesOfFreedom", "Degrees of freedom used when " +
             "scaleAllIndependently=false and scaleAll=true to override default in calcualation of Hasting ratio. " +
             "Ignored when less than 1, default 0.", 0);
-    public Input<BooleanParameter> ndicatorInput = new Input<BooleanParameter>("indicator", "indicates which of the dimension " +
+    public Input<BooleanParameter> indicatorInput = new Input<BooleanParameter>("indicator", "indicates which of the dimension " +
             "of the parameters can be scaled. Only used when scaleAllIndependently=false and scaleAll=false. If not specified " +
             "it is assumed all dimensions are allowed to be scaled.");
     public Input<Boolean> rootOnlyInput = new Input<Boolean>("rootOnly", "scale root of a tree only, ignored if tree is not specified (default false)", false);
@@ -78,7 +80,7 @@ public class ScaleOperator extends Operator {
         m_fScaleFactor = scaleFactorInput.get();
         m_bIsTreeScaler = (treeInput.get() != null);
 
-        final BooleanParameter indicators = ndicatorInput.get();
+        final BooleanParameter indicators = indicatorInput.get();
         if (indicators != null) {
             if (m_bIsTreeScaler) {
                 throw new Exception("indicator is specified which has no effect for scaling a tree");
@@ -181,7 +183,7 @@ public class ScaleOperator extends Operator {
 
                 // which position to scale
                 final int index;
-                final BooleanParameter indicators = ndicatorInput.get();
+                final BooleanParameter indicators = indicatorInput.get();
                 if (indicators != null) {
                     final int nDim = indicators.getDimension();
                     Boolean[] indicator = indicators.getValues();

@@ -11,12 +11,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import yabby.app.YabbyVersion;
+import yabby.app.BEASTVersion;
 import yabby.app.beauti.BeautiDoc.ActionOnExit;
 import yabby.app.beauti.BeautiDoc.DOC_STATUS;
 import yabby.app.draw.*;
 import yabby.app.util.Utils;
 import yabby.util.AddOnManager;
+
+
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -50,6 +52,7 @@ public class Beauti extends JTabbedPane implements BeautiDocListener {
      * File extension for Beast specifications
      */
     static public final String FILE_EXT = ".xml";
+    static public final String FILE_EXT2 = ".json";
 
     /**
      * document in document-view pattern. BTW this class is the view
@@ -202,7 +205,7 @@ public class Beauti extends JTabbedPane implements BeautiDocListener {
             return false;
         }
         File file = yabby.app.util.Utils.getSaveFile("Save Model As", new File(
-                doc.getFileName()), null, (String[]) null);
+                doc.getFileName()), null, FILE_EXT, FILE_EXT2);
         if (file != null) {
             if (file.exists() && !Utils.isMac()) {
                 if (JOptionPane.showConfirmDialog(null,
@@ -223,7 +226,7 @@ public class Beauti extends JTabbedPane implements BeautiDocListener {
                 g_sDir = doc.getFileName().substring(0,
                         doc.getFileName().lastIndexOf(fileSep));
             }
-            if (!doc.getFileName().endsWith(FILE_EXT))
+            if (!doc.getFileName().toLowerCase().endsWith(FILE_EXT) && !doc.getFileName().toLowerCase().endsWith(FILE_EXT2))
                 doc.setFileName(doc.getFileName().concat(FILE_EXT));
             saveFile(doc.getFileName());
             setTitle();
@@ -565,7 +568,7 @@ public class Beauti extends JTabbedPane implements BeautiDocListener {
         } // c'tor
 
         public void actionPerformed(ActionEvent ae) {
-            YabbyVersion version = new YabbyVersion();
+            BEASTVersion version = new BEASTVersion();
             JOptionPane.showMessageDialog(null, version.getCredits(),
                     "About Beauti 2", JOptionPane.PLAIN_MESSAGE,
                     BeautiPanel.getIcon(BEAUTI_ICON));
@@ -919,7 +922,7 @@ public class Beauti extends JTabbedPane implements BeautiDocListener {
         try {
             AddOnManager.loadExternalJars();
             Utils.loadUIManager();
-            PluginPanel.init();
+            BEASTObjectPanel.init();
 
             BeautiDoc doc = new BeautiDoc();
             if (doc.parseArgs(args) == ActionOnExit.WRITE_XML) {

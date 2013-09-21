@@ -18,14 +18,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
+import yabby.app.draw.BEASTObjectPanel;
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.ListInputEditor;
-import yabby.app.draw.PluginPanel;
 import yabby.app.draw.SmallButton;
+import yabby.core.YABBYObject;
 import yabby.core.Distribution;
 import yabby.core.Input;
 import yabby.core.Logger;
-import yabby.core.YABBYObject;
 import yabby.core.State;
 import yabby.core.StateNode;
 import yabby.core.parameter.RealParameter;
@@ -36,6 +36,8 @@ import yabby.evolution.tree.TreeDistribution;
 import yabby.math.distributions.MRCAPrior;
 import yabby.math.distributions.OneOnX;
 import yabby.math.distributions.Prior;
+
+
 
 
 public class PriorListInputEditor extends ListInputEditor {
@@ -75,11 +77,11 @@ public class PriorListInputEditor extends ListInputEditor {
 						if (o2 instanceof TreeDistribution) {
 							Tree tree1 = ((TreeDistribution)o1).treeInput.get();
 							if (tree1 == null) {
-								tree1 = ((TreeDistribution)o1).treeIntervalsInput.get().m_tree.get();
+								tree1 = ((TreeDistribution)o1).treeIntervalsInput.get().treeInput.get();
 							}
 							Tree tree2 = ((TreeDistribution)o2).treeInput.get();
 							if (tree2 == null) {
-								tree2 = ((TreeDistribution)o2).treeIntervalsInput.get().m_tree.get();
+								tree2 = ((TreeDistribution)o2).treeIntervalsInput.get().treeInput.get();
 							}
 							return sID1.compareTo(sID2);
 						} else {
@@ -167,7 +169,7 @@ public class PriorListInputEditor extends ListInputEditor {
 
     Set<Taxon> getTaxonCandidates(MRCAPrior prior) {
         Set<Taxon> candidates = new HashSet<Taxon>();
-        Tree tree = prior.m_treeInput.get();
+        Tree tree = prior.treeInput.get();
         String [] taxa = null;
         if (tree.m_taxonset.get() != null) {
         	try {
@@ -175,10 +177,10 @@ public class PriorListInputEditor extends ListInputEditor {
         		set.initAndValidate();
             	taxa = set.asStringList().toArray(new String[0]);
         	} catch (Exception e) {
-            	taxa = prior.m_treeInput.get().getTaxaNames();
+            	taxa = prior.treeInput.get().getTaxaNames();
 			}
         } else {
-        	taxa = prior.m_treeInput.get().getTaxaNames();
+        	taxa = prior.treeInput.get().getTaxaNames();
         }
         
         
@@ -213,7 +215,7 @@ public class PriorListInputEditor extends ListInputEditor {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                m_prior.m_bIsMonophyleticInput.setValue(((JCheckBox) e.getSource()).isSelected(), m_prior);
+                m_prior.isMonophyleticInput.setValue(((JCheckBox) e.getSource()).isSelected(), m_prior);
                 refreshPanel();
             } catch (Exception ex) {
                 System.err.println("PriorListInputEditor " + ex.getMessage());
@@ -254,7 +256,7 @@ public class PriorListInputEditor extends ListInputEditor {
             if (iTree < 0) {
                 return null;
             }
-            prior.m_treeInput.setValue(trees.get(iTree), prior);
+            prior.treeInput.setValue(trees.get(iTree), prior);
             TaxonSet taxonSet = new TaxonSet();
 
             TaxonSetDialog dlg = new TaxonSetDialog(taxonSet, getTaxonCandidates(prior), doc);
@@ -262,13 +264,13 @@ public class PriorListInputEditor extends ListInputEditor {
                 return null;
             }
             taxonSet = dlg.taxonSet;
-            PluginPanel.addPluginToMap(taxonSet, doc);
-            prior.m_taxonset.setValue(taxonSet, prior);
+            BEASTObjectPanel.addPluginToMap(taxonSet, doc);
+            prior.taxonsetInput.setValue(taxonSet, prior);
             prior.setID(taxonSet.getID() + ".prior");
             // this sets up the type
-            prior.m_distInput.setValue(new OneOnX(), prior);
+            prior.distInput.setValue(new OneOnX(), prior);
             // this removes the parametric distribution
-            prior.m_distInput.setValue(null, prior);
+            prior.distInput.setValue(null, prior);
 
             Logger logger = (Logger) doc.pluginmap.get("tracelog");
             logger.loggersInput.setValue(prior, logger);

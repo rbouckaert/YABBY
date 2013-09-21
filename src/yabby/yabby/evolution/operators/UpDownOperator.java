@@ -14,6 +14,8 @@ import yabby.core.parameter.Parameter;
 import yabby.core.parameter.RealParameter;
 import yabby.util.Randomizer;
 
+
+
 @Description("This element represents an operator that scales two parameters in different directions. " +
         "Each operation involves selecting a scale uniformly at random between scaleFactor and 1/scaleFactor. " +
         "The up parameter is multiplied by this scale and the down parameter is divided by this scale.")

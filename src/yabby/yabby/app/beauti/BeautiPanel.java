@@ -13,8 +13,10 @@ import javax.swing.event.ListSelectionListener;
 import yabby.app.beauti.BeautiPanelConfig.Partition;
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.InputEditor.ExpandOption;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
+
+
 
 
 /**

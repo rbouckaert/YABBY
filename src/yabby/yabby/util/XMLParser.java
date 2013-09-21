@@ -28,6 +28,7 @@ package yabby.util;
 //import beast.core.parameter.IntegerParameter;
 //import beast.core.parameter.BooleanParameter;
 
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,15 +38,22 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import yabby.app.beauti.PartitionContext;
-import yabby.core.*;
-import yabby.core.Input.Validate;
 import yabby.core.Runnable;
+import yabby.core.Input;
+import yabby.core.State;
+import yabby.core.YABBYObject;
+import yabby.core.Distribution;
+import yabby.core.Operator;
+import yabby.core.Logger;
+import yabby.core.Input.Validate;
 import yabby.core.parameter.Parameter;
 import yabby.core.parameter.RealParameter;
 import yabby.core.util.Log;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.Sequence;
 import yabby.evolution.tree.Tree;
+
+
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -172,33 +180,33 @@ public class XMLParser {
     /**
      * DOM document representation of XML file *
      */
-    Document m_doc;
+    Document doc;
 
     /**
      * maps sequence data onto integer value *
      */
     String m_sDataMap;
 
-    HashMap<String, YABBYObject> m_sIDMap;
-    HashMap<String, Integer[]> m_LikelihoodMap;
-    HashMap<String, Node> m_sIDNodeMap;
+    HashMap<String, YABBYObject> IDMap;
+    HashMap<String, Integer[]> likelihoodMap;
+    HashMap<String, Node> IDNodeMap;
 
-    static HashMap<String, String> m_sElement2ClassMap;
-    static Set<String> m_sReservedElements;
+    static HashMap<String, String> element2ClassMap;
+    static Set<String> reservedElements;
     static {
-        m_sElement2ClassMap = new HashMap<String, String>();
-        m_sElement2ClassMap.put(DISTRIBUTION_ELEMENT, LIKELIHOOD_CLASS);
-        m_sElement2ClassMap.put(OPERATOR_ELEMENT, OPERATOR_CLASS);
-        m_sElement2ClassMap.put(INPUT_ELEMENT, INPUT_CLASS);
-        m_sElement2ClassMap.put(LOG_ELEMENT, LOG_CLASS);
-        m_sElement2ClassMap.put(DATA_ELEMENT, DATA_CLASS);
-        m_sElement2ClassMap.put(STATE_ELEMENT, STATE_CLASS);
-        m_sElement2ClassMap.put(SEQUENCE_ELEMENT, SEQUENCE_CLASS);
-        m_sElement2ClassMap.put(TREE_ELEMENT, TREE_CLASS);
-        m_sElement2ClassMap.put(REAL_PARAMETER_ELEMENT, REAL_PARAMETER_CLASS);
-        m_sReservedElements = new HashSet<String>();
-        for (String element : m_sElement2ClassMap.keySet()) {
-        	m_sReservedElements.add(element);
+        element2ClassMap = new HashMap<String, String>();
+        element2ClassMap.put(DISTRIBUTION_ELEMENT, LIKELIHOOD_CLASS);
+        element2ClassMap.put(OPERATOR_ELEMENT, OPERATOR_CLASS);
+        element2ClassMap.put(INPUT_ELEMENT, INPUT_CLASS);
+        element2ClassMap.put(LOG_ELEMENT, LOG_CLASS);
+        element2ClassMap.put(DATA_ELEMENT, DATA_CLASS);
+        element2ClassMap.put(STATE_ELEMENT, STATE_CLASS);
+        element2ClassMap.put(SEQUENCE_ELEMENT, SEQUENCE_CLASS);
+        element2ClassMap.put(TREE_ELEMENT, TREE_CLASS);
+        element2ClassMap.put(REAL_PARAMETER_ELEMENT, REAL_PARAMETER_CLASS);
+        reservedElements = new HashSet<String>();
+        for (String element : element2ClassMap.keySet()) {
+        	reservedElements.add(element);
         }
     }
     
@@ -206,7 +214,7 @@ public class XMLParser {
     List<Node> nodesWaitingToInit;
 
     public HashMap<String, String> getElement2ClassMap() {
-        return m_sElement2ClassMap;
+        return element2ClassMap;
     }
 
 
@@ -234,13 +242,13 @@ public class XMLParser {
         // parse the XML file into a DOM document
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //factory.setValidating(true);
-        m_doc = factory.newDocumentBuilder().parse(file);
-        m_doc.normalize();
+        doc = factory.newDocumentBuilder().parse(file);
+        doc.normalize();
         processPlates();
 
-        m_sIDMap = new HashMap<String, YABBYObject>();
-        m_LikelihoodMap = new HashMap<String, Integer[]>();
-        m_sIDNodeMap = new HashMap<String, Node>();
+        IDMap = new HashMap<String, YABBYObject>();
+        likelihoodMap = new HashMap<String, Integer[]>();
+        IDNodeMap = new HashMap<String, Node>();
 
 
         parse();
@@ -262,18 +270,18 @@ public class XMLParser {
         // parse the XML file into a DOM document
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //factory.setValidating(true);
-        m_doc = factory.newDocumentBuilder().parse(new InputSource(new StringReader(sXML)));
-        m_doc.normalize();
+        doc = factory.newDocumentBuilder().parse(new InputSource(new StringReader(sXML)));
+        doc.normalize();
         processPlates();
 
-        m_sIDMap = sIDMap;//new HashMap<String, Plugin>();
-        m_LikelihoodMap = new HashMap<String, Integer[]>();
-        m_sIDNodeMap = new HashMap<String, Node>();
+        IDMap = sIDMap;//new HashMap<String, Plugin>();
+        likelihoodMap = new HashMap<String, Integer[]>();
+        IDNodeMap = new HashMap<String, Node>();
 
         List<YABBYObject> plugins = new ArrayList<YABBYObject>();
 
         // find top level beast element
-        NodeList nodes = m_doc.getElementsByTagName("*");
+        NodeList nodes = doc.getElementsByTagName("*");
         if (nodes == null || nodes.getLength() == 0) {
             throw new Exception("Expected top level beast element in XML");
         }
@@ -330,7 +338,7 @@ public class XMLParser {
      */
     void processPlates() {
         // process plate elements
-        NodeList nodes = m_doc.getElementsByTagName(PLATE_ELEMENT);
+        NodeList nodes = doc.getElementsByTagName(PLATE_ELEMENT);
         // instead of processing all plates, process them one by one,
         // then check recursively for new plates that could have been
         // created when they are nested
@@ -385,16 +393,16 @@ public class XMLParser {
         m_bInitialize = bInitialize;
         // parse the XML fragment into a DOM document
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        m_doc = factory.newDocumentBuilder().parse(new InputSource(new StringReader(sXML)));
-        m_doc.normalize();
+        doc = factory.newDocumentBuilder().parse(new InputSource(new StringReader(sXML)));
+        doc.normalize();
         processPlates();
 
-        m_sIDMap = new HashMap<String, YABBYObject>();
-        m_LikelihoodMap = new HashMap<String, Integer[]>();
-        m_sIDNodeMap = new HashMap<String, Node>();
+        IDMap = new HashMap<String, YABBYObject>();
+        likelihoodMap = new HashMap<String, Integer[]>();
+        IDNodeMap = new HashMap<String, Node>();
 
         // find top level beast element
-        NodeList nodes = m_doc.getElementsByTagName("*");
+        NodeList nodes = doc.getElementsByTagName("*");
         if (nodes == null || nodes.getLength() == 0) {
             throw new Exception("Expected top level beast element in XML");
         }
@@ -447,12 +455,12 @@ public class XMLParser {
         m_bInitialize = bInitialize;
         // parse the XML fragment into a DOM document
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        m_doc = factory.newDocumentBuilder().parse(new InputSource(new StringReader(sXML)));
-        m_doc.normalize();
+        doc = factory.newDocumentBuilder().parse(new InputSource(new StringReader(sXML)));
+        doc.normalize();
         processPlates();
 
         // find top level beast element
-        NodeList nodes = m_doc.getElementsByTagName("*");
+        NodeList nodes = doc.getElementsByTagName("*");
         if (nodes == null || nodes.getLength() == 0) {
             throw new Exception("Expected top level beast element in XML");
         }
@@ -479,7 +487,7 @@ public class XMLParser {
      */
     public void parse() throws Exception {
         // find top level beast element
-        NodeList nodes = m_doc.getElementsByTagName("*");
+        NodeList nodes = doc.getElementsByTagName("*");
         if (nodes == null || nodes.getLength() == 0) {
             throw new Exception("Expected top level beast element in XML");
         }
@@ -508,10 +516,10 @@ public class XMLParser {
     void initIDNodeMap(Node node) throws Exception {
         String sID = getID(node);
         if (sID != null) {
-            if (m_sIDNodeMap.containsKey(sID)) {
+            if (IDNodeMap.containsKey(sID)) {
                 throw new XMLParserException(node, "IDs should be unique. Duplicate id '" + sID + "' found", 104);
             }
-            m_sIDNodeMap.put(sID, node);
+            IDNodeMap.put(sID, node);
         }
         NodeList children = node.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
@@ -543,14 +551,14 @@ public class XMLParser {
         }
 
         // process map elements
-        NodeList nodes = m_doc.getElementsByTagName(MAP_ELEMENT);
+        NodeList nodes = doc.getElementsByTagName(MAP_ELEMENT);
         for (int i = 0; i < nodes.getLength(); i++) {
             Node child = nodes.item(i);
             String sName = getAttribute(child, "name");
             if (sName == null) {
                 throw new XMLParserException(child, "name attribute expected in map element", 300);
             }
-            if (!m_sElement2ClassMap.containsKey(sName)) {
+            if (!element2ClassMap.containsKey(sName)) {
 //                throw new XMLParserException(child, "name '" + sName + "' is already defined as " + m_sElement2ClassMap.get(sName), 301);
 //            }
 
@@ -558,18 +566,18 @@ public class XMLParser {
 	            String sClass = child.getTextContent();
 	            // remove spaces
 	            sClass = sClass.replaceAll("\\s", "");
-	            sClass = sClass.replaceAll("beast", "yabby");
+	            //sClass = sClass.replaceAll("beast", "yabby");
 	            // go through namespaces in order they are declared to find the correct class
 	            boolean bDone = false;
 	            for (String sNameSpace : m_sNameSpaces) {
 	                try {
 	                    // sanity check: class should exist
 	                    if (!bDone && Class.forName(sNameSpace + sClass) != null) {
-	                        m_sElement2ClassMap.put(sName, sClass);
+	                        element2ClassMap.put(sName, sClass);
 	                        System.err.println(sName + " => " + sNameSpace + sClass);
 	                        String reserved = getAttribute(child, "reserved"); 
 	                        if (reserved != null && reserved.toLowerCase().equals("true")) {
-	                        	m_sReservedElements.add(sName);
+	                        	reservedElements.add(sName);
 	                        }
 	
 	                        bDone = true;
@@ -602,7 +610,7 @@ public class XMLParser {
 
     void parseRunElement(Node topNode) throws Exception {
         // find mcmc element
-        NodeList nodes = m_doc.getElementsByTagName(RUN_ELEMENT);
+        NodeList nodes = doc.getElementsByTagName(RUN_ELEMENT);
         if (nodes.getLength() == 0) {
             throw new XMLParserException(topNode, "Expected run element in file", 102);
         }
@@ -631,13 +639,13 @@ public class XMLParser {
     } // checkType
 
     YABBYObject createObject(Node node, String sClass, YABBYObject parent) throws Exception {
-    	sClass = sClass.replaceAll("beast", "yabby");
+    	//sClass = sClass.replaceAll("beast", "yabby");
         // try the IDMap first
         String sID = getID(node);
 
         if (sID != null) {
-            if (m_sIDMap.containsKey(sID)) {
-                YABBYObject plugin = m_sIDMap.get(sID);
+            if (IDMap.containsKey(sID)) {
+                YABBYObject plugin = IDMap.get(sID);
                 if (checkType(sClass, plugin)) {
                     return plugin;
                 }
@@ -656,14 +664,14 @@ public class XMLParser {
                     Log.warning.println("Element " + node.getNodeName() + " found with idref='" + sIDRef + "'. All other attributes are ignored.\n");
                 }
             }
-            if (m_sIDMap.containsKey(sIDRef)) {
-                YABBYObject plugin = m_sIDMap.get(sIDRef);
+            if (IDMap.containsKey(sIDRef)) {
+                YABBYObject plugin = IDMap.get(sIDRef);
                 if (checkType(sClass, plugin)) {
                     return plugin;
                 }
                 throw new XMLParserException(node, "id=" + sIDRef + ". Expected object of type " + sClass + " instead of " + plugin.getClass().getName(), 106);
-            } else if (m_sIDNodeMap.containsKey(sIDRef)) {
-                YABBYObject plugin = createObject(m_sIDNodeMap.get(sIDRef), sClass, parent);
+            } else if (IDNodeMap.containsKey(sIDRef)) {
+                YABBYObject plugin = createObject(IDNodeMap.get(sIDRef), sClass, parent);
                 if (checkType(sClass, plugin)) {
                     return plugin;
                 }
@@ -676,16 +684,16 @@ public class XMLParser {
         String sElementName = node.getNodeName();
 
 
-        if (m_sElement2ClassMap.containsKey(sElementName)) {
-            sSpecClass = m_sElement2ClassMap.get(sElementName);
+        if (element2ClassMap.containsKey(sElementName)) {
+            sSpecClass = element2ClassMap.get(sElementName);
         }
         String sSpec = getAttribute(node, "spec");
         if (sSpec != null) {
             sSpecClass = sSpec;
         }
-    	sSpecClass = sSpecClass.replaceAll("beast", "yabby");
+    	//sSpecClass = sSpecClass.replaceAll("beast", "yabby");
     	
-    	if (sSpecClass.indexOf("YABBYObject") > 0) {
+    	if (sSpecClass.indexOf("BEASTObject") > 0) {
     		System.out.println(sSpecClass);
     	}
 
@@ -696,7 +704,7 @@ public class XMLParser {
             for (String sNameSpace : m_sNameSpaces) {
                 try {
                     if (!bDone) {
-                    	sNameSpace = sNameSpace.replaceAll("beast", "yabby");
+                    	//sNameSpace = sNameSpace.replaceAll("beast", "yabby");
                         o = Class.forName(sNameSpace + sSpecClass).newInstance();
                         bDone = true;
                     }
@@ -848,7 +856,7 @@ public class XMLParser {
                     String sValue = atts.item(i).getNodeValue();
                     if (sValue.startsWith("@")) {
                         String sIDRef = sValue.substring(1);
-                        Element element = m_doc.createElement("input");
+                        Element element = doc.createElement("input");
                         element.setAttribute("idref", sIDRef);
                         // add child in case things go belly up, and an XMLParserException is thrown
                         node.appendChild(element);
@@ -877,8 +885,8 @@ public class XMLParser {
                 }
                 // resolve base class
                 String sClass = PLUGIN_CLASS;
-                if (m_sElement2ClassMap.containsKey(sElement)) {
-                    sClass = m_sElement2ClassMap.get(sElement);
+                if (element2ClassMap.containsKey(sElement)) {
+                    sClass = element2ClassMap.get(sElement);
                 }
                 YABBYObject childItem = createObject(child, sClass, parent);
                 if (childItem != null) {
@@ -979,7 +987,7 @@ public class XMLParser {
     void register(Node node, YABBYObject plugin) {
         String sID = getID(node);
         if (sID != null) {
-            m_sIDMap.put(sID, plugin);
+            IDMap.put(sID, plugin);
         }
     }
 

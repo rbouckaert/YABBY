@@ -33,6 +33,8 @@ import javax.swing.JCheckBox;
 
 import yabby.app.util.Utils;
 
+
+
 public class GuessPatternDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	public static final String EXAMPLE_FORMAT = "<html>A proper trait file is tab delimited. <br>"

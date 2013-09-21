@@ -7,6 +7,8 @@ import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.FilteredAlignment;
 import yabby.evolution.alignment.Sequence;
 
+
+
 public class FilteredAlignmentTest extends TestCase {
 
     static public Alignment getAlignment() throws Exception {

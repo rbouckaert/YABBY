@@ -9,6 +9,8 @@ import java.util.List;
 import yabby.core.Description;
 import yabby.core.Input;
 
+
+
 @Description("Set of taxa, useful for instance for multi-gene analysis")
 public class TaxonSet extends Taxon {
     public Input<List<Taxon>> taxonsetInput = new Input<List<Taxon>>("taxon", "list of taxa making up the set", new ArrayList<Taxon>());

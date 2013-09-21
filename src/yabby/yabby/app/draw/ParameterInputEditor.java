@@ -17,17 +17,19 @@ import javax.swing.JOptionPane;
 import yabby.app.beauti.BeautiDoc;
 import yabby.app.beauti.BeautiPanel;
 import yabby.app.beauti.PartitionContext;
+import yabby.core.YABBYObject;
 import yabby.core.Distribution;
 import yabby.core.Input;
 import yabby.core.Operator;
-import yabby.core.YABBYObject;
 import yabby.core.parameter.RealParameter;
 import yabby.evolution.branchratemodel.BranchRateModel;
 import yabby.math.distributions.ParametricDistribution;
 import yabby.math.distributions.Prior;
 
 
-public class ParameterInputEditor extends PluginInputEditor {
+
+
+public class ParameterInputEditor extends BEASTObjectInputEditor {
 	boolean isParametricDistributionParameter = false;
 	
     //public ParameterInputEditor() {}

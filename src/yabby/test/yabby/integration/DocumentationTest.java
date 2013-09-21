@@ -7,10 +7,12 @@ import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.util.AddOnManager;
+
+
 
 
 public class DocumentationTest extends TestCase {

@@ -33,9 +33,11 @@ import org.apache.commons.math.distribution.IntegerDistribution;
 
 import yabby.core.CalculationNode;
 import yabby.core.Description;
-import yabby.core.Input;
 import yabby.core.Function;
+import yabby.core.Input;
 import yabby.util.Randomizer;
+
+
 
 
 /**
@@ -49,7 +51,7 @@ import yabby.util.Randomizer;
         "parameters/valuables as inputs and can produce (cummulative) densities and inverse " +
         "cummulative densities.")
 public abstract class ParametricDistribution extends CalculationNode implements ContinuousDistribution {
-    public final Input<Double> m_offset = new Input<Double>("offset", "offset of origin (defaults to 0)", 0.0);
+    public final Input<Double> offsetInput = new Input<Double>("offset", "offset of origin (defaults to 0)", 0.0);
 
     abstract public org.apache.commons.math.distribution.Distribution getDistribution();
 
@@ -59,7 +61,7 @@ public abstract class ParametricDistribution extends CalculationNode implements 
      * so the sum of log probabilities of all elements of x is returned as the prior.
      */
     public double calcLogP(final Function x) throws Exception {
-        final double fOffset = m_offset.get();
+        final double fOffset = offsetInput.get();
         double fLogP = 0;
         for (int i = 0; i < x.getDimension(); i++) {
             final double fX = x.getArrayValue(i) - fOffset;
@@ -77,7 +79,7 @@ public abstract class ParametricDistribution extends CalculationNode implements 
         final Double[][] sample = new Double[size][];
         for (int i = 0; i < sample.length; i++) {
             final double p = Randomizer.nextDouble();
-            sample[i] = new Double[]{inverseCumulativeProbability(p)+m_offset.get()};
+            sample[i] = new Double[]{inverseCumulativeProbability(p)+offsetInput.get()};
         }
         return sample;
 

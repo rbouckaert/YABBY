@@ -27,10 +27,12 @@ package yabby.evolution.alignment;
 
 import java.util.List;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.evolution.datatype.DataType;
+
+
 
 @Description("Single sequence in an alignment.")
 public class Sequence extends YABBYObject {

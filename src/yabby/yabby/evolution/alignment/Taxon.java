@@ -5,8 +5,10 @@ package yabby.evolution.alignment;
 import java.util.ArrayList;
 import java.util.List;
 
-import yabby.core.Description;
 import yabby.core.YABBYObject;
+import yabby.core.Description;
+
+
 
 @Description("For identifying a single taxon")
 public class Taxon extends YABBYObject {

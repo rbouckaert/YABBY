@@ -28,16 +28,18 @@ package yabby.evolution.branchratemodel;
 
 import java.io.PrintStream;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
+import yabby.core.Function;
 import yabby.core.Input;
 import yabby.core.Loggable;
-import yabby.core.YABBYObject;
-import yabby.core.Function;
 import yabby.core.Input.Validate;
 import yabby.evolution.likelihood.GenericTreeLikelihood;
 import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
 import yabby.math.statistic.DiscreteStatistics;
+
+
 
 
 

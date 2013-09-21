@@ -7,6 +7,8 @@ import yabby.core.Description;
 import yabby.core.Input;
 
 
+
+
 @Description("Alignemnt that allows ascertainment correction")
 public class AscertainedAlignment extends Alignment {
     public Input<Integer> excludefromInput = new Input<Integer>("excludefrom", "first site to condition on, default 0", 0);

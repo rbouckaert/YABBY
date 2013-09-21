@@ -3,7 +3,6 @@ package yabby.evolution.branchratemodel;
 import yabby.core.Description;
 import yabby.core.parameter.RealParameter;
 import yabby.evolution.tree.Node;
-//import beast.core.Input;
 
 /**
  * @author Alexei Drummond

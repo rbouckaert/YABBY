@@ -15,10 +15,12 @@ import yabby.app.beauti.BeautiDoc;
 import yabby.app.beauti.BeautiSubTemplate;
 import yabby.app.draw.InputEditor.ButtonStatus;
 import yabby.app.draw.InputEditor.ExpandOption;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.core.Input.Validate;
 import yabby.util.AddOnManager;
+
+
 
 
 /** Can create InputEditors for inputs of Plugins 
@@ -141,6 +143,12 @@ public class InputEditorFactory {
         }
         if (listItemNr >= 0) {
         	inputClass = ((List<?>)input.get()).get(listItemNr).getClass();
+        } else {
+        	if (input.get() != null && !input.get().getClass().equals(inputClass)
+        			&& !(input.get() instanceof ArrayList)) {
+        		System.err.println(input.get().getClass() + " != " + inputClass);
+        		inputClass = input.get().getClass();
+        	}
         }
 
 System.err.print(inputClass.getName() + " => ");        
@@ -185,7 +193,7 @@ System.err.println(inputEditor.getClass().getName() + " (CUSTOM EDITOR)");
         		inputClass2 = inputClass2.getSuperclass(); 
         	}
         	if (inputClass2 == null) {
-        		inputEditor = new PluginInputEditor(doc);
+        		inputEditor = new BEASTObjectInputEditor(doc);
         	} else {
 	            // handle Plugin-input with custom input editors
 	            String sInputEditor = inputEditorMap.get(inputClass2);
@@ -268,7 +276,7 @@ System.err.println(inputEditor.getClass().getName());
             sTabuList = new ArrayList<String>();
         }
         if (!doc.isExpertMode()) {
-            for (YABBYObject plugin : PluginPanel.listAscendants(parent, doc.pluginmap.values())) {
+            for (YABBYObject plugin : BEASTObjectPanel.listAscendants(parent, doc.pluginmap.values())) {
                 sTabuList.add(plugin.getID());
             }
         }

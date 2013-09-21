@@ -24,16 +24,22 @@
  */
 package yabby.util;
 
-import yabby.app.beauti.PartitionContext;
-import yabby.core.*;
-import yabby.core.Input.Validate;
-import yabby.core.Runnable;
-import yabby.core.parameter.Parameter;
-import yabby.core.parameter.RealParameter;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import yabby.app.beauti.PartitionContext;
+import yabby.core.Runnable;
+import yabby.core.Input;
+import yabby.core.YABBYObject;
+import yabby.core.State;
+
+import yabby.core.Input.Validate;
+import yabby.core.parameter.Parameter;
+import yabby.core.parameter.RealParameter;
+
 
 import java.io.BufferedReader;
 import java.io.File;

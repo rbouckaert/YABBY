@@ -8,12 +8,14 @@ import org.apache.commons.math.distribution.Distribution;
 import yabby.core.Description;
 
 
+
+
 @Description("OneOnX distribution.  f(x) = C/x for some normalizing constant C. " +
         "If the input x is a multidimensional parameter, each of the dimensions is considered as a " +
         "separate independent component.")
 public class OneOnX extends ParametricDistribution {
 
-    ContinuousDistribution m_dist = new OneOnXImpl();
+    ContinuousDistribution dist = new OneOnXImpl();
 
     @Override
     public void initAndValidate() {
@@ -21,7 +23,7 @@ public class OneOnX extends ParametricDistribution {
 
     @Override
     public Distribution getDistribution() {
-        return m_dist;
+        return dist;
     }
 
     class OneOnXImpl implements ContinuousDistribution {

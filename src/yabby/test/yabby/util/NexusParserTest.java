@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import yabby.util.NexusParser;
 
+
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.StringReader;
@@ -82,17 +84,17 @@ public class NexusParserTest extends TestCase {
 
             parser.parseFile("testTranslateBlock", new StringReader(nexusTreeWithTranslateBlock));
 
-            assertEquals(1, parser.m_trees.size());
+            assertEquals(1, parser.trees.size());
 
-            assertNotNull(parser.m_trees.get(0));
+            assertNotNull(parser.trees.get(0));
 
-            assertEquals(7, parser.m_trees.get(0).getTaxaNames().length);
+            assertEquals(7, parser.trees.get(0).getTaxaNames().length);
 
-            for (String taxaName : parser.m_trees.get(0).getTaxaNames()) {
+            for (String taxaName : parser.trees.get(0).getTaxaNames()) {
                 assertNotNull(taxaName);
             }
 
-            assertTrue(taxa.containsAll(Arrays.asList(parser.m_trees.get(0).getTaxaNames())));
+            assertTrue(taxa.containsAll(Arrays.asList(parser.trees.get(0).getTaxaNames())));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,7 +110,7 @@ public class NexusParserTest extends TestCase {
             String sFile = System.getProperty("user.dir") + "/examples/nexus/Primates.nex";
             NexusParser parser = new NexusParser();
             parser.parseFile(new File(sFile));
-            assertEquals(2, parser.m_filteredAlignments.size());
+            assertEquals(2, parser.filteredAlignments.size());
         } catch (Exception e) {
             System.out.println("exception thrown ");
             System.out.println(e.getMessage());

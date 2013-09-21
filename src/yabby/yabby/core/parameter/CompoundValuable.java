@@ -3,13 +3,15 @@ package yabby.core.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import yabby.core.YABBYObject;
 import yabby.core.CalculationNode;
 import yabby.core.Description;
-import yabby.core.Input;
-import yabby.core.YABBYObject;
-import yabby.core.StateNode;
 import yabby.core.Function;
+import yabby.core.Input;
+import yabby.core.StateNode;
 import yabby.core.Input.Validate;
+
+
 
 
 @Description("Summarizes a set of valuables so that for example a rate matrix can be " +

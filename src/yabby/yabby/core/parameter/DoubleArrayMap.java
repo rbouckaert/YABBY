@@ -6,6 +6,8 @@ import java.util.List;
 import yabby.core.Description;
 import yabby.core.Input;
 
+
+
 @Description("Maps names to list of doubles, e.g. taxon names to longitude/latitude pairs for locations")
 public class DoubleArrayMap extends Map<List<Double>> {
 	protected Class<?> mapType() {return List.class;}

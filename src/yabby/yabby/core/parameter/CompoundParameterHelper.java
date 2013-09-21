@@ -5,6 +5,8 @@ import java.util.List;
 
 import yabby.core.Description;
 
+
+
 @Description("A temporary helper class to solve compound state nodes for operators, " +
         "but it cannot be used as input, before the framework is modified.")
 public abstract class CompoundParameterHelper<T> {

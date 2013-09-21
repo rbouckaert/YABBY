@@ -1,9 +1,9 @@
 package test.yabby.beast2vs1.trace;
 
+import yabby.core.YABBYObject;
 import yabby.core.Citation;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
 
 

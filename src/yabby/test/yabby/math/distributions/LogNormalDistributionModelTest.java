@@ -8,6 +8,8 @@ import yabby.math.distributions.LogNormalDistributionModel;
 import yabby.util.XMLParser;
 
 
+
+
 import junit.framework.TestCase;
 
 public class LogNormalDistributionModelTest extends TestCase {
@@ -24,8 +26,8 @@ public class LogNormalDistributionModelTest extends TestCase {
 
             double x = Math.log(Math.random() * 10);
 
-            logNormal.MParameter.setValue(M + "", logNormal);
-            logNormal.SParameter.setValue(S + "", logNormal);
+            logNormal.MParameterInput.setValue(M + "", logNormal);
+            logNormal.SParameterInput.setValue(S + "", logNormal);
             logNormal.initAndValidate();
 
             double pdf = 1.0 / (x * S * Math.sqrt(2 * Math.PI)) * Math.exp(-Math.pow(Math.log(x) - M, 2) / (2 * S * S));
@@ -41,10 +43,10 @@ public class LogNormalDistributionModelTest extends TestCase {
     @Test
     public void testCalcLogP() throws Exception {
         LogNormalDistributionModel logNormal = new LogNormalDistributionModel();
-        logNormal.m_bMeanInRealSpaceInput.setValue("true", logNormal);
-        logNormal.m_offset.setValue("1200", logNormal);
-        logNormal.MParameter.setValue("2000", logNormal);
-        logNormal.SParameter.setValue("0.6", logNormal);
+        logNormal.hasMeanInRealSpaceInput.setValue("true", logNormal);
+        logNormal.offsetInput.setValue("1200", logNormal);
+        logNormal.MParameterInput.setValue("2000", logNormal);
+        logNormal.SParameterInput.setValue("0.6", logNormal);
         logNormal.initAndValidate();
         RealParameter p = new RealParameter(new Double[]{2952.6747000000014});
 

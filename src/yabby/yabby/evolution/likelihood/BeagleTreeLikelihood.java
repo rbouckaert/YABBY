@@ -38,6 +38,7 @@ import yabby.evolution.substitutionmodel.EigenDecomposition;
 import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
 
+
 /**
  * BeagleTreeLikelihoodModel - implements a Likelihood Function for sequences on a tree.
  *
@@ -102,7 +103,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         storedBranchLengths = new double[m_nNodeCount];
 
         m_nStateCount = dataInput.get().getMaxStateCount();
-        m_nPatternCount = dataInput.get().getPatternCount();
+        patternCount = dataInput.get().getPatternCount();
 
         //System.err.println("Attempt to load BEAGLE TreeLikelihood");
 
@@ -208,7 +209,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         }
 
         if (preferenceFlags == 0 && resourceList == null) { // else determine dataset characteristics
-            if (m_nStateCount == 4 && m_nPatternCount < 10000) // TODO determine good cut-off
+            if (m_nStateCount == 4 && patternCount < 10000) // TODO determine good cut-off
                 preferenceFlags |= BeagleFlag.PROCESSOR_CPU.getMask();
         }
 
@@ -223,7 +224,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
                 partialBufferHelper.getBufferCount(),
                 compactPartialsCount,
                 m_nStateCount,
-                m_nPatternCount,
+                patternCount,
                 eigenBufferHelper.getBufferCount(),            // eigenBufferCount
                 matrixBufferHelper.getBufferCount(),
                 categoryCount,
@@ -266,7 +267,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             return false;
         }
         System.err.println("  " + (m_bUseAmbiguities ? "Using" : "Ignoring") + " ambiguities in tree likelihood.");
-        System.err.println("  With " + m_nPatternCount + " unique site patterns.");
+        System.err.println("  With " + patternCount + " unique site patterns.");
 
         
         Node [] nodes = treeInput.get().getNodesAsArray();
@@ -283,8 +284,8 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             ascertainedSitePatterns = true;
         }
 
-        double[] fPatternWeights = new double[m_nPatternCount];
-        for (int i = 0; i < m_nPatternCount; i++) {
+        double[] fPatternWeights = new double[patternCount];
+        for (int i = 0; i < patternCount; i++) {
             fPatternWeights[i] = dataInput.get().getPatternWeight(i);
         }
         beagle.setPatternWeights(fPatternWeights);
@@ -377,12 +378,12 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
                                      int nodeIndex, int taxon) {
         Alignment data = dataInput.get();
 
-        double[] partials = new double[m_nPatternCount * m_nStateCount * categoryCount];
+        double[] partials = new double[patternCount * m_nStateCount * categoryCount];
 
         boolean[] stateSet;
 
         int v = 0;
-        for (int i = 0; i < m_nPatternCount; i++) {
+        for (int i = 0; i < patternCount; i++) {
 
             int state = data.getPattern(taxon, i);
             stateSet = data.getStateSet(state);
@@ -398,7 +399,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         }
 
         // if there is more than one category then replicate the partials for each
-        int n = m_nPatternCount * m_nStateCount;
+        int n = patternCount * m_nStateCount;
         int k = n;
         for (int i = 1; i < categoryCount; i++) {
             System.arraycopy(partials, 0, partials, k, n);
@@ -409,7 +410,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
     }
 
     public int getPatternCount() {
-        return m_nPatternCount;
+        return patternCount;
     }
 
     void setUpSubstModel() {
@@ -442,9 +443,9 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         Alignment data = dataInput.get();
         int i;
 
-        int[] states = new int[m_nPatternCount];
+        int[] states = new int[patternCount];
 
-        for (i = 0; i < m_nPatternCount; i++) {
+        for (i = 0; i < patternCount; i++) {
             int state = data.getPattern(taxon, i);
             states[i] = state;
         }
@@ -545,7 +546,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
     public double calculateLogP() throws Exception {
 
         if (patternLogLikelihoods == null) {
-            patternLogLikelihoods = new double[m_nPatternCount];
+            patternLogLikelihoods = new double[patternCount];
         }
 
         if (matrixUpdateIndices == null) {
@@ -740,7 +741,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
                                                           int[] patternWeights) {
         double logL = 0.0;
         double ascertainmentCorrection = patternList.getAscertainmentCorrection(patternLogLikelihoods);
-        for (int i = 0; i < m_nPatternCount; i++) {
+        for (int i = 0; i < patternCount; i++) {
             logL += (patternLogLikelihoods[i] - ascertainmentCorrection) * patternWeights[i];
         }
         return logL;
@@ -892,7 +893,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
 
     protected /*final*/ int tipCount;
     protected /*final*/ int internalNodeCount;
-    protected /*final*/ int m_nPatternCount;
+    protected /*final*/ int patternCount;
 
     private PartialsRescalingScheme rescalingScheme = DEFAULT_RESCALING_SCHEME;
     private int rescalingFrequency = RESCALE_FREQUENCY;

@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import yabby.app.draw.BEASTObjectPanel;
 import yabby.app.draw.InputEditor;
-import yabby.app.draw.PluginPanel;
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
+
+
 
 
 
@@ -110,7 +112,7 @@ public class BeautiPanelConfig extends YABBYObject {
         }
         inputs = new ArrayList<YABBYObject>();
         startInputs = new ArrayList<YABBYObject>();
-        PluginPanel.getID(this);
+        BEASTObjectPanel.getID(this);
     }
 
     /**

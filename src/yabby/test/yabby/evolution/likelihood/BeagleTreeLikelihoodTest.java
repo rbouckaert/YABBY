@@ -7,6 +7,8 @@ import yabby.evolution.likelihood.BeagleTreeLikelihood;
 import yabby.evolution.likelihood.TreeLikelihood;
 
 
+
+
 /** Same as TreeLikelihoodTest, but for Beagle Tree Likelihood. 
  * **/
 public class BeagleTreeLikelihoodTest extends TreeLikelihoodTest {

@@ -6,49 +6,51 @@ import java.util.List;
 
 import yabby.core.CalculationNode;
 import yabby.core.Description;
+import yabby.core.Function;
 import yabby.core.Input;
 import yabby.core.Loggable;
-import yabby.core.Function;
 import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.TaxonSet;
 
 
+
+
 @Description("Calculates the time of the most recent common ancestor (MRCA) for a set of taxa. " +
 		"This is useful for adding prior information on sets of taxa to the analysis.")
 public class MRCATime extends CalculationNode implements Function, Loggable {
-	public Input<TaxonSet> m_taxa = new Input<TaxonSet>("taxa","comma separated list of taxa", Validate.REQUIRED);
-	public Input<Alignment> m_data = new Input<Alignment>("data","alignment containing the complete list of taxa to choose from", Validate.REQUIRED);
-	public Input<Tree> m_tree = new Input<Tree>("tree","tree for which the MRCA time is calculated", Validate.REQUIRED);
+	public Input<TaxonSet> taxaInput = new Input<TaxonSet>("taxa","comma separated list of taxa", Validate.REQUIRED);
+	public Input<Alignment> dataInput = new Input<Alignment>("data","alignment containing the complete list of taxa to choose from", Validate.REQUIRED);
+	public Input<Tree> treeInput = new Input<Tree>("tree","tree for which the MRCA time is calculated", Validate.REQUIRED);
 	
 	// number of taxa in taxon set
-	int m_nNrOfTaxa = -1;
+	int nrOfTaxa = -1;
 	// array of flags to indicate which taxa are in the set
-	boolean [] m_bTaxaSet;
+	boolean [] isInTaxaSet;
 	// stores time to be calculated
-	double m_fMRCATime = -1;
+	double MRCATime = -1;
 
 	@Override
 	public void initAndValidate() throws Exception {
 		// determine nr of taxa in taxon set
-		Alignment data = m_data.get();
-		List<String> sTaxa = m_taxa.get().asStringList();
-		m_nNrOfTaxa = sTaxa.size();
-		if (m_nNrOfTaxa <= 1) {
+		Alignment data = dataInput.get();
+		List<String> sTaxa = taxaInput.get().asStringList();
+		nrOfTaxa = sTaxa.size();
+		if (nrOfTaxa <= 1) {
 			throw new Exception ("At least two taxa are required in a taxon set");
 		}
 
 		// determine which taxa are in the set
-		m_bTaxaSet = new boolean [data.getNrTaxa()];
+		isInTaxaSet = new boolean [data.getNrTaxa()];
 		for (String sTaxon : sTaxa) {
 			int iTaxon = data.getTaxaNames().indexOf(sTaxon);
 			if (iTaxon < 0) {
 				throw new Exception ("Cannot find taxon " + sTaxon + " in data");
 			}
-			if (m_bTaxaSet[iTaxon]) {
+			if (isInTaxaSet[iTaxon]) {
 				throw new Exception ("Taxon " + sTaxon + " is defined multiple times, while they should be unique");
 			}
-			m_bTaxaSet[iTaxon] = true;
+			isInTaxaSet[iTaxon] = true;
 		}
 	}
 
@@ -60,9 +62,9 @@ public class MRCATime extends CalculationNode implements Function, Loggable {
 	@Override
 	public double getArrayValue() {
 		// calculate MRCA time from tree
-		Node root = m_tree.get().getRoot();
+		Node root = treeInput.get().getRoot();
 		calcMRCAtime(root);
-		return m_fMRCATime;
+		return MRCATime;
 	}
 	
 	/** Recursively visit all leaf nodes, 
@@ -71,7 +73,7 @@ public class MRCATime extends CalculationNode implements Function, Loggable {
 	 * **/
 	int calcMRCAtime(Node node) {
 		if (node.isLeaf()) {
-			if (m_bTaxaSet[node.getNr()]) {
+			if (isInTaxaSet[node.getNr()]) {
 				return 1;
 			} else {
 				return 0;
@@ -80,9 +82,9 @@ public class MRCATime extends CalculationNode implements Function, Loggable {
 			int iTaxons = calcMRCAtime(node.getLeft());
 			if (node.getRight() != null) {
 				iTaxons += calcMRCAtime(node.getRight());
-				if (iTaxons == m_nNrOfTaxa) {
+				if (iTaxons == nrOfTaxa) {
 					// we are at the MRCA, so record the height
-					m_fMRCATime = node.getDate();
+					MRCATime = node.getDate();
 					return iTaxons + 1;
 				}
 			}
@@ -97,7 +99,7 @@ public class MRCATime extends CalculationNode implements Function, Loggable {
 
 	@Override
 	public void init(PrintStream out) throws Exception {
-		out.print("mrcatime("+m_taxa.get()+")\t");
+		out.print("mrcatime("+taxaInput.get()+")\t");
 	}
 
 	@Override

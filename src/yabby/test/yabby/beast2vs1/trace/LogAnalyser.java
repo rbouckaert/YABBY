@@ -33,13 +33,14 @@ import java.util.List;
 
 import yabby.core.*;
 import yabby.core.Input.Validate;
-import yabby.core.Runnable;
+
+
 
 @Description("Log Analyser: analyse BEAST log and provide statistics result including mean, min, max, median, standard deviation, " +
         "mean squared error, variance, ESS, hpd lower, hpd upper, cpd lower, cpd upper, standard error of mean, auto correlation time " +
         "and geometric mean, which does not store the input data values in memory.")
 @Citation("Created by Alexei Drummond and modified by Walter Xie")
-public class LogAnalyser extends Runnable {
+public class LogAnalyser extends yabby.core.Runnable {
     public Input<String> m_sFileName =
             new Input<String>("fileName", "Name of the log file to be analysed", Validate.REQUIRED);
     public Input<Integer> m_iBurnIn =
@@ -222,12 +223,12 @@ public class LogAnalyser extends Runnable {
         System.out.flush();
     }
 
-    public LogFileTraces readLog(String fileName, int inBurnin) throws TraceException, IOException {
+    public LogFileTraces readLog(String fileName, long inBurnin) throws TraceException, IOException {
         File file = new File(fileName);
         LogFileTraces traces = new LogFileTraces(fileName, file);
         traces.loadTraces();
 
-        int burnin = inBurnin;
+        long burnin = inBurnin;
         if (burnin == -1) {
             burnin = traces.getMaxState() / 10;
         }

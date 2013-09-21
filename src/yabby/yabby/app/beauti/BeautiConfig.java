@@ -6,11 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
 import yabby.util.XMLParser;
+
+
 
 
 @Description("Beauti configuration object, used to find Beauti configuration " +

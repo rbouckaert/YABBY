@@ -43,6 +43,8 @@ import org.xml.sax.InputSource;
 
 import yabby.core.*;
 
+
+
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -60,17 +62,17 @@ public class XMLProducer extends XMLParser {
     /**
      * list of objects already converted to XML, so an idref suffices
      */
-    HashSet<YABBYObject> m_bDone;
+    HashSet<YABBYObject> isDone;
     @SuppressWarnings("rawtypes")
-    HashSet<Input> m_bInputsDone;
+    HashSet<Input> inputsDone;
     /**
      * list of IDs of elements produces, used to prevent duplicate ID generation
      */
-    HashSet<String> m_sIDs;
+    HashSet<String> IDs;
     /**
      * #spaces before elements in XML *
      */
-    int m_nIndent;
+    int indent;
 
     final public static String DEFAULT_NAMESPACE = "beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood";
     //final public static String DO_NOT_EDIT_WARNING = "DO NOT EDIT the following machine generated text, they are used in Beauti";
@@ -93,16 +95,16 @@ public class XMLProducer extends XMLParser {
         try {
             StringBuffer buf = new StringBuffer();
             buf.append("<" + XMLParser.BEAST_ELEMENT + " version='2.0' namespace='" + DEFAULT_NAMESPACE + "'>\n");
-            for (String element : m_sElement2ClassMap.keySet()) {
-            	if (!m_sReservedElements.contains(element)) {
-            		buf.append("<map name='" + element + "'>" + m_sElement2ClassMap.get(element) +"</map>\n");
+            for (String element : element2ClassMap.keySet()) {
+            	if (!reservedElements.contains(element)) {
+            		buf.append("<map name='" + element + "'>" + element2ClassMap.get(element) +"</map>\n");
             	}
             }
             buf.append("\n\n");
-            m_bDone = new HashSet<YABBYObject>();
-            m_bInputsDone = new HashSet<Input>();
-            m_sIDs = new HashSet<String>();
-            m_nIndent = 0;
+            isDone = new HashSet<YABBYObject>();
+            inputsDone = new HashSet<Input>();
+            IDs = new HashSet<String>();
+            indent = 0;
             pluginToXML(plugin, buf, null, true);
             String sEndBeast = "</" + XMLParser.BEAST_ELEMENT + ">";
             buf.append(sEndBeast);
@@ -123,7 +125,7 @@ public class XMLProducer extends XMLParser {
             buf = new StringBuffer();
             if (others.size() > 0) {
                 for (YABBYObject plugin2 : others) {
-                    if (!m_sIDs.contains(plugin2.getID())) {
+                    if (!IDs.contains(plugin2.getID())) {
                         pluginToXML(plugin2, buf, null, false);
                     }
                 }
@@ -179,10 +181,10 @@ public class XMLProducer extends XMLParser {
     public String toRawXML(YABBYObject plugin, String sName) {
         try {
             StringBuffer buf = new StringBuffer();
-            m_bDone = new HashSet<YABBYObject>();
-            m_bInputsDone = new HashSet<Input>();
-            m_sIDs = new HashSet<String>();
-            m_nIndent = 0;
+            isDone = new HashSet<YABBYObject>();
+            inputsDone = new HashSet<Input>();
+            IDs = new HashSet<String>();
+            indent = 0;
             pluginToXML(plugin, buf, sName, false);
             return buf.toString();
         } catch (Exception e) {
@@ -197,9 +199,9 @@ public class XMLProducer extends XMLParser {
         try {
             StringBuffer buf = new StringBuffer();
             //buf.append("<" + XMLParser.BEAST_ELEMENT + " version='2.0'>\n");
-            m_bDone = new HashSet<YABBYObject>();
-            m_sIDs = new HashSet<String>();
-            m_nIndent = 0;
+            isDone = new HashSet<YABBYObject>();
+            IDs = new HashSet<String>();
+            indent = 0;
             pluginToXML(plugin, buf, null, false);
             return buf.toString();
         } catch (Exception e) {
@@ -236,16 +238,16 @@ public class XMLProducer extends XMLParser {
     // compress parts into plates
     String findPlates(String sXML) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        m_doc = factory.newDocumentBuilder().parse(new InputSource(new StringReader(sXML)));
-        m_doc.normalize();
+        doc = factory.newDocumentBuilder().parse(new InputSource(new StringReader(sXML)));
+        doc.normalize();
 
-        Node topNode = m_doc.getElementsByTagName("*").item(0);
+        Node topNode = doc.getElementsByTagName("*").item(0);
         findPlates(topNode);
 
         //create string from xml tree
         StringWriter sw = new StringWriter();
         StreamResult result = new StreamResult(sw);
-        DOMSource source = new DOMSource(m_doc);
+        DOMSource source = new DOMSource(doc);
         TransformerFactory factory2 = TransformerFactory.newInstance();
         Transformer transformer = factory2.newTransformer();
         transformer.transform(source, result);
@@ -297,15 +299,15 @@ public class XMLProducer extends XMLParser {
      * replace node element by a plate element with variable sVar and range sRange *
      */
     void makePlate(Node node, String sPattern, String sVar, String sRange) {
-        Element plate = m_doc.createElement("plate");
+        Element plate = doc.createElement("plate");
         plate.setAttribute("var", sVar);
         plate.setAttribute("range", sRange);
         String sIndent = node.getPreviousSibling().getTextContent();
         replace(node, sPattern, sVar);
         node.getParentNode().replaceChild(plate, node);
-        plate.appendChild(m_doc.createTextNode(sIndent + "  "));
+        plate.appendChild(doc.createTextNode(sIndent + "  "));
         plate.appendChild(node);
-        plate.appendChild(m_doc.createTextNode(sIndent));
+        plate.appendChild(doc.createTextNode(sIndent));
     }
 
     /**
@@ -565,8 +567,8 @@ public class XMLProducer extends XMLParser {
     void pluginToXML(YABBYObject plugin, StringBuffer buf, String sName, boolean bIsTopLevel) throws Exception {
         // determine element name, default is input, otherswise find one of the defaults
         String sElementName = "input";
-        for (String key : m_sElement2ClassMap.keySet()) {
-        	String className = m_sElement2ClassMap.get(key);
+        for (String key : element2ClassMap.keySet()) {
+        	String className = element2ClassMap.get(key);
         	Class _class = Class.forName(className);
         	if (_class.equals(plugin.getClass())) {
         		sElementName = key;
@@ -601,16 +603,16 @@ public class XMLProducer extends XMLParser {
         if (bIsTopLevel) {
             sElementName = XMLParser.RUN_ELEMENT;
         }
-        for (int i = 0; i < m_nIndent; i++) {
+        for (int i = 0; i < indent; i++) {
             buf.append("    ");
         }
-        m_nIndent++;
+        indent++;
 
         // open element
         buf.append("<").append(sElementName);
 
         boolean bSkipInputs = false;
-        if (m_bDone.contains(plugin)) {
+        if (isDone.contains(plugin)) {
             // XML is already produced, we can idref it
             buf.append(" idref='" + plugin.getID() + "'");
             bSkipInputs = true;
@@ -619,21 +621,21 @@ public class XMLProducer extends XMLParser {
             if (plugin.getID() != null && !plugin.getID().equals("")) {
                 String sID = plugin.getID();
                 // ensure ID is unique
-                if (m_sIDs.contains(sID)) {
+                if (IDs.contains(sID)) {
                     int k = 1;
-                    while (m_sIDs.contains(sID + k)) {
+                    while (IDs.contains(sID + k)) {
                         k++;
                     }
                     sID = sID + k;
                 }
                 buf.append(" id='" + sID + "'");
-                m_sIDs.add(sID);
+                IDs.add(sID);
             }
-            m_bDone.add(plugin);
+            isDone.add(plugin);
         }
         String sClassName = plugin.getClass().getName();
-        if (bSkipInputs == false && (!m_sElement2ClassMap.containsKey(sElementName) ||
-                !m_sElement2ClassMap.get(sElementName).equals(sClassName))) {
+        if (bSkipInputs == false && (!element2ClassMap.containsKey(sElementName) ||
+                !element2ClassMap.get(sElementName).equals(sClassName))) {
             // only add spec element if it cannot be deduced otherwise (i.e., by idref or default mapping
             buf.append(" spec='" + sClassName + "'");
         }
@@ -656,14 +658,14 @@ public class XMLProducer extends XMLParser {
             }
             if (buf2.length() == 0) {
                 // if nothing was added by the inputs, close element
-                m_nIndent--;
+                indent--;
                 buf.append("/>\n");
             } else {
                 // add contribution of inputs
                 buf.append(">\n");
                 buf.append(buf2);
-                m_nIndent--;
-                for (int i = 0; i < m_nIndent; i++) {
+                indent--;
+                for (int i = 0; i < indent; i++) {
                     buf.append("    ");
                 }
                 // add closing element
@@ -671,10 +673,10 @@ public class XMLProducer extends XMLParser {
             }
         } else {
             // close element
-            m_nIndent--;
+            indent--;
             buf.append("/>\n");
         }
-        if (m_nIndent < 2) {
+        if (indent < 2) {
             buf.append("\n");
         }
     } // pluginToXML
@@ -709,11 +711,11 @@ public class XMLProducer extends XMLParser {
                             return;
                         } else if (input.get() instanceof YABBYObject) {
                         	if (!input.get().equals(input.defaultValue)) {
-	                            if (bShort && m_bDone.contains((YABBYObject) input.get())) {
+	                            if (bShort && isDone.contains((YABBYObject) input.get())) {
 	                                buf.append(" " + sInput + "='@" + ((YABBYObject) input.get()).getID() + "'");
-	                                m_bInputsDone.add(input);
+	                                inputsDone.add(input);
 	                            }
-	                            if (!bShort && !m_bInputsDone.contains(input)) {
+	                            if (!bShort && !inputsDone.contains(input)) {
 	                                pluginToXML((YABBYObject) input.get(), buf, sInput, false);
 	                            }
                         	}
@@ -728,7 +730,7 @@ public class XMLProducer extends XMLParser {
 	                                }
 	                            } else {
 	                                if (sValue.indexOf('\n') >= 0) {
-	                                    for (int j = 0; j < m_nIndent; j++) {
+	                                    for (int j = 0; j < indent; j++) {
 	                                        buf.append("    ");
 	                                    }
 	                                    if (sInput.equals("value")) {

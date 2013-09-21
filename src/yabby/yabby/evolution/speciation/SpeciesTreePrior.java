@@ -16,6 +16,8 @@ import yabby.evolution.tree.TreeDistribution;
 import yabby.math.distributions.Gamma;
 
 
+
+
 @Description("Species tree prior for *BEAST analysis")
 public class SpeciesTreePrior extends TreeDistribution {
     //public Input<Tree> m_speciesTree = new Input<Tree>("speciesTree", "species tree containing the associated gene tree", Validate.REQUIRED);
@@ -77,13 +79,13 @@ public class SpeciesTreePrior extends TreeDistribution {
 
         // bottom prior = Gamma(2,Psi)
         gamma2Prior = new Gamma();
-        gamma2Prior.m_beta.setValue(gammaParameterInput.get(), gamma2Prior);
+        gamma2Prior.betaInput.setValue(gammaParameterInput.get(), gamma2Prior);
 
         // top prior = Gamma(4,Psi)
         gamma4Prior = new Gamma();
         final RealParameter parameter = new RealParameter(new Double[]{4.0});
-        gamma4Prior.m_alpha.setValue(parameter, gamma4Prior);
-        gamma4Prior.m_beta.setValue(gammaParameterInput.get(), gamma4Prior);
+        gamma4Prior.alphaInput.setValue(parameter, gamma4Prior);
+        gamma4Prior.betaInput.setValue(gammaParameterInput.get(), gamma4Prior);
 
         if (popFunction != PopSizeFunction.constant && gamma4Prior == null) {
             throw new Exception("Top prior must be specified when population function is not constant");

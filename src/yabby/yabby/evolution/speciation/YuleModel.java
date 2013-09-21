@@ -10,6 +10,8 @@ import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
 
 
+
+
 // From Gernhard 2008, Yule density (p; conditioned on n nodes) should be:
 // double p = 0.0;
 // p = lambda^(n-1) * exp(-lambda*rootHeight);
@@ -35,7 +37,7 @@ public class YuleModel extends SpeciesTreeDistribution {
         // otherwise this Yule Model is not appropriate
         Tree tree = treeInput.get();
         if (tree == null) {
-        	tree = treeIntervalsInput.get().m_tree.get();
+        	tree = treeIntervalsInput.get().treeInput.get();
         }
         List<Node> leafs = tree.getExternalNodes();
         double height = leafs.get(0).getHeight();

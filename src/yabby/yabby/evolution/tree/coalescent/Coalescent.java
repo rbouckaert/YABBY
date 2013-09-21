@@ -13,6 +13,8 @@ import yabby.core.Input.Validate;
 import yabby.evolution.tree.TreeDistribution;
 import yabby.math.Binomial;
 
+
+
 /**
  * @author Alexei Drummond
  */
@@ -22,7 +24,7 @@ import yabby.math.Binomial;
         "in account, in other words, the constant required for making this a proper distribution that integrates " +
         "to unity is not calculated (partly, because we don't know how for sequentially samples data).")
 public class Coalescent extends TreeDistribution {
-    public Input<PopulationFunction> popSize = new Input<PopulationFunction>("populationModel", "A population size model", Validate.REQUIRED);
+    public Input<PopulationFunction> popSizeInput = new Input<PopulationFunction>("populationModel", "A population size model", Validate.REQUIRED);
 
     TreeIntervals intervals;
 
@@ -42,7 +44,7 @@ public class Coalescent extends TreeDistribution {
     @Override
     public double calculateLogP() throws Exception {
 
-        logP = calculateLogLikelihood(intervals, popSize.get());
+        logP = calculateLogLikelihood(intervals, popSizeInput.get());
 
         if (Double.isInfinite(logP)) {
         	logP = Double.NEGATIVE_INFINITY;
@@ -68,7 +70,7 @@ public class Coalescent extends TreeDistribution {
      * @return a list of unique ids for the state nodes that make up the conditions
      */
     public List<String> getConditions() {
-        return popSize.get().getParameterIds();
+        return popSizeInput.get().getParameterIds();
     }
 
 
@@ -139,6 +141,6 @@ public class Coalescent extends TreeDistribution {
 
     @Override
     protected boolean requiresRecalculation() {
-        return ((CalculationNode) popSize.get()).isDirtyCalculation() || super.requiresRecalculation();
+        return ((CalculationNode) popSizeInput.get()).isDirtyCalculation() || super.requiresRecalculation();
     }
 }

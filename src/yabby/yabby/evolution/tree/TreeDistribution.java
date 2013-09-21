@@ -11,6 +11,8 @@ import yabby.core.State;
 import yabby.core.Input.Validate;
 import yabby.evolution.tree.coalescent.TreeIntervals;
 
+
+
 @Description("Distribution on a tree, typically a prior such as Coalescent or Yule")
 public class TreeDistribution extends Distribution {
     public Input<Tree> treeInput = new Input<Tree>("tree", "tree over which to calculate a prior or likelihood");

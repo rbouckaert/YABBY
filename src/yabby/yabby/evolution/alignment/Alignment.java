@@ -38,6 +38,8 @@ import yabby.core.Input.Validate;
 import yabby.evolution.datatype.DataType;
 import yabby.util.AddOnManager;
 
+
+
 @Description("Class representing alignment data")
 public class Alignment extends CalculationNode {
     /**
@@ -48,7 +50,7 @@ public class Alignment extends CalculationNode {
     /**
      * directory to pick up data types from *
      */
-    final static String[] IMPLEMENTATION_DIR = {"yabby.evolution.datatype"};
+    final static String[] IMPLEMENTATION_DIR = {"beast.evolution.datatype"};
 
     /**
      * list of data type descriptions, obtained from DataType classes *

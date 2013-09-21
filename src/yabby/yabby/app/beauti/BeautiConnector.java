@@ -4,12 +4,14 @@ package yabby.app.beauti;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.MCMC;
 import yabby.core.Operator;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
+
+
 
 
 @Description("Specifies which part of the template get connected to the main network")

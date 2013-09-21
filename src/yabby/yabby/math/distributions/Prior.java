@@ -9,21 +9,23 @@ import yabby.core.Input.Validate;
 import yabby.core.parameter.IntegerParameter;
 import yabby.core.parameter.RealParameter;
 
+
+
 @Description("Produces prior (log) probability of value x." +
         "If x is multidimensional, the components of x are assumed to be independent, " +
         "so the sum of log probabilities of all elements of x is returned as the prior.")
 public class Prior extends Distribution {
     public Input<Function> m_x = new Input<Function>("x", "point at which the density is calculated", Validate.REQUIRED);
-    public Input<ParametricDistribution> m_distInput = new Input<ParametricDistribution>("distr", "distribution used to calculate prior, e.g. normal, beta, gamma.", Validate.REQUIRED);
+    public Input<ParametricDistribution> distInput = new Input<ParametricDistribution>("distr", "distribution used to calculate prior, e.g. normal, beta, gamma.", Validate.REQUIRED);
 
     /**
      * shadows m_distInput *
      */
-    ParametricDistribution m_dist;
+    ParametricDistribution dist;
 
     @Override
     public void initAndValidate() throws Exception {
-        m_dist = m_distInput.get();
+        dist = distInput.get();
         calculateLogP();
     }
 
@@ -48,7 +50,7 @@ public class Prior extends Distribution {
             	}
             }
         }
-        logP = m_dist.calcLogP(x);
+        logP = dist.calcLogP(x);
         return logP;
     }
     

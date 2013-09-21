@@ -28,9 +28,9 @@ package yabby.evolution.tree;
 
 import java.util.*;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.StateNode;
 import yabby.core.StateNodeInitialiser;
 import yabby.core.Input.Validate;
@@ -41,6 +41,8 @@ import yabby.math.distributions.MRCAPrior;
 import yabby.math.distributions.ParametricDistribution;
 import yabby.util.HeapSort;
 import yabby.util.Randomizer;
+
+
 
 
 @Description("This class provides the basic engine for coalescent simulation of a given demographic model over a given time period. ")
@@ -173,8 +175,8 @@ public class RandomTree extends Tree implements StateNodeInitialiser {
 
 
         for (final MRCAPrior prior : calibrations) {
-            final TaxonSet taxonSet = prior.m_taxonset.get();
-            if (taxonSet != null && !prior.m_bOnlyUseTipsInput.get()) {
+            final TaxonSet taxonSet = prior.taxonsetInput.get();
+            if (taxonSet != null && !prior.onlyUseTipsInput.get()) {
 	            final BitSet bTaxa = new BitSet(m_nTaxa);
 	        	if (taxonSet.asStringList() == null) {
 	        		taxonSet.initAndValidate();
@@ -186,7 +188,7 @@ public class RandomTree extends Tree implements StateNodeInitialiser {
 	                }
 	                bTaxa.set(iID);
 	            }
-	            final ParametricDistribution distr = prior.m_distInput.get();
+	            final ParametricDistribution distr = prior.distInput.get();
 	            final Bound bounds = new Bound();
 	            if (distr != null) {
 	        		List<YABBYObject> plugins = new ArrayList<YABBYObject>();
@@ -194,11 +196,11 @@ public class RandomTree extends Tree implements StateNodeInitialiser {
 	        		for (int i = plugins.size() - 1; i >= 0 ; i--) {
 	        			plugins.get(i).initAndValidate();
 	        		}
-	                bounds.m_fLower = distr.inverseCumulativeProbability(0.0) + distr.m_offset.get();
-	                bounds.m_fUpper = distr.inverseCumulativeProbability(1.0) + distr.m_offset.get();
+	                bounds.m_fLower = distr.inverseCumulativeProbability(0.0) + distr.offsetInput.get();
+	                bounds.m_fUpper = distr.inverseCumulativeProbability(1.0) + distr.offsetInput.get();
 	            }
 	
-	            if (prior.m_bIsMonophyleticInput.get()) {
+	            if (prior.isMonophyleticInput.get()) {
 	                // add any monophyletic constraint
 	                m_bTaxonSets.add(m_nIsMonophyletic, bTaxa);
 	                m_distributions.add(m_nIsMonophyletic, distr);
@@ -293,20 +295,20 @@ public class RandomTree extends Tree implements StateNodeInitialiser {
     private void scaleToFit(double scale, Node node) {
         if (!node.isLeaf()) {
 	    	double oldHeight = node.getHeight();
-	    	node.m_fHeight *= scale;
+	    	node.height *= scale;
 	        final Integer iConstraint = getDistrConstraint(node);
 	        if (iConstraint != null) {
-	            if (node.m_fHeight < m_bounds.get(iConstraint).m_fLower || node.m_fHeight > m_bounds.get(iConstraint).m_fUpper) {
+	            if (node.height < m_bounds.get(iConstraint).m_fLower || node.height > m_bounds.get(iConstraint).m_fUpper) {
 	            	//revert scaling
-	            	node.m_fHeight = oldHeight;
+	            	node.height = oldHeight;
 	            	return;
 	            }
 	        }
 	        scaleToFit(scale, node.getLeft());
 	        scaleToFit(scale, node.getRight());
-	        if (node.m_fHeight < Math.max(node.getLeft().getHeight(), node.getRight().getHeight())) {
+	        if (node.height < Math.max(node.getLeft().getHeight(), node.getRight().getHeight())) {
 	        	// this can happen if a child node is constrained and the default tree is higher than desired
-	        	node.m_fHeight = 1.0000001 * Math.max(node.getLeft().getHeight(), node.getRight().getHeight());
+	        	node.height = 1.0000001 * Math.max(node.getLeft().getHeight(), node.getRight().getHeight());
 	        }
         }
 	}

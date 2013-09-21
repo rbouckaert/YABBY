@@ -23,8 +23,10 @@ import javax.swing.event.ListSelectionListener;
 import yabby.app.beauti.BeautiDoc;
 import yabby.app.beauti.BeautiPanel;
 import yabby.app.beauti.BeautiPanelConfig;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
+
+
 
 
 /**

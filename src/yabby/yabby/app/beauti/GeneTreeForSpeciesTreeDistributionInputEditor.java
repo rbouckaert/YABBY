@@ -8,9 +8,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import yabby.app.draw.InputEditor;
-import yabby.core.Input;
 import yabby.core.YABBYObject;
+import yabby.core.Input;
 import yabby.evolution.speciation.GeneTreeForSpeciesTreeDistribution;
+
+
 
 
 public class GeneTreeForSpeciesTreeDistributionInputEditor extends InputEditor.Base {

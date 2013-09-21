@@ -18,15 +18,17 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import yabby.app.draw.ExtensionFileFilter;
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.FilteredAlignment;
 import yabby.evolution.alignment.Sequence;
 import yabby.util.NexusParser;
 import yabby.util.XMLParser;
+
+
 
 
 @Description("Class for creating new alignments to be edited by AlignmentListInputEditor")
@@ -74,7 +76,7 @@ public class BeautiAlignmentProvider extends YABBYObject {
 					NexusParser parser = new NexusParser();
 					try {
 						parser.parseFile(file);
-						if (parser.m_filteredAlignments.size() > 0) {
+						if (parser.filteredAlignments.size() > 0) {
 							/**
 							 * sanity check: make sure the filters do not
 							 * overlap
@@ -82,7 +84,7 @@ public class BeautiAlignmentProvider extends YABBYObject {
 							int[] used = new int[parser.m_alignment.getSiteCount()];
 							Set<Integer> overlap = new HashSet<Integer>();
 							int partitionNr = 1;
-							for (Alignment data : parser.m_filteredAlignments) {
+							for (Alignment data : parser.filteredAlignments) {
 								int[] indices = ((FilteredAlignment) data).indices();
 								for (int i : indices) {
 									if (used[i] > 0) {
@@ -96,15 +98,15 @@ public class BeautiAlignmentProvider extends YABBYObject {
 							if (overlap.size() > 0) {
 								String overlaps = "<html>Warning: The following partitions overlap:<br/>";
 								for (int i : overlap) {
-									overlaps += parser.m_filteredAlignments.get(i / 10000 - 1).getID()
+									overlaps += parser.filteredAlignments.get(i / 10000 - 1).getID()
 											+ " overlaps with "
-											+ parser.m_filteredAlignments.get(i % 10000 - 1).getID() + "<br/>";
+											+ parser.filteredAlignments.get(i % 10000 - 1).getID() + "<br/>";
 								}
 								overlaps += "The first thing you might want to do is delete some of these partitions.</html>";
 								JOptionPane.showMessageDialog(null, overlaps);
 							}
 							/** add alignments **/
-							for (Alignment data : parser.m_filteredAlignments) {
+							for (Alignment data : parser.filteredAlignments) {
 								selectedPlugins.add(data);
 							}
 						} else {

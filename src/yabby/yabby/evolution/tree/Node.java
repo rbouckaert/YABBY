@@ -27,9 +27,11 @@ package yabby.evolution.tree;
 
 import java.util.*;
 
-import yabby.core.Description;
 import yabby.core.YABBYObject;
+import yabby.core.Description;
 import yabby.util.HeapSort;
+
+
 
 @Description("Nodes in building beast.tree data structure.")
 public class Node extends YABBYObject {
@@ -37,12 +39,12 @@ public class Node extends YABBYObject {
     /**
      * label nr of node, used mostly when this is a leaf.
      */
-    protected int m_iLabel;
+    protected int labelNr;
 
     /**
      * height of this node.
      */
-    protected double m_fHeight = Double.MAX_VALUE;
+    protected double height = Double.MAX_VALUE;
 
     /**
      * Arbitrarily labeled metadata on this node. Not currently implemented as part of state!
@@ -64,17 +66,17 @@ public class Node extends YABBYObject {
     /**
      * parent node in the beast.tree, null if root *
      */
-    Node m_Parent = null;
+    Node parent = null;
 
     /**
      * status of this node after an operation is performed on the state *
      */
-    int m_bIsDirty = Tree.IS_CLEAN;
+    int isDirty = Tree.IS_CLEAN;
 
     /**
      * meta-data contained in square brackets in Newick *
      */
-    public String m_sMetaData;
+    public String metaDataString;
 
     /**
      * The Tree that this node is a part of.
@@ -108,29 +110,29 @@ public class Node extends YABBYObject {
      *         Node number is guaranteed not to change during an MCMC run.
      */
     public int getNr() {
-        return m_iLabel;
+        return labelNr;
     }
 
     public void setNr(int iLabel) {
-        m_iLabel = iLabel;
+        labelNr = iLabel;
     }
 
     public double getHeight() {
-        return m_fHeight;
+        return height;
     }
 
     public double getDate() {
-        return m_tree.getDate(m_fHeight);
+        return m_tree.getDate(height);
     }
 
     public void setHeight(double fHeight) {
         startEditing();
-        m_fHeight = fHeight;
-        m_bIsDirty |= Tree.IS_DIRTY;
+        height = fHeight;
+        isDirty |= Tree.IS_DIRTY;
         if (!isLeaf()) {
-            getLeft().m_bIsDirty |= Tree.IS_DIRTY;
+            getLeft().isDirty |= Tree.IS_DIRTY;
             if (getRight() != null) {
-                getRight().m_bIsDirty |= Tree.IS_DIRTY;
+                getRight().isDirty |= Tree.IS_DIRTY;
             }
         }
     }
@@ -142,7 +144,7 @@ public class Node extends YABBYObject {
         if (isRoot()) {
             return 0;
         } else {
-            return getParent().m_fHeight - m_fHeight;
+            return getParent().height - height;
         }
     }
 
@@ -153,15 +155,15 @@ public class Node extends YABBYObject {
      * Otherwise the node is Tree.IS_CLEAN *
      */
     public int isDirty() {
-        return m_bIsDirty;
+        return isDirty;
     }
 
     public void makeDirty(int nDirty) {
-        m_bIsDirty |= nDirty;
+        isDirty |= nDirty;
     }
 
     public void makeAllDirty(int nDirty) {
-        m_bIsDirty = nDirty;
+        isDirty = nDirty;
         if (!isLeaf()) {
             getLeft().makeAllDirty(nDirty);
             if (getRight() != null) {
@@ -175,7 +177,7 @@ public class Node extends YABBYObject {
      * @return parent node, or null if this is root *
      */
     public Node getParent() {
-        return m_Parent;
+        return parent;
     }
 
     /**
@@ -195,9 +197,9 @@ public class Node extends YABBYObject {
      */
     void setParent(Node parent, boolean inOperator) {
         if (inOperator) startEditing();
-        if (m_Parent != parent) {
-            m_Parent = parent;
-            if (inOperator) m_bIsDirty = Tree.IS_FILTHY;
+        if (this.parent != parent) {
+        	this.parent = parent;
+            if (inOperator) isDirty = Tree.IS_FILTHY;
         }
     }
 
@@ -256,7 +258,7 @@ public class Node extends YABBYObject {
      * @return true if current node is root node *
      */
     public boolean isRoot() {
-        return m_Parent == null;
+        return parent == null;
     }
 
     /**
@@ -387,11 +389,11 @@ public class Node extends YABBYObject {
             }
             buf.append(")");
             if (getID() != null) {
-                buf.append(m_iLabel+1);
+                buf.append(labelNr+1);
             }
         } else {
-            iMaxNodeInClade[0] = m_iLabel;
-            buf.append(m_iLabel + 1);
+            iMaxNodeInClade[0] = labelNr;
+            buf.append(labelNr + 1);
         }
 
         if (printMetaData) {
@@ -427,7 +429,7 @@ public class Node extends YABBYObject {
             }
         } else {
             if (getID() == null) {
-                buf.append(m_iLabel);
+                buf.append(labelNr);
             } else {
                 buf.append(getID());
             }
@@ -438,8 +440,8 @@ public class Node extends YABBYObject {
     }
 
     public String getNewickMetaData() {
-        if (m_sMetaData != null) {
-            return "[&" + m_sMetaData + ']';
+        if (metaDataString != null) {
+            return "[&" + metaDataString + ']';
         }
         return "";
     }
@@ -460,11 +462,11 @@ public class Node extends YABBYObject {
             }
             buf.append(")");
         } else {
-            buf.append(sLabels.get(m_iLabel));
+            buf.append(sLabels.get(labelNr));
         }
-        if (m_sMetaData != null) {
+        if (metaDataString != null) {
             buf.append('[');
-            buf.append(m_sMetaData);
+            buf.append(metaDataString);
             buf.append(']');
         }
         buf.append(":").append(getLength());
@@ -483,7 +485,7 @@ public class Node extends YABBYObject {
     public int sort() {
 
         if (isLeaf()) {
-            return m_iLabel;
+            return labelNr;
         }
 
         int childCount = getChildCount();
@@ -522,7 +524,7 @@ public class Node extends YABBYObject {
             if (getRight() != null) {
                 iLabel = getRight().labelInternalNodes(iLabel);
             }
-            m_iLabel = iLabel++;
+            labelNr = iLabel++;
         }
         return iLabel;
     } // labelInternalNodes
@@ -532,10 +534,10 @@ public class Node extends YABBYObject {
      */
     public Node copy() {
         Node node = new Node();
-        node.m_fHeight = m_fHeight;
-        node.m_iLabel = m_iLabel;
-        node.m_sMetaData = m_sMetaData;
-        node.m_Parent = null;
+        node.height = height;
+        node.labelNr = labelNr;
+        node.metaDataString = metaDataString;
+        node.parent = null;
         node.setID(ID);
 
         for (Node child : getChildren()) {
@@ -549,19 +551,19 @@ public class Node extends YABBYObject {
      */
     public void assignTo(Node[] nodes) {
         Node node = nodes[getNr()];
-        node.m_fHeight = m_fHeight;
-        node.m_iLabel = m_iLabel;
-        node.m_sMetaData = m_sMetaData;
-        node.m_Parent = null;
+        node.height = height;
+        node.labelNr = labelNr;
+        node.metaDataString = metaDataString;
+        node.parent = null;
         node.ID = ID;
         if (getLeft() != null) {
             node.setLeft(nodes[getLeft().getNr()]);
             getLeft().assignTo(nodes);
-            node.getLeft().m_Parent = node;
+            node.getLeft().parent = node;
             if (getRight() != null) {
                 node.setRight(nodes[getRight().getNr()]);
                 getRight().assignTo(nodes);
-                node.getRight().m_Parent = node;
+                node.getRight().parent = node;
             }
         }
     }
@@ -570,19 +572,19 @@ public class Node extends YABBYObject {
      * assign values from a tree in array representation *
      */
     public void assignFrom(Node[] nodes, Node node) {
-        m_fHeight = node.m_fHeight;
-        m_iLabel = node.m_iLabel;
-        m_sMetaData = node.m_sMetaData;
-        m_Parent = null;
+        height = node.height;
+        labelNr = node.labelNr;
+        metaDataString = node.metaDataString;
+        parent = null;
         ID = node.ID;
         if (node.getLeft() != null) {
             setLeft(nodes[node.getLeft().getNr()]);
             getLeft().assignFrom(nodes, node.getLeft());
-            getLeft().m_Parent = this;
+            getLeft().parent = this;
             if (node.getRight() != null) {
                 setRight(nodes[node.getRight().getNr()]);
                 getRight().assignFrom(nodes, node.getRight());
-                getRight().m_Parent = this;
+                getRight().parent = this;
             }
         }
     }
@@ -597,8 +599,8 @@ public class Node extends YABBYObject {
         if (sPattern.equals(TraitSet.DATE_TRAIT) ||
                 sPattern.equals(TraitSet.DATE_FORWARD_TRAIT) ||
                 sPattern.equals(TraitSet.DATE_BACKWARD_TRAIT)) {
-            m_fHeight = (Double) fValue;
-            m_bIsDirty |= Tree.IS_DIRTY;
+            height = (Double) fValue;
+            isDirty |= Tree.IS_DIRTY;
         } else {
             if (metaData == null) metaData = new TreeMap<String, Object>();
             metaData.put(sPattern, fValue);
@@ -610,7 +612,7 @@ public class Node extends YABBYObject {
         if (sPattern.equals(TraitSet.DATE_TRAIT) ||
                 sPattern.equals(TraitSet.DATE_FORWARD_TRAIT) ||
                 sPattern.equals(TraitSet.DATE_BACKWARD_TRAIT)) {
-            return m_fHeight;
+            return height;
         } else if (metaData != null) {
             Object d = metaData.get(sPattern);
             if (d != null) return d;
@@ -633,14 +635,14 @@ public class Node extends YABBYObject {
      */
     public void scale(double fScale) throws Exception {
         startEditing();
-        m_bIsDirty |= Tree.IS_DIRTY;
+        isDirty |= Tree.IS_DIRTY;
         if (!isLeaf()) {
-            m_fHeight *= fScale;
+            height *= fScale;
             getLeft().scale(fScale);
             if (getRight() != null) {
                 getRight().scale(fScale);
             }
-            if (m_fHeight < getLeft().m_fHeight || m_fHeight < getRight().m_fHeight) {
+            if (height < getLeft().height || height < getRight().height) {
                 throw new Exception("Scale gives negative branch length");
             }
         }

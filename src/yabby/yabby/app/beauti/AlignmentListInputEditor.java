@@ -39,9 +39,9 @@ import javax.swing.table.TableColumn;
 import yabby.app.draw.ListInputEditor;
 import yabby.app.draw.SmallButton;
 import yabby.app.util.Utils;
+import yabby.core.YABBYObject;
 import yabby.core.Input;
 import yabby.core.MCMC;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
 import yabby.core.util.CompoundDistribution;
 import yabby.evolution.alignment.Alignment;
@@ -51,6 +51,8 @@ import yabby.evolution.likelihood.GenericTreeLikelihood;
 import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.sitemodel.SiteModelInterface;
 import yabby.evolution.tree.Tree;
+
+
 
 
 // TODO: add useAmbiguities flag

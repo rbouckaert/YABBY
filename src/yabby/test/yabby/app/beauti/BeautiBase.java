@@ -29,15 +29,17 @@ import org.fest.swing.junit.testcase.FestSwingJUnitTestCase;
 import yabby.app.beauti.Beauti;
 import yabby.app.beauti.BeautiDoc;
 import yabby.app.util.Utils;
+import yabby.core.YABBYObject;
 import yabby.core.Distribution;
 import yabby.core.Logger;
 import yabby.core.MCMC;
 import yabby.core.Operator;
-import yabby.core.YABBYObject;
 import yabby.core.State;
 import yabby.core.StateNode;
 import yabby.core.util.CompoundDistribution;
 import yabby.util.XMLParser;
+
+
 
 
 /**

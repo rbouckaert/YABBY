@@ -32,12 +32,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
-import yabby.app.Yabby;
+import yabby.app.BeastMCMC;
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Distribution;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.State;
+
+
 
 @Description("Takes a collection of distributions, typically a number of likelihoods " +
         "and priors and combines them into the compound of these distributions " +
@@ -62,7 +64,7 @@ public class CompoundDistribution extends Distribution {
     @Override
     public void initAndValidate() throws Exception {
         super.initAndValidate();
-        useThreads = useThreadsInput.get() && (Yabby.m_nThreads > 1);
+        useThreads = useThreadsInput.get() && (BeastMCMC.m_nThreads > 1);
         ignore = ignoreInput.get();
 
         if (pDistributions.get().size() == 0) {
@@ -140,7 +142,7 @@ public class CompoundDistribution extends Distribution {
             for (Distribution dists : pDistributions.get()) {
                 if (dists.isDirtyCalculation()) {
                     CoreRunnable coreRunnable = new CoreRunnable(dists);
-                    Yabby.g_exec.execute(coreRunnable);
+                    BeastMCMC.g_exec.execute(coreRunnable);
                 }
             }
             m_nCountDown.await();
@@ -153,7 +155,7 @@ public class CompoundDistribution extends Distribution {
             useThreads = false;
             System.err.println("Stop using threads: " + e.getMessage());
             // refresh thread pool
-            Yabby.g_exec = Executors.newFixedThreadPool(Yabby.m_nThreads);
+            BeastMCMC.g_exec = Executors.newFixedThreadPool(BeastMCMC.m_nThreads);
             return calculateLogP();
         }
     }

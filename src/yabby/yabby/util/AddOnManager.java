@@ -35,11 +35,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import yabby.app.YabbyVersion;
+import yabby.app.BEASTVersion;
 import yabby.app.util.Arguments;
 import yabby.app.util.Utils;
 import yabby.core.util.Log;
 import yabby.evolution.alignment.Alignment;
+
+
 
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -67,7 +69,7 @@ import java.util.zip.ZipFile;
  */
 // TODO: on windows allow installation on drive D: and pick up add-ons in drive C:
 public class AddOnManager {
-    public final static String[] IMPLEMENTATION_DIR = {"yabby", "snap"};
+    public final static String[] IMPLEMENTATION_DIR = {"beast", "snap"};
     public final static String TO_DELETE_LIST_FILE = "toDeleteList";
 
     /**
@@ -314,13 +316,13 @@ public class AddOnManager {
 //            if (System.getenv("APPDATA") != null) {
 //                return System.getenv("APPDATA") + "\\BEAST";
 //            }
-            return System.getProperty("user.home") + "\\YABBY";
+            return System.getProperty("user.home") + "\\BEAST";
         }
         if (Utils.isMac()) {
-            return System.getProperty("user.home") + "/Library/Application Support/YABBY";
+            return System.getProperty("user.home") + "/Library/Application Support/BEAST";
         }
         // Linux and unices
-        return System.getProperty("user.home") + "/.yabby";
+        return System.getProperty("user.home") + "/.beast";
     }
 
     /**
@@ -573,7 +575,7 @@ public class AddOnManager {
         }
 
         HashMap<String, Double> addonVersion = new HashMap<String, Double>();
-        YabbyVersion beastVersion = new YabbyVersion();
+        BEASTVersion beastVersion = new BEASTVersion();
         addonVersion.put("beast2", parseVersion(beastVersion.getVersion()));
         List<AddonDependency> dependencies = new ArrayList<AddonDependency>();
 

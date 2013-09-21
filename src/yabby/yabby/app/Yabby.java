@@ -21,6 +21,22 @@ import netscape.javascript.JSObject;
 
 import org.json.JSONObject;
 
+import yabby.app.util.Application;
+import yabby.app.util.HTMLPrintStream;
+import yabby.app.util.HTTPPostServer;
+import yabby.app.util.HTTPRequestHandler;
+import yabby.core.Input;
+import yabby.core.Logger;
+import yabby.core.Runnable;
+import yabby.core.Logger.LogFileMode;
+import yabby.core.util.Log;
+import yabby.util.AddOnManager;
+import yabby.util.JSONParser;
+import yabby.util.JSONParserException;
+import yabby.util.Randomizer;
+import yabby.util.XMLParser;
+import yabby.util.XMLParserException;
+
 import beagle.BeagleFlag;
 import beagle.BeagleInfo;
 import javafx.application.Platform;
@@ -32,21 +48,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import yabby.app.util.Application;
-import yabby.app.util.HTMLPrintStream;
-import yabby.app.util.HTTPPostServer;
-import yabby.app.util.HTTPRequestHandler;
-import yabby.core.Input;
-import yabby.core.Logger;
-import yabby.core.Logger.LogFileMode;
-import yabby.core.Runnable;
-import yabby.core.util.Log;
-import yabby.util.AddOnManager;
-import yabby.util.JSONParser;
-import yabby.util.JSONParserException;
-import yabby.util.Randomizer;
-import yabby.util.XMLParser;
-import yabby.util.XMLParserException;
 
 /** 
  * main program for running MCMC analysis as well as other analysis 
@@ -92,11 +93,11 @@ public class Yabby extends Application implements HTTPRequestHandler {
     /**
      * number of threads used to run the likelihood beast.core *
      */
-    static public int m_nThreads = 1;
+    //static public int m_nThreads = 1;
     /**
      * thread pool *
      */
-    public static ExecutorService g_exec = Executors.newFixedThreadPool(m_nThreads);
+    //public static ExecutorService g_exec = Executors.newFixedThreadPool(BeastMCMC.m_nThreads);
     /**
      * random number seed used to initialise Randomizer *
      */
@@ -375,8 +376,8 @@ public class Yabby extends Application implements HTTPRequestHandler {
             resume = true;
         }
 
-        m_nThreads = threadsInput.get();
-        g_exec = Executors.newFixedThreadPool(m_nThreads);
+        BeastMCMC.m_nThreads = threadsInput.get();
+        BeastMCMC.g_exec = Executors.newFixedThreadPool(BeastMCMC.m_nThreads);
         
         // BEAGLE options
         long beagleFlags = 0;
@@ -425,7 +426,7 @@ public class Yabby extends Application implements HTTPRequestHandler {
         	return false;
         }
 
-        System.err.println("File: " + yabbyFile.getName() + " seed: " + m_nSeed + " threads: " + m_nThreads);
+        System.err.println("File: " + yabbyFile.getName() + " seed: " + m_nSeed + " threads: " + BeastMCMC.m_nThreads);
         if (resume) {
             System.out.println("Resuming from file");
         }
@@ -443,10 +444,10 @@ public class Yabby extends Application implements HTTPRequestHandler {
     } // init
 
     public void run() throws Exception {
-        g_exec = Executors.newFixedThreadPool(m_nThreads);
+    	BeastMCMC.g_exec = Executors.newFixedThreadPool(BeastMCMC.m_nThreads);
         m_runnable.run();
-        g_exec.shutdown();
-        g_exec.shutdownNow();
+        BeastMCMC.g_exec.shutdown();
+        BeastMCMC.g_exec.shutdownNow();
     } // run	
 	
     

@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import yabby.util.TreeParser;
 
+
+
 public class TreeParserTest extends TestCase {
 
     @Test
@@ -17,7 +19,7 @@ public class TreeParserTest extends TestCase {
             boolean isLabeled = false;
 
             TreeParser treeParser = new TreeParser(newick, false, false, isLabeled, 0);
-            treeParser.m_nOffset.setValue(0, treeParser);
+            treeParser.offsetInput.setValue(0, treeParser);
 
             assertEquals(newick.split(";")[0], treeParser.getRoot().toShortNewick(true));
 

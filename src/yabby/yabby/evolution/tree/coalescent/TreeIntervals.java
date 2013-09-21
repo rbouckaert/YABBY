@@ -13,6 +13,8 @@ import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
 import yabby.util.HeapSort;
 
+
+
 /*
  * TreeIntervals.java
  *
@@ -48,7 +50,7 @@ import yabby.util.HeapSort;
 @Description("Extracts the intervals from a tree. Points in the intervals " +
         "are defined by the heights of nodes in the tree.")
 public class TreeIntervals extends CalculationNode implements IntervalList {
-    public Input<Tree> m_tree = new Input<Tree>("tree", "tree for which to calculate the intervals", Validate.REQUIRED);
+    public Input<Tree> treeInput = new Input<Tree>("tree", "tree for which to calculate the intervals", Validate.REQUIRED);
 
     public TreeIntervals() {
         super();
@@ -125,7 +127,7 @@ public class TreeIntervals extends CalculationNode implements IntervalList {
 
     public int getSampleCount() {
         // Assumes a binary tree!
-        return m_tree.get().getInternalNodeCount();
+        return treeInput.get().getInternalNodeCount();
     }
 
     /**
@@ -310,7 +312,7 @@ public class TreeIntervals extends CalculationNode implements IntervalList {
      */
     @SuppressWarnings("unchecked")
     protected void calculateIntervals() {
-        Tree tree = m_tree.get();
+        Tree tree = treeInput.get();
 
         final int nodeCount = tree.getNodeCount();
 

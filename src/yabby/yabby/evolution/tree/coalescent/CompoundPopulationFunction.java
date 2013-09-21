@@ -21,6 +21,8 @@ import yabby.evolution.tree.coalescent.PopulationFunction;
 import yabby.evolution.tree.coalescent.TreeIntervals;
 import yabby.math.statistic.DiscreteStatistics;
 
+
+
 /**
  * @author joseph
  *         Date: 26/08/2010
@@ -37,11 +39,11 @@ public class CompoundPopulationFunction extends PopulationFunction.Abstract impl
     public Input<List<TreeIntervals>> treesInput = new Input<List<TreeIntervals>>("itree", "Coalecent intervals of this tree are " +
             "used in the compound population function.", new ArrayList<TreeIntervals>(), Input.Validate.REQUIRED);
 
-    public Input<String> demographicType = new Input<String>("type", "Flavour of demographic: either linear or stepwise for " +
+    public Input<String> demographicTypeInput = new Input<String>("type", "Flavour of demographic: either linear or stepwise for " +
             " piecewise-linear or piecewise-constant.",
             "linear");
 
-    public Input<Boolean> useMiddle = new Input<Boolean>("useIntervalsMiddle", "When true, the demographic X axis points are " +
+    public Input<Boolean> useMiddleInput = new Input<Boolean>("useIntervalsMiddle", "When true, the demographic X axis points are " +
             "in the middle of the coalecent intervals. By default they are at the beggining.",
             false);
 
@@ -82,16 +84,16 @@ public class CompoundPopulationFunction extends PopulationFunction.Abstract impl
         // is that safe???
         trees = treesInput.get();
 
-        useMid = useMiddle.get();
+        useMid = useMiddleInput.get();
 
         // used to work without upper case ???
-        type = Type.valueOf(demographicType.get().toUpperCase());  // errors?
+        type = Type.valueOf(demographicTypeInput.get().toUpperCase());  // errors?
         // set lengths
 
         int events = 0;
         for (TreeIntervals ti : trees) {
             // number of coalescent events
-            events += ti.m_tree.get().getLeafNodeCount() - 1;
+            events += ti.treeInput.get().getLeafNodeCount() - 1;
         }
         // all trees share time 0, need fixing for serial data
 
@@ -310,7 +312,7 @@ public class CompoundPopulationFunction extends PopulationFunction.Abstract impl
         ttimes = new double[trees.size()][];
         int tot = 0;
         for (int k = 0; k < ttimes.length; ++k) {
-            ttimes[k] = new double[trees.get(k).m_tree.get().getLeafNodeCount() - 1];
+            ttimes[k] = new double[trees.get(k).treeInput.get().getLeafNodeCount() - 1];
             tot += ttimes[k].length;
         }
         alltimes = new double[tot];

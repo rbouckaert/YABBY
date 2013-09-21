@@ -9,6 +9,8 @@ import yabby.app.beauti.Beauti;
 import yabby.app.beauti.BeautiDoc;
 
 
+
+
 import junit.framework.TestCase;
 
 public class BeautiTest extends TestCase {

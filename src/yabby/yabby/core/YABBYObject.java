@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+// This class was formerly called 'Plugin'
 @Description(
         value = "Base class for all YABBY objects, which is pretty much every class " +
                 "you want to incorporate in a model.",
@@ -364,4 +364,4 @@ abstract public class YABBYObject {
 
 	
 	
-} // class Plugin
+} // class BEASTObject

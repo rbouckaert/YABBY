@@ -6,9 +6,9 @@ import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.List;
 
+import yabby.core.YABBYObject;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.Sequence;
@@ -21,6 +21,8 @@ import yabby.evolution.tree.Tree;
 import yabby.util.Randomizer;
 import yabby.util.XMLParser;
 import yabby.util.XMLProducer;
+
+
 
 
 /**

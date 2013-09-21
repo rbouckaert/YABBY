@@ -8,9 +8,11 @@ import javax.swing.JTextField;
 import yabby.app.draw.InputEditor;
 import yabby.app.draw.ListInputEditor;
 import yabby.app.draw.StringInputEditor;
+import yabby.core.YABBYObject;
 import yabby.core.Input;
 import yabby.core.Logger;
-import yabby.core.YABBYObject;
+
+
 
 
 public class LoggerListInputEditor extends ListInputEditor {

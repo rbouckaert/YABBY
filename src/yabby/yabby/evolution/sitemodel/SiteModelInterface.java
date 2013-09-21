@@ -3,16 +3,18 @@ package yabby.evolution.sitemodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import yabby.core.YABBYObject;
 import yabby.core.CalculationNode;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.core.YABBYObject;
 import yabby.core.StateNode;
 import yabby.core.Input.Validate;
 import yabby.evolution.datatype.DataType;
 import yabby.evolution.likelihood.TreeLikelihood;
 import yabby.evolution.substitutionmodel.SubstitutionModel;
 import yabby.evolution.tree.Node;
+
+
 
 
 

@@ -11,6 +11,8 @@ import java.io.PrintStream;
 import yabby.core.*;
 import yabby.core.parameter.Parameter;
 
+
+
 /**
  * A statistic based on evaluating simple expressions.
  * <p/>
@@ -23,8 +25,8 @@ import yabby.core.parameter.Parameter;
 public class RPNcalculator extends CalculationNode implements Loggable, Function {
 
 
-    public Input<String> str_expression = new Input<String>("expression", "Expressions needed for the calculations", Input.Validate.REQUIRED);
-    public Input<List<Parameter>> parameters = new Input<List<Parameter>>("parameter", "Parameters needed for the calculations", new ArrayList<Parameter>());
+    public Input<String> strExpressionInput = new Input<String>("expression", "Expressions needed for the calculations", Input.Validate.REQUIRED);
+    public Input<List<Parameter>> parametersInput = new Input<List<Parameter>>("parameter", "Parameters needed for the calculations", new ArrayList<Parameter>());
 
     private RPNexpressionCalculator[] expressions;
     private List<String> names;
@@ -36,11 +38,11 @@ public class RPNcalculator extends CalculationNode implements Loggable, Function
     public void initAndValidate() throws Exception {
 
         names = new ArrayList<String>();
-        dim = parameters.get().get(0).getDimension();
+        dim = parametersInput.get().get(0).getDimension();
 
         int pdim;
 
-        for (Parameter p : parameters.get()) {
+        for (Parameter p : parametersInput.get()) {
 
             pdim = p.getDimension();
 
@@ -78,7 +80,7 @@ public class RPNcalculator extends CalculationNode implements Loggable, Function
 
         String err;
         for (int i = 0; i < dim; i++) {
-            expressions[i] = new RPNexpressionCalculator(str_expression.get());
+            expressions[i] = new RPNexpressionCalculator(strExpressionInput.get());
 
             err = expressions[i].validate();
             if (err != null) {
@@ -88,7 +90,7 @@ public class RPNcalculator extends CalculationNode implements Loggable, Function
     }
 
     private void updateValues() {
-        for (Parameter p : parameters.get()) {
+        for (Parameter p : parametersInput.get()) {
             for (int i = 0; i < p.getDimension(); i++) {
                 variables.put(p.getID(), p.getValues());
             }
@@ -146,7 +148,7 @@ public class RPNcalculator extends CalculationNode implements Loggable, Function
 
     public List<String> getArguments() {
         List<String> arguments = new ArrayList<String>();
-        for (Parameter par : parameters.get()) {
+        for (Parameter par : parametersInput.get()) {
             arguments.add(par.getID());
         }
         return arguments;
