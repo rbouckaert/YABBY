@@ -51,7 +51,7 @@ public class JSONProducer {
      */
     int indentCount;
 
-    final public static String DEFAULT_NAMESPACE = "beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood";
+    final public static String DEFAULT_NAMESPACE = "yabby.core:yabby.evolution.alignment:yabby.evolution.tree.coalescent:yabby.core.util:yabby.evolution.nuc:yabby.evolution.operators:yabby.evolution.sitemodel:yabby.evolution.substitutionmodel:yabby.evolution.likelihood";
 
     public JSONProducer() {
         super();
@@ -59,7 +59,7 @@ public class JSONProducer {
 
     /**
      * Main entry point for this class
-     * Given a plug-in, produces the XML in BEAST 2.0 format
+     * Given a plug-in, produces the XML in yabby 2.0 format
      * representing the plug-in. This assumes plugin is Runnable
      */
     public String toJSON(YABBYObject plugin) {
@@ -145,7 +145,7 @@ public class JSONProducer {
     public String stateNodeToJSON(YABBYObject plugin) {
         try {
             StringBuffer buf = new StringBuffer();
-            //buf.append("<" + XMLParser.BEAST_ELEMENT + " version='2.0'>\n");
+            //buf.append("<" + XMLParser.yabby_ELEMENT + " version='2.0'>\n");
             isDone = new HashSet<YABBYObject>();
             IDs = new HashSet<String>();
             indentCount = 1;
@@ -387,7 +387,7 @@ public class JSONProducer {
 
 	
 	public static void main(String[] args) throws Exception {
-		// convert BEAST 2 XML to BEAST json file
+		// convert yabby 2 XML to yabby json file
 		XMLParser parser = new XMLParser();
 		YABBYObject plugin = parser.parseFile(new File(args[0]));
 

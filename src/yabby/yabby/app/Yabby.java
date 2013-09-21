@@ -371,8 +371,8 @@ public class Yabby extends Application implements HTTPRequestHandler {
         
         Logger.FILE_MODE = logmodeInput.get();
         if (logmodeInput.get() == LogFileMode.resume) {
-            System.setProperty("beast.resume", "true");
-            System.setProperty("beast.debug", "false");
+            System.setProperty("yabby.resume", "true");
+            System.setProperty("yabby.debug", "false");
             resume = true;
         }
 

@@ -246,7 +246,7 @@ public class BeautiSubTemplate extends YABBYObject {
             Logger logger = (Logger) doc.pluginmap.get("tracelog");
             if (logger != null) {
 	            String fileName = logger.fileNameInput.get();
-	            if (fileName.startsWith("beast.") && treeLikelihood != null) {
+	            if (fileName.startsWith("yabby.") && treeLikelihood != null) {
 	            	Alignment data = ((GenericTreeLikelihood)treeLikelihood).dataInput.get();
 	            	while (data instanceof FilteredAlignment) {
 	            		data = ((FilteredAlignment) data).alignmentInput.get();

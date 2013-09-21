@@ -171,7 +171,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 
 	public ActionOnExit parseArgs(String[] args) throws Exception {
 		ActionOnExit endState = ActionOnExit.UNKNOWN;
-		String sOutputFileName = "beast.xml";
+		String sOutputFileName = "yabby.xml";
 		String sXML = null;
 		String sTemplateXML = null;
 		TraitSet traitset = null;
@@ -550,7 +550,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 
 									}
 								} catch (Exception e) {
-									if (!e.getMessage().contains("beast.app.beauti.InputConstraint")) {
+									if (!e.getMessage().contains("yabby.app.beauti.InputConstraint")) {
 										System.err.println(e.getMessage());
 									}
 								}
@@ -714,7 +714,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		Set<YABBYObject> plugins = new HashSet<YABBYObject>();
 //		for (Plugin plugin : pluginmap.values()) {
 //			String sName = plugin.getClass().getName();
-//			if (!sName.startsWith("beast.app.beauti")) {
+//			if (!sName.startsWith("yabby.app.beauti")) {
 //				plugins.add(plugin);
 //			}
 //		}
@@ -1585,7 +1585,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 	}
 
 	private void warning(String s) {
-		if (Boolean.valueOf(System.getProperty("beast.debug"))) {
+		if (Boolean.valueOf(System.getProperty("yabby.debug"))) {
 			System.err.print(s);
 		}
 	}

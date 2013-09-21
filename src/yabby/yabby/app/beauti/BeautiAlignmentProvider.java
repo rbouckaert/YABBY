@@ -54,7 +54,7 @@ public class BeautiAlignmentProvider extends YABBYObject {
 		List<YABBYObject> selectedPlugins = new ArrayList<YABBYObject>();
 		JFileChooser fileChooser = new JFileChooser(Beauti.g_sDir);
 
-		fileChooser.addChoosableFileFilter(new ExtensionFileFilter(".xml", "Beast xml file (*.xml)"));
+		fileChooser.addChoosableFileFilter(new ExtensionFileFilter(".xml", "YABBY xml file (*.xml)"));
 		String[] exts = { ".nex", ".nxs", ".nexus" };
 		fileChooser.addChoosableFileFilter(new ExtensionFileFilter(exts, "Nexus file (*.nex)"));
 
@@ -232,7 +232,7 @@ public class BeautiAlignmentProvider extends YABBYObject {
 			}
 		}
 		// alignment.initAndValidate();
-		alignment.setID("beast1");
+		alignment.setID("yabby1");
 		return alignment;
 	} // parseBeast1XML
 

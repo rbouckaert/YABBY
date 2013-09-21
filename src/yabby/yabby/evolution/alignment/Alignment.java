@@ -50,7 +50,7 @@ public class Alignment extends CalculationNode {
     /**
      * directory to pick up data types from *
      */
-    final static String[] IMPLEMENTATION_DIR = {"beast.evolution.datatype"};
+    final static String[] IMPLEMENTATION_DIR = {"yabby.evolution.datatype"};
 
     /**
      * list of data type descriptions, obtained from DataType classes *

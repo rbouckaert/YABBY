@@ -55,7 +55,7 @@ public class AddOnAppLauncher extends JDialog {
 		}
 		panel = new JPanel();
 		add(BorderLayout.CENTER, panel);
-		setTitle("BEAST 2 Add-On Application Launcher");
+		setTitle("YABBY Add-On Application Launcher");
 		Component pluginListBox = createList();
 		panel.add(pluginListBox);
 		Box buttonBox = createButtonBox();

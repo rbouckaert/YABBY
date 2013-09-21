@@ -35,7 +35,7 @@ import yabby.evolution.tree.Tree;
 
 @Description("This operator changes a beast.tree.")
 abstract public class TreeOperator extends Operator {
-    public Input<Tree> treeInput = new Input<Tree>("tree", "beast.tree on which this operation is performed", Validate.REQUIRED);
+    public Input<Tree> treeInput = new Input<Tree>("tree", "yabby.tree on which this operation is performed", Validate.REQUIRED);
 
 
     /**

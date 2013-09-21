@@ -141,7 +141,7 @@ public class LogCombinerDialog {
 
         ActionListener buttonListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                File file = Utils.getSaveFile("Select output file...", new File(Beauti.g_sDir), "Beast log and tree files", "log", "trees");
+                File file = Utils.getSaveFile("Select output file...", new File(Beauti.g_sDir), "YABBY log and tree files", "log", "trees");
                 if (file == null) {
                     // the dialog was cancelled...
                     return;

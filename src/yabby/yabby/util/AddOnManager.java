@@ -69,7 +69,7 @@ import java.util.zip.ZipFile;
  */
 // TODO: on windows allow installation on drive D: and pick up add-ons in drive C:
 public class AddOnManager {
-    public final static String[] IMPLEMENTATION_DIR = {"beast", "snap"};
+    public final static String[] IMPLEMENTATION_DIR = {"yabby", "snap"};
     public final static String TO_DELETE_LIST_FILE = "toDeleteList";
 
     /**
@@ -151,7 +151,7 @@ public class AddOnManager {
                         for (int j = 0; j < nodes.getLength(); j++) {
                             Element dependson = (Element) nodes.item(j);
                             String s = dependson.getAttribute("on");
-                            if (!s.equals("beast2")) {
+                            if (!s.equals("yabby")) {
                             	dependencies +=  s + ", ";
                             }
                         }
@@ -353,14 +353,14 @@ public class AddOnManager {
     public static List<String> getBeastDirectories() {
         List<String> sDirs = new ArrayList<String>();
         // check if there is the BEAST environment variable is set
-        if (System.getProperty("BEAST_ADDON_PATH") != null) {
-            String sBEAST = System.getProperty("BEAST_ADDON_PATH");
+        if (System.getProperty("YABBY_ADDON_PATH") != null) {
+            String sBEAST = System.getProperty("YABBY_ADDON_PATH");
             for (String sDir : sBEAST.split(":")) {
                 sDirs.add(sDir);
             }
         }
-        if (System.getenv("BEAST_ADDON_PATH") != null) {
-            String sBEAST = System.getenv("BEAST_ADDON_PATH");
+        if (System.getenv("YABBY_ADDON_PATH") != null) {
+            String sBEAST = System.getenv("YABBY_ADDON_PATH");
             for (String sDir : sBEAST.split(":")) {
                 sDirs.add(sDir);
             }
@@ -576,7 +576,7 @@ public class AddOnManager {
 
         HashMap<String, Double> addonVersion = new HashMap<String, Double>();
         YABBYVersion beastVersion = new YABBYVersion();
-        addonVersion.put("beast2", parseVersion(beastVersion.getVersion()));
+        addonVersion.put("yabby", parseVersion(beastVersion.getVersion()));
         List<AddonDependency> dependencies = new ArrayList<AddonDependency>();
 
         // gather version and dependency info for all add-ons
@@ -1002,8 +1002,8 @@ public class AddOnManager {
             boolean useAppDir = arguments.hasOption("useAppDir");
             String customDir = arguments.getStringOption("dir");
             if (customDir != null) {
-            	String path = System.getProperty("BEAST_ADDON_PATH");
-            	System.setProperty("BEAST_ADDON_PATH", (path != null ? path + ":" : "") +customDir);
+            	String path = System.getProperty("YABBY_ADDON_PATH");
+            	System.setProperty("YABBY_ADDON_PATH", (path != null ? path + ":" : "") +customDir);
             }
 
             Log.debug.print("Getting list of add-ons ...");

@@ -444,7 +444,7 @@ public class LogAnalyser {
             if (args.length == 0) {
                 YABBYVersion version = new YABBYVersion();
                 File file = Utils.getLoadFile("LogAnalyser " + version.getVersionString() + " - Select log file to analyse",
-                        null, "BEAST log (*.log) Files", "log", "txt");
+                        null, "YABBY log (*.log) Files", "log", "txt");
                 if (file == null) {
                     return;
                 }

@@ -67,7 +67,7 @@ public class XMLElementNameTest extends TestCase {
         HashMap<String, String> sElement2ClassMap = parser.getElement2ClassMap();
 
         // allow 'parameter' for any of the various parameter derivatives, not just RealParameter
-        sElement2ClassMap.put("parameter", "beast.core.parameter.Parameter");
+        sElement2ClassMap.put("parameter", "yabby.core.parameter.Parameter");
 
         // check each plugin
         List<String> sPluginNames = AddOnManager.find(yabby.core.YABBYObject.class, AddOnManager.IMPLEMENTATION_DIR);

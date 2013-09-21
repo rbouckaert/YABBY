@@ -301,7 +301,7 @@ public class Tree extends StateNode implements TreeInterface {
             }
         }
         // sanity check
-        if (m_sTaxaNames.length == 1 && m_sTaxaNames[0] == null && Boolean.valueOf(System.getProperty("beast.resume"))) {
+        if (m_sTaxaNames.length == 1 && m_sTaxaNames[0] == null && Boolean.valueOf(System.getProperty("yabby.resume"))) {
             System.err.println("WARNING: tree interrogated for taxa, but the tree was not initialised properly. To fix this, specify the taxonset input");
         }
         return m_sTaxaNames;

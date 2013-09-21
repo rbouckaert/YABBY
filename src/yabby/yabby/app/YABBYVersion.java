@@ -64,7 +64,7 @@ public class YABBYVersion extends Version {
                 "Source code distributed under the GNU Lesser General Public License:",
                 "\thttp://code.google.com/p/beast2",
                 "",
-                "BEAST developers:",
+                "YABBY developers:",
                 "\tAlex Alekseyenko, Trevor Bedford, Erik Bloomquist, Joseph Heled, ",
                 "\tSebastian Hoehna, Denise Kuehnert, Philippe Lemey, Wai Lok Sibon Li, ",
                 "\tGerton Lunter, Sidney Markowitz, Vladimir Minin, Michael Defoin Platel, ",

@@ -61,7 +61,7 @@ public class YABBYbjectDialog extends JDialog {
 
     
     public boolean showDialog() {
-        URL url = ClassLoader.getSystemResource(ModelBuilder.ICONPATH + "beast.png");
+        URL url = ClassLoader.getSystemResource(ModelBuilder.ICONPATH + "yabby.png");
         Icon icon = new ImageIcon(url);
         JOptionPane optionPane = new JOptionPane(m_panel,
                 JOptionPane.QUESTION_MESSAGE,

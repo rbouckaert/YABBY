@@ -91,7 +91,7 @@ public class ClusterTree extends Tree implements StateNodeInitialiser {
     @Override
     public void initAndValidate() throws Exception {
 
-        if (Boolean.valueOf(System.getProperty("beast.resume")) &&
+        if (Boolean.valueOf(System.getProperty("yabby.resume")) &&
                 (isEstimatedInput.get() || (m_initial.get() != null && m_initial.get().isEstimatedInput.get()))) {
             // don't bother creating a cluster tree to save some time, if it is read from file anyway
             // make a caterpillar

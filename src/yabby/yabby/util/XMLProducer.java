@@ -3,22 +3,22 @@
 *
 * Copyright (C) 2010 Remco Bouckaert remco@cs.auckland.ac.nz
 *
-* This file is part of BEAST2.
+* This file is part of yabby2.
 * See the NOTICE file distributed with this work for additional
 * information regarding copyright ownership and licensing.
 *
-* BEAST is free software; you can redistribute it and/or modify
+* yabby is free software; you can redistribute it and/or modify
 * it under the terms of the GNU Lesser General Public License as
 * published by the Free Software Foundation; either version 2
 * of the License, or (at your option) any later version.
 *
-*  BEAST is distributed in the hope that it will be useful,
+*  yabby is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU Lesser General Public License for more details.
 *
 * You should have received a copy of the GNU Lesser General Public
-* License along with BEAST; if not, write to the
+* License along with yabby; if not, write to the
 * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
 * Boston, MA  02110-1301  USA
 */
@@ -74,7 +74,7 @@ public class XMLProducer extends XMLParser {
      */
     int indent;
 
-    final public static String DEFAULT_NAMESPACE = "beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood";
+    final public static String DEFAULT_NAMESPACE = "yabby.core:yabby.evolution.alignment:yabby.evolution.tree.coalescent:yabby.core.util:yabby.evolution.nuc:yabby.evolution.operators:yabby.evolution.sitemodel:yabby.evolution.substitutionmodel:yabby.evolution.likelihood";
     //final public static String DO_NOT_EDIT_WARNING = "DO NOT EDIT the following machine generated text, they are used in Beauti";
 
     public XMLProducer() {
@@ -83,7 +83,7 @@ public class XMLProducer extends XMLParser {
 
     /**
      * Main entry point for this class
-     * Given a plug-in, produces the XML in BEAST 2.0 format
+     * Given a plug-in, produces the XML in yabby 2.0 format
      * representing the plug-in. This assumes plugin is Runnable
      */
     @SuppressWarnings("rawtypes")
@@ -94,7 +94,7 @@ public class XMLProducer extends XMLParser {
     public String toXML(YABBYObject plugin, Collection<YABBYObject> others) {
         try {
             StringBuffer buf = new StringBuffer();
-            buf.append("<" + XMLParser.BEAST_ELEMENT + " version='2.0' namespace='" + DEFAULT_NAMESPACE + "'>\n");
+            buf.append("<" + XMLParser.YABBY_ELEMENT + " version='2.0' namespace='" + DEFAULT_NAMESPACE + "'>\n");
             for (String element : element2ClassMap.keySet()) {
             	if (!reservedElements.contains(element)) {
             		buf.append("<map name='" + element + "'>" + element2ClassMap.get(element) +"</map>\n");
@@ -106,8 +106,8 @@ public class XMLProducer extends XMLParser {
             IDs = new HashSet<String>();
             indent = 0;
             pluginToXML(plugin, buf, null, true);
-            String sEndBeast = "</" + XMLParser.BEAST_ELEMENT + ">";
-            buf.append(sEndBeast);
+            String sEndyabby = "</" + XMLParser.YABBY_ELEMENT + ">";
+            buf.append(sEndyabby);
             //return buf.toString();
             // beautify XML hierarchy
             String sXML = cleanUpXML(buf.toString(), m_sXMLBeuatifyXSL);
@@ -130,13 +130,13 @@ public class XMLProducer extends XMLParser {
                     }
                 }
             }
-            int iEnd = sXML.indexOf(sEndBeast);
+            int iEnd = sXML.indexOf(sEndyabby);
             String extras = buf.toString();
             // prevent double -- inside XML comment, this can happen in sequences
             extras = extras.replaceAll("--","- - ");
             sXML = sXML.substring(0, iEnd) //+ "\n\n<!-- " + DO_NOT_EDIT_WARNING + " \n\n" + 
             	//extras +  "\n\n-->\n\n" 
-            		+ sEndBeast;
+            		+ sEndyabby;
 
             return sXML;
         } catch (Exception e) {
@@ -198,7 +198,7 @@ public class XMLProducer extends XMLParser {
     public String stateNodeToXML(YABBYObject plugin) {
         try {
             StringBuffer buf = new StringBuffer();
-            //buf.append("<" + XMLParser.BEAST_ELEMENT + " version='2.0'>\n");
+            //buf.append("<" + XMLParser.yabby_ELEMENT + " version='2.0'>\n");
             isDone = new HashSet<YABBYObject>();
             IDs = new HashSet<String>();
             indent = 0;
@@ -212,7 +212,7 @@ public class XMLProducer extends XMLParser {
 
     /**
      * Applies XSL script (specified in m_sXSL) to make XML a bit
-     * nicer by removing unused IDs and moving data, beast.tree and likelihood
+     * nicer by removing unused IDs and moving data, yabby.tree and likelihood
      * outside MCMC element.
      * Tries to compress common parts into plates.
      */
@@ -396,13 +396,13 @@ public class XMLProducer extends XMLParser {
             "\n" +
             "<xsl:output method='xml' indent='yes'/>\n" +
             "\n" +
-            "<xsl:template match='beast'>\n" +
+            "<xsl:template match='yabby'>\n" +
             "    <xsl:copy>\n" +
             "        <xsl:apply-templates select='@*'/>\n" +
             "        <xsl:text>&#x0a;&#x0a;&#x0a;    </xsl:text>\n" +
             "        <xsl:apply-templates  select='//data[not(@idref)]' mode='copy'/>\n" +
             "        <xsl:text>&#x0a;&#x0a;&#x0a;    </xsl:text>\n" +
-            "        <xsl:apply-templates select='//beast.tree[not(@idref)]' mode='copy'/>\n" +
+            "        <xsl:apply-templates select='//yabby.tree[not(@idref)]' mode='copy'/>\n" +
             "        <xsl:text>&#x0a;&#x0a;&#x0a;    </xsl:text>\n" +
             "        <xsl:apply-templates select='//distribution[not(@idref) and not(ancestor::distribution)]' mode='copy'/>\n" +
             "        <xsl:text>&#x0a;&#x0a;&#x0a;    </xsl:text>\n" +
@@ -419,7 +419,7 @@ public class XMLProducer extends XMLParser {
             "  </xsl:copy>\n" +
             "</xsl:template>\n" +
             "\n" +
-            "<xsl:template match='data|beast.tree|distribution[not(ancestor::distribution)]'>\n" +
+            "<xsl:template match='data|yabby.tree|distribution[not(ancestor::distribution)]'>\n" +
             "    <xsl:copy>\n" +
             "        <xsl:attribute name='idref'>\n" +
             "            <xsl:choose>\n" +
@@ -465,7 +465,7 @@ public class XMLProducer extends XMLParser {
                     "\n" +
                     "<xsl:output method='xml' indent='yes'/>\n" +
                     "\n" +
-                    "<xsl:template match='beast'>\n" +
+                    "<xsl:template match='yabby'>\n" +
                     "  <xsl:copy>\n" +
                     "    <xsl:apply-templates select='@*|node()'/>\n" +
                     "  </xsl:copy>\n" +
@@ -506,7 +506,7 @@ public class XMLProducer extends XMLParser {
             "\n" +
             "<xsl:output method='xml' indent='yes'/>\n" +
             "\n" +
-            "<xsl:template match='beast'>\n" +
+            "<xsl:template match='yabby'>\n" +
             "  <xsl:copy>\n" +
             "    <xsl:apply-templates select='@*|node()'/>\n" +
             "  </xsl:copy>\n" +

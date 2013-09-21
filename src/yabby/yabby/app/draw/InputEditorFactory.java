@@ -43,12 +43,12 @@ public class InputEditorFactory {
         inputEditorMap = new HashMap<Class<?>, String>();
         listInputEditorMap = new HashMap<Class<?>, String>();
 
-//        String [] sKnownEditors = new String [] {"beast.app.draw.DataInputEditor","beast.app.beauti.AlignmentListInputEditor", "beast.app.beauti.FrequenciesInputEditor", "beast.app.beauti.OperatorListInputEditor", "beast.app.beauti.ParametricDistributionInputEditor", "beast.app.beauti.PriorListInputEditor", "beast.app.beauti.SiteModelInputEditor", "beast.app.beauti.TaxonSetInputEditor", "beast.app.beauti.TipDatesInputEditor", "beast.app.draw.BooleanInputEditor", "beast.app.draw.DoubleInputEditor", "beast.app.draw.EnumInputEditor", "beast.app.draw.IntegerInputEditor", "beast.app.draw.ListInputEditor", 
-//        		"beast.app.draw.ParameterInputEditor", "beast.app.draw.PluginInputEditor", "beast.app.draw.StringInputEditor"};
+//        String [] sKnownEditors = new String [] {"yabby.app.draw.DataInputEditor","yabby.app.beauti.AlignmentListInputEditor", "yabby.app.beauti.FrequenciesInputEditor", "yabby.app.beauti.OperatorListInputEditor", "yabby.app.beauti.ParametricDistributionInputEditor", "yabby.app.beauti.PriorListInputEditor", "yabby.app.beauti.SiteModelInputEditor", "yabby.app.beauti.TaxonSetInputEditor", "yabby.app.beauti.TipDatesInputEditor", "yabby.app.draw.BooleanInputEditor", "yabby.app.draw.DoubleInputEditor", "yabby.app.draw.EnumInputEditor", "yabby.app.draw.IntegerInputEditor", "yabby.app.draw.ListInputEditor", 
+//        		"yabby.app.draw.ParameterInputEditor", "yabby.app.draw.PluginInputEditor", "yabby.app.draw.StringInputEditor"};
 //        registerInputEditors(sKnownEditors);
-        String[] PACKAGE_DIRS = {"beast.app",};
+        String[] PACKAGE_DIRS = {"yabby",};
         for (String sPackage : PACKAGE_DIRS) {
-            List<String> sInputEditors = AddOnManager.find("beast.app.draw.InputEditor", sPackage);
+            List<String> sInputEditors = AddOnManager.find("yabby.app.draw.InputEditor", sPackage);
             registerInputEditors(sInputEditors.toArray(new String[0]));
         }
     }
@@ -307,7 +307,7 @@ System.err.println(inputEditor.getClass().getName());
         }
         /* add all plugin-classes of type assignable to the input */
         if (doc.isExpertMode()) {
-            List<String> sClasses = AddOnManager.find(input.getType(), "beast");
+            List<String> sClasses = AddOnManager.find(input.getType(), "yabby");
             for (String sClass : sClasses) {
                 try {
                     Object o = Class.forName(sClass).newInstance();

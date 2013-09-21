@@ -73,7 +73,7 @@ public class ModelBuilder extends JPanel implements ComponentListener {
      * position, etc) NB This is not the extension for GenerationD model files.
      */
     static public final String FILE_EXT = ".xml";
-    final public static String ICONPATH = "beast/app/draw/icons/";
+    final public static String ICONPATH = "yabby/app/draw/icons/";
 
     /**
      * contains the Panel
@@ -211,7 +211,7 @@ public class ModelBuilder extends JPanel implements ComponentListener {
     Selection m_Selection = new Selection();
 
 
-    ExtensionFileFilter ef1 = new ExtensionFileFilter(".xml", "BEAST files");
+    ExtensionFileFilter ef1 = new ExtensionFileFilter(".xml", "YABBY files");
     ExtensionFileFilter ef2 = new ExtensionFileFilter(".gif", "GIF images");
     ExtensionFileFilter ef3 = new ExtensionFileFilter(".jpg", "JPG images");
     ExtensionFileFilter ef4 = new ExtensionFileFilter(".bmp", "BMP images");

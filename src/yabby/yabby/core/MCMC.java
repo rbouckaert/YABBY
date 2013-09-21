@@ -270,7 +270,7 @@ public class MCMC extends Runnable {
 
         // do the sampling
         logAlpha = 0;
-        debugFlag = Boolean.valueOf(System.getProperty("beast.debug"));
+        debugFlag = Boolean.valueOf(System.getProperty("yabby.debug"));
 
 
 //        System.err.println("Start state:");

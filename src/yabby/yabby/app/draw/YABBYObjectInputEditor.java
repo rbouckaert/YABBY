@@ -478,7 +478,7 @@ public class YABBYObjectInputEditor extends InputEditor.Base {
 //    }
 
     String[] getAvailablePlugins() {
-        List<String> sPlugins = AddOnManager.find(m_input.getType(), "beast");
+        List<String> sPlugins = AddOnManager.find(m_input.getType(), "yabby");
         return sPlugins.toArray(new String[0]);
     } // getAvailablePlugins
 

@@ -161,7 +161,7 @@ public class XMLParser {
     /* This is the set of keywords in XML.
 * This list should not be added to unless there
 * is a very very good reason. */
-    final static String BEAST_ELEMENT = "beast";
+    final static String YABBY_ELEMENT = "yabby";
     final static String MAP_ELEMENT = "map";
     final static String DISTRIBUTION_ELEMENT = "distribution";
     final static String OPERATOR_ELEMENT = "operator";
@@ -288,7 +288,7 @@ public class XMLParser {
         Node topNode = nodes.item(0);
         // sanity check that we are reading a beast 2 file
         double fVersion = getAttributeAsDouble(topNode, "version");
-        if (!topNode.getNodeName().equals(BEAST_ELEMENT) || fVersion < 2.0 || fVersion == Double.MAX_VALUE) {
+        if (!topNode.getNodeName().equals(YABBY_ELEMENT) || fVersion < 2.0 || fVersion == Double.MAX_VALUE) {
             return plugins;
         }
         // only process templates
@@ -566,7 +566,7 @@ public class XMLParser {
 	            String sClass = child.getTextContent();
 	            // remove spaces
 	            sClass = sClass.replaceAll("\\s", "");
-	            //sClass = sClass.replaceAll("beast", "yabby");
+	            sClass = sClass.replaceAll("beast", "yabby");
 	            // go through namespaces in order they are declared to find the correct class
 	            boolean bDone = false;
 	            for (String sNameSpace : m_sNameSpaces) {
@@ -639,7 +639,7 @@ public class XMLParser {
     } // checkType
 
     YABBYObject createObject(Node node, String sClass, YABBYObject parent) throws Exception {
-    	//sClass = sClass.replaceAll("beast", "yabby");
+    	sClass = sClass.replaceAll("beast", "yabby");
         // try the IDMap first
         String sID = getID(node);
 
@@ -691,9 +691,9 @@ public class XMLParser {
         if (sSpec != null) {
             sSpecClass = sSpec;
         }
-    	//sSpecClass = sSpecClass.replaceAll("beast", "yabby");
+    	sSpecClass = sSpecClass.replaceAll("beast", "yabby");
     	
-    	if (sSpecClass.indexOf("BEASTObject") > 0) {
+    	if (sSpecClass.indexOf("YABBYObject") > 0) {
     		System.out.println(sSpecClass);
     	}
 
@@ -704,7 +704,7 @@ public class XMLParser {
             for (String sNameSpace : m_sNameSpaces) {
                 try {
                     if (!bDone) {
-                    	//sNameSpace = sNameSpace.replaceAll("beast", "yabby");
+                    	sNameSpace = sNameSpace.replaceAll("beast", "yabby");
                         o = Class.forName(sNameSpace + sSpecClass).newInstance();
                         bDone = true;
                     }

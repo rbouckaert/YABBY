@@ -189,7 +189,7 @@ public class HelpBrowser extends JDialog implements HyperlinkListener {
      */
     public static void main(String[] args) {
         try {
-            HelpBrowser b = new HelpBrowser("beast.core.MCMC");
+            HelpBrowser b = new HelpBrowser("yabby.core.MCMC");
             b.setSize(800, 800);
             b.setVisible(true);
             b.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

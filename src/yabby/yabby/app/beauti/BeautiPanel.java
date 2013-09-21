@@ -24,7 +24,7 @@ import yabby.core.Input;
  */
 public class BeautiPanel extends JPanel implements ListSelectionListener {
     private static final long serialVersionUID = 1L;
-    public final static String ICONPATH = "beast/app/beauti/";
+    public final static String ICONPATH = "yabby/app/beauti/";
 
     static int partitionListPreferredWidth = 120;
 

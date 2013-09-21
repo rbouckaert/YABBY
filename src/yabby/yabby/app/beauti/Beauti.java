@@ -39,10 +39,10 @@ import java.util.List;
 
 public class Beauti extends JTabbedPane implements BeautiDocListener {
     private static final long serialVersionUID = 1L;
-    static final String BEAUTI_ICON = "beast/app/draw/icons/beauti.png";
+    static final String BEAUTI_ICON = "yabby/app/draw/icons/beauti.png";
 
     // ExtensionFileFilter ef0 = new ExtensionFileFilter(".nex", "Nexus files");
-    // ExtensionFileFilter ef1 = new ExtensionFileFilter(".xml", "BEAST files");
+    // ExtensionFileFilter ef1 = new ExtensionFileFilter(".xml", "YABBY files");
 
     /**
      * current directory for opening files *
@@ -278,7 +278,7 @@ public class Beauti extends JTabbedPane implements BeautiDocListener {
 
         public void actionPerformed(ActionEvent ae) {
             File file = yabby.app.util.Utils.getLoadFile("Load Beast XML File",
-                    new File(g_sDir), "Beast XML files", "xml");
+                    new File(g_sDir), "YABBY XML files", "xml");
             // JFileChooser fileChooser = new JFileChooser(g_sDir);
             // fileChooser.addChoosableFileFilter(ef1);
             // fileChooser.setDialogTitle("Load Beast XML File");

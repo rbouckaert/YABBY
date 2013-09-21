@@ -46,7 +46,7 @@ public class JAddOnDialog extends JDialog {
 
         panel = new JPanel();
         getContentPane().add(BorderLayout.CENTER, panel);
-        setTitle("BEAST 2 Add-On Manager");
+        setTitle("YABBY Add-On Manager");
 
 
         Component pluginListBox = createList();
