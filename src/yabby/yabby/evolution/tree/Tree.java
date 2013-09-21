@@ -53,6 +53,7 @@ public class Tree extends StateNode implements TreeInterface {
     public Input<Tree> m_initial = new Input<Tree>("initial", "tree to start with");
     public Input<TraitSet> m_trait = new Input<TraitSet>("trait", "trait information for initializing traits (like node dates) in the tree");
     public Input<TaxonSet> m_taxonset = new Input<TaxonSet>("taxonset", "set of taxa that correspond to the leafs in the tree");
+    public Input<String> nodeTypeInput = new Input<String>("nodetype", "type of the nodes in the beast.tree", Node.class.getName());
 
     /**
      * state of dirtiness of a node in the tree
@@ -101,16 +102,16 @@ public class Tree extends StateNode implements TreeInterface {
             if (m_taxonset.get() != null) {
                 // make a caterpillar
                 List<String> sTaxa = m_taxonset.get().asStringList();
-                Node left = createNode();
+                Node left = newNode();
                 left.labelNr = 0;
                 left.height = 0;
                 left.setID(sTaxa.get(0));
                 for (int i = 1; i < sTaxa.size(); i++) {
-                    Node right = createNode();
+                    Node right = newNode();
                     right.labelNr = i;
                     right.height = 0;
                     right.setID(sTaxa.get(i));
-                    Node parent = createNode();
+                    Node parent = newNode();
                     parent.labelNr = sTaxa.size() + i - 1;
                     parent.height = i;
                     left.parent = parent;
@@ -126,7 +127,7 @@ public class Tree extends StateNode implements TreeInterface {
 
             } else {
                 // make dummy tree with a single root node
-                root = createNode();
+                root = newNode();
                 root.labelNr = 0;
                 root.height = 0;
                 root.m_tree = this;
@@ -142,6 +143,15 @@ public class Tree extends StateNode implements TreeInterface {
         if (nodeCount >= 0) {
             initArrays();
         }
+    }
+
+    protected Node newNode() {
+    	try {
+    		return (Node) Class.forName(nodeTypeInput.get()).newInstance();
+    	} catch (Exception e) {
+    		throw new RuntimeException("Cannot create node of tyep " + nodeTypeInput.get() + ": " + e.getMessage());
+    	}
+        //return new NodeData();
     }
 
     protected void initArrays() {
@@ -421,7 +431,7 @@ public class Tree extends StateNode implements TreeInterface {
         Tree tree = (Tree) other;
         Node[] nodes = new Node[tree.getNodeCount()];//tree.getNodesAsArray();
         for (int i = 0; i < tree.getNodeCount(); i++) {
-            nodes[i] = createNode();
+            nodes[i] = newNode();
         }
         ID = tree.ID;
         //index = tree.index;
@@ -637,7 +647,7 @@ public class Tree extends StateNode implements TreeInterface {
             }
             if (nodeCount > m_storedNodes.length) {
                 tmp[m_storedNodes.length - 1] = m_storedNodes[m_storedNodes.length - 1];
-                tmp[nodeCount - 1] = createNode();
+                tmp[nodeCount - 1] = newNode();
                 tmp[nodeCount - 1].setNr(nodeCount - 1);
             }
             m_storedNodes = tmp;
@@ -747,15 +757,6 @@ public class Tree extends StateNode implements TreeInterface {
         m_nodes = tmp;
         nodeCount++;
         leafNodeCount++;
-    }
-
-    /**
-     * Should be overridden by subclasses to create the appropriate subclass of node.
-     *
-     * @return
-     */
-    public Node createNode() {
-        return new Node();
     }
 
     public int getDirectAncestorNodeCount() {
