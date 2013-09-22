@@ -93,8 +93,8 @@
 			<include name="test/yabby/**" />
 		</javac>
 		<copy todir="${build}">
-			<fileset dir="${src}" includes="**/*.properties" />
-			<fileset dir="${src}" includes="**/*.png" />
+			<fileset dir="${src}/yabby" includes="**/*.properties" />
+			<fileset dir="${src}/yabby" includes="**/*.png" />
 		</copy>
 		<echo message="Successfully compiled." />
 	</target>
