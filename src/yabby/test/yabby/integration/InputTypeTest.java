@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 public class InputTypeTest  extends TestCase {
 	
 	@Test
-	public void testInputTypeCanBeSet() {
+	public void testInputTypeCanBeSet() throws Exception {
         List<String> sPluginNames = AddOnManager.find(yabby.core.YABBYObject.class, AddOnManager.IMPLEMENTATION_DIR);
         List<String> failingInputs = new ArrayList<String>();
         for (String sPlugin : sPluginNames) {
@@ -25,6 +25,9 @@ public class InputTypeTest  extends TestCase {
                 	if (input.getType() == null) {
                 		try {
                 			input.determineClass(plugin);
+                			if (input.getType() == null) {
+                    			failingInputs.add(sPlugin + ":" + input.getName());
+                			}
                 		} catch (Exception e2) {
                 			failingInputs.add(sPlugin + ":" + input.getName());
                 		}
@@ -34,6 +37,7 @@ public class InputTypeTest  extends TestCase {
             	// ignore
             }
         }
+                
         assertTrue("Type of input could not be set for these inputs (probably requires to be set by using the appropriate constructure of Input): "
                 + failingInputs.toString(), failingInputs.size() == 0);
 	}
