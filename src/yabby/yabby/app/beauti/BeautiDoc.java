@@ -727,7 +727,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		if (bAllowLinking) {
 			beautiStatus += (beautiStatus.length() > 0 ? "|" : "") + "allowLinking";			
 		}
-		sXML = sXML.replaceFirst("<beast ", "<beast beautitemplate='" + templateName + "' beautistatus='" + beautiStatus + "' ");
+		sXML = sXML.replaceFirst("<yabby ", "<yabby beautitemplate='" + templateName + "' beautistatus='" + beautiStatus + "' ");
 		return sXML + "\n";
 	}
 

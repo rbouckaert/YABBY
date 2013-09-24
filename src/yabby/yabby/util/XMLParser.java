@@ -852,6 +852,7 @@ public class XMLParser {
                 if (!(sName.equals("id") ||
                         sName.equals("idref") ||
                         sName.equals("spec") ||
+                        sName.equals("xmlns") ||
                         sName.equals("name"))) {
                     String sValue = atts.item(i).getNodeValue();
                     if (sValue.startsWith("@")) {

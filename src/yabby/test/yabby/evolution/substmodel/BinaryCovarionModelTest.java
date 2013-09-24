@@ -1,10 +1,14 @@
 package test.yabby.evolution.substmodel;
 
 
+
+import org.junit.Test;
+
 import junit.framework.TestCase;
-//import beast.core.parameter.RealParameter;
-//import beast.evolution.datatype.DataType;
-//import beast.evolution.substitutionmodel.BinaryCovarion;
+//import yabby.core.parameter.RealParameter;
+//import yabby.evolution.datatype.DataType;
+//import yabby.evolution.datatype.TwoStateCovarion;
+//import yabby.evolution.substitutionmodel.BinaryCovarion;
 
 /**
  * BinaryCovarionModel Tester.
@@ -14,10 +18,10 @@ import junit.framework.TestCase;
  * @since <pre>08/26/2007</pre>
  */
 public class BinaryCovarionModelTest extends TestCase {
-//    public BinaryCovarionModelTest(String name) {
-//        super(name);
-//    }
-//
+    public BinaryCovarionModelTest(String name) {
+        super(name);
+    }
+
 //    @Override
 //	public void setUp() throws Exception {
 //        super.setUp();
@@ -215,4 +219,8 @@ public class BinaryCovarionModelTest extends TestCase {
 //    RealParameter hiddenFrequencies;
 //    RealParameter switchingRate;
 //    RealParameter alpha;
+    
+    @Test
+    public void testDummy() {
+    }
 }
