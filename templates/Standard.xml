@@ -1,0 +1,349 @@
+<yabby version='2.0'
+       namespace='yabby.app.beauti:yabby.core:yabby.evolution.branchratemodel:yabby.evolution.speciation:yabby.evolution.tree.coalescent:yabby.core.util:yabby.evolution.nuc:yabby.evolution.operators:yabby.evolution.sitemodel:yabby.evolution.substitutionmodel:yabby.evolution.likelihood:yabby.evolution:yabby.math.distributions'
+	templateinfo='template for standard phylogenetic analysis,&lt;br> supporting tip-date analysis and calibrations'>
+
+<map name='connect' reserved='true'>yabby.app.beauti.BeautiConnector</map>
+<map name='subtemplate' reserved='true'>yabby.app.beauti.BeautiSubTemplate</map>
+<map name='Uniform'>yabby.math.distributions.Uniform</map>
+<map name='Normal'>yabby.math.distributions.Normal</map>
+<map name='OneOnX'>yabby.math.distributions.OneOnX</map>
+<map name='LogNormal'>yabby.math.distributions.LogNormalDistributionModel</map>
+<map name='Exponential'>yabby.math.distributions.Exponential</map>
+<map name='Gamma'>yabby.math.distributions.Gamma</map>
+<map name='Beta'>yabby.math.distributions.Beta</map>
+<map name='LaplaceDistribution'>yabby.math.distributions.LaplaceDistribution</map>
+<map name='InverseGamma'>yabby.math.distributions.InverseGamma</map>
+<map name='prior'>yabby.math.distributions.Prior</map>
+
+    <beauticonfig spec='BeautiConfig'
+        inputLabelMap='yabby.core.MCMC.operator=Operators,
+	        yabby.core.MCMC.logger=Loggers,
+			yabby.evolution.sitemodel.SiteModel.mutationRate =Substitution Rate'
+        inlinePlugins ='yabby.core.MCMC.distribution,
+            yabby.evolution.sitemodel.SiteModel.substModel,
+            yabby.evolution.tree.coalescent.ExponentialGrowth,
+            yabby.evolution.tree.coalescent.ConstantPopulation,
+            yabby.evolution.tree.coalescent.Coalescent,
+            yabby.core.State.stateNode'
+        collapsedPlugins ='yabby.core.MCMC.logger'
+        suppressPlugins = 'yabby.core.MCMC.operator,
+    		yabby.core.MCMC.operatorschedule,
+	        yabby.evolution.tree.coalescent.Coalescent.treeIntervals,
+	        yabby.evolution.tree.coalescent.Coalescent.tree,
+	        yabby.core.MCMC.state,
+	        yabby.core.MCMC.distribution,
+	        yabby.core.MCMC.init,
+	        yabby.evolution.speciation.BirthDeathGernhard08Model.treeIntervals,
+	        yabby.evolution.speciation.BirthDeathGernhard08Model.tree,
+	        yabby.evolution.speciation.BirthDeathGernhard08Model.sampleProbability,
+			yabby.evolution.speciation.YuleModel.treeIntervals,
+			yabby.evolution.speciation.YuleModel.useTipDates,
+			yabby.evolution.speciation.YuleModel.tree,
+	        yabby.evolution.tree.Tree,
+	        yabby.evolution.tree.Tree.trait,
+	        yabby.evolution.tree.Tree.taxa,
+	        yabby.evolution.tree.Tree.taxonset,
+	        yabby.evolution.tree.RandomTree.trait,
+	        yabby.evolution.tree.RandomTree.initial,
+	        yabby.evolution.tree.RandomTree.taxa,
+	        yabby.evolution.tree.RandomTree.taxonset,
+	        yabby.evolution.tree.RandomTree.estimate,
+	        yabby.util.TreeParser.initial,
+	        yabby.util.TreeParser.taxa,
+	        yabby.util.TreeParser.taxonset,
+	        yabby.util.TreeParser.trait,
+	        yabby.util.TreeParser.estimate,
+	        yabby.util.ClusterTree.initial,
+	        yabby.util.ClusterTree.taxa,
+	        yabby.util.ClusterTree.taxonset,
+	        yabby.util.ClusterTree.trait,
+	        yabby.util.ClusterTree.estimate,
+	        yabby.evolution.substitutionmodel.WAG.rates,
+	        yabby.evolution.substitutionmodel.WAG.frequencies,
+	        yabby.evolution.substitutionmodel.JTT.rates,
+	        yabby.evolution.substitutionmodel.JTT.frequencies,
+	        yabby.evolution.substitutionmodel.Blosum62.rates,
+	        yabby.evolution.substitutionmodel.Blosum62.frequencies,
+	        yabby.evolution.substitutionmodel.Dayhoff.rates,
+	        yabby.evolution.substitutionmodel.Dayhoff.frequencies,
+	        yabby.evolution.substitutionmodel.CPREV.rates,
+	        yabby.evolution.substitutionmodel.CPREV.frequencies,
+	        yabby.evolution.substitutionmodel.MTREV.rates,
+	        yabby.evolution.substitutionmodel.MTREV.frequencies,
+	        yabby.evolution.substitutionmodel.GTR.rates,
+	        yabby.evolution.substitutionmodel.JukesCantor.frequencies,
+            yabby.math.distributions.Prior.x,
+            yabby.math.distributions.MRCAPrior.tree,
+            yabby.math.distributions.MRCAPrior.monophyletic,
+            yabby.math.distributions.MRCAPrior.taxonset,
+            yabby.evolution.branchratemodel.UCRelaxedClockModel.tree,
+            yabby.evolution.branchratemodel.UCRelaxedClockModel.rateCategories,
+			yabby.evolution.branchratemodel.UCRelaxedClockModel.distr,
+            yabby.evolution.branchratemodel.RandomLocalClockModel.tree,
+            yabby.evolution.branchratemodel.RandomLocalClockModel.meanRate,
+            yabby.evolution.branchratemodel.RandomLocalClockModel.indicators,
+            yabby.evolution.operators.ScaleOperator.indicator,
+	        yabby.core.Operator.weight,
+            yabby.core.Logger.model,
+            yabby.evolution.tree.coalescent.BayesianSkyline.treeIntervals,
+            yabby.evolution.tree.coalescent.BayesianSkyline.groupSizes,
+            yabby.evolution.tree.coalescent.BayesianSkyline.popSizes
+            '
+        buttonLabelMap='yabby.app.beauti.BeautiInitDlg.&gt;&gt; details=Edit parameters'
+    >
+        <!--disableMenus='Mode'-->
+
+        <panel spec='BeautiPanelConfig' panelname="Partitions" tiptext="Data Partitions"
+            path='distribution/distribution[id="likelihood"]/distribution/data'
+            hasPartitions="none" icon='2220.png.x' forceExpansion='FALSE'
+            type='yabby.evolution.alignment.Alignment'
+        />
+		<mergepoint id='aux-partitions-panels'/>
+
+		<panel spec='BeautiPanelConfig' panelname="Tip Dates" tiptext="Allows to specify data that a taxon was sampled"
+            path='tree'
+            hasPartitions="Tree" icon='2.png.x' forceExpansion='TRUE'
+            isVisible='true'
+        />
+		<mergepoint id='aux-tipdates-panels'/>
+
+		<panel spec='BeautiPanelConfig' panelname="Site Model" tiptext="Site model and substitution model specifications"
+            path='siteModel'
+            hasPartitions="SiteModel" icon='3.png.x' forceExpansion='TRUE'
+        />
+		<mergepoint id='aux-sitemodel-panels'/>
+
+		<panel spec='BeautiPanelConfig' panelname="Clock Model" tiptext="Clock model"
+            path='branchRateModel'
+            hasPartitions="ClockModel" icon='4.png.x' forceExpansion='TRUE'
+        />
+		<mergepoint id='aux-clockmodel-panels'/>
+		<panel spec='BeautiPanelConfig' panelname="Initialization" tiptext="Initial state"
+            path='state/stateNode'
+            hasPartitions="none" icon='6.png.x' forceExpansion='TRUE_START_COLLAPSED'
+            isVisible='false'
+        />
+		<mergepoint id='aux-initilisation-panels'/>
+
+		<panel spec='BeautiPanelConfig' panelname="Priors" tiptext="Other priors"
+            path='distribution/distribution[id="prior"]/distribution'
+            hasPartitions="none" icon='7.png.x' forceExpansion='TRUE_START_COLLAPSED'
+            type='yabby.core.Distribution'
+        />
+		<mergepoint id='aux-priors-panels'/>
+
+		<panel spec='BeautiPanelConfig' panelname="Operators" tiptext="MCMC Operator details"
+            path='operator'
+            hasPartitions="none" icon='8.png.x' forceExpansion='TRUE_START_COLLAPSED'
+            isVisible='false' buttonStatus='ADD_ONLY'
+        />
+		<mergepoint id='aux-operators-panels'/>
+
+		<panel spec='BeautiPanelConfig' panelname="MCMC" tiptext="MCMC parameters"
+            path=''
+            hasPartitions="none" icon='9.png.x' forceExpansion='TRUE'
+        />
+		<mergepoint id='aux-panels'/>
+
+		<alignmentProvider id="Add Alignment" spec='BeautiAlignmentProvider' template='@StandardPartitionTemplate'/>
+
+
+        <partitiontemplate id='StandardPartitionTemplate' spec='BeautiSubTemplate' class='yabby.evolution.likelihood.TreeLikelihood' mainid='mcmc'>
+<![CDATA[
+            <!-- site model                                                              -->
+            <plugin spec='SiteModel' id="SiteModel.s:$(n)" gammaCategoryCount='0'>
+                <!--substModel will be automatically detected /-->
+                <proportionInvariant spec='parameter.RealParameter' id='proportionInvariant.s:$(n)' value='0.0' lower='0' upper='1' estimate='false'/>
+                <mutationRate        spec='parameter.RealParameter' id='mutationRate.s:$(n)' value='1.0'        estimate='false'/>
+                <shape               spec='parameter.RealParameter' id='gammaShape.s:$(n)' value='1.0'         estimate='false'/>
+            </plugin>
+
+            <plugin spec='TreeLikelihood' id="treeLikelihood.$(n)">
+                <data idref="data"/>
+                <tree idref="Tree.t:$(n)"/>
+                <siteModel idref="SiteModel.s:$(n)"/>
+                <branchRateModel spec='StrictClockModel' id='StrictClock.c:$(n)'>
+                    <clock.rate id='clockRate.c:$(n)' spec='parameter.RealParameter' value='1.0' estimate='false'/>
+                </branchRateModel>
+            </plugin>
+
+	        <prior id='ClockPrior.c:$(n)' x='@clockRate.c:$(n)'><distr spec="yabby.math.distributions.Uniform" upper='Infinity'/></prior>
+	        <prior id='MutationRatePrior.s:$(n)' x='@mutationRate.s:$(n)'><distr spec="OneOnX"/></prior>
+
+            <!-- tree and its properties -->
+            <taxonset id='TaxonSet.$(n)' spec='yabby.evolution.alignment.TaxonSet' alignment='@$(n)' />
+            <plugin spec='yabby.evolution.tree.Tree' id='Tree.t:$(n)' taxonset='@TaxonSet.$(n)'/>
+
+            <!--plugin spec='yabby.evolution.tree.RandomTree' id='RandomTree.t:$(n)' estimate='false' trait='@datetrait.$(n)' initial='@Tree.t:$(n)'-->
+            <plugin spec='yabby.evolution.tree.RandomTree' id='RandomTree.t:$(n)' estimate='false' initial='@Tree.t:$(n)'>
+                <taxa spec='Alignment' idref='data'/>
+                <populationModel id='ConstantPopulation0.t:$(n)' spec='ConstantPopulation'>
+            		<popSize id='randomPopSize.t:$(n)' spec='parameter.RealParameter' value='1'/>
+	            </populationModel>
+            </plugin>
+
+            <!-- default tree prior -->
+            <plugin spec='YuleModel' id="YuleModel.t:$(n)" tree='@Tree.t:$(n)'>
+                <parameter name='birthDiffRate' id="birthRate.t:$(n)" value='1.0' estimate='true'/>
+            </plugin>
+
+            <plugin id='TreeHeight.t:$(n)' spec='yabby.evolution.tree.TreeHeightLogger' tree='@Tree.t:$(n)'/>
+
+            <logger id='treelog.t:$(n)' spec='yabby.core.Logger' logEvery="1000" fileName="$(tree).trees" mode='tree'>
+	            <log id='TreeWithMetaDataLogger.t:$(n)' spec='yabby.evolution.tree.TreeWithMetaDataLogger' tree='@Tree.t:$(n)'>
+	            </log>
+            </logger>
+
+            <operator id='proportionInvariantScaler.s:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="0.1" parameter="@proportionInvariant.s:$(n)"/>
+            <operator id='mutationRateScaler.s:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="0.1" parameter="@mutationRate.s:$(n)"/>
+            <operator id='gammaShapeScaler.s:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="0.1" parameter="@gammaShape.s:$(n)"/>
+            <operator id='allTipDatesRandomWalker.t:$(n)' spec='TipDatesRandomWalker' windowSize="1" weight="0" tree="@Tree.t:$(n)"/>
+
+            <operator id='treeScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)"/>
+            <operator id='treeRootScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)" rootOnly='true'/>
+            <operator id='UniformOperator.t:$(n)' spec='Uniform' weight="30" tree="@Tree.t:$(n)"/>
+            <operator id='SubtreeSlide.t:$(n)' spec='SubtreeSlide' weight="15" gaussian="true" size="1.0" tree="@Tree.t:$(n)"/>
+            <operator id='narrow.t:$(n)' spec='Exchange' isNarrow='true' weight="15" tree="@Tree.t:$(n)"/>
+            <operator id='wide.t:$(n)' spec='Exchange' isNarrow='false' weight="3" tree="@Tree.t:$(n)"/>
+            <operator id='WilsonBalding.t:$(n)' spec='WilsonBalding' weight="3" tree="@Tree.t:$(n)"/>
+
+
+            <prior id='YuleBirthRatePrior.t:$(n)' x='@birthRate.t:$(n)'><distr spec="yabby.math.distributions.Uniform" lower='0' upper='Infinity'/></prior>
+            <prior id='GammaShapePrior.s:$(n)' x='@gammaShape.s:$(n)'><distr spec="yabby.math.distributions.Exponential" mean='1'/></prior>
+            <prior id='PropInvariantPrior.t:$(n)' x='@proportionInvariant.s:$(n)'><distr spec="yabby.math.distributions.Uniform" lower='0' upper='1'/></prior>
+  		    <operator id='YuleBirthRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.75" weight="3" parameter="@birthRate.t:$(n)"/>
+			<operator id='StrictClockRateScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.75" weight="3" parameter='@clockRate.c:$(n)'/>
+			<!-- need updown operator for clockRate?!? Also in SubstModel.xml -->
+			<upDownOperator id='strictClockUpDownOperator.c:$(n)' spec='UpDownOperator' scaleFactor="0.75" weight="3">
+				<up idref="clockRate.c:$(n)"/>
+				<down idref="Tree.t:$(n)"/>
+			</upDownOperator>
+
+]]>
+            <connect srcID='treeLikelihood.$(n)'            targetID='likelihood' inputName='distribution' if="isInitializing"/>
+            <connect srcID='YuleModel.t:$(n)'               targetID='prior' inputName='distribution' if="isInitializing"/>
+			<connect method="yabby.app.beauti.SiteModelInputEditor.customConnector"/>
+
+            <connect srcID='treelog.t:$(n)'                 targetID='mcmc' inputName='logger' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
+            <connect srcID='RandomTree.t:$(n)'                targetID='mcmc' inputName='init'   if='inposterior(Tree.t:$(n))'/>
+
+            <connect srcID='ClockPrior.c:$(n)'                targetID='prior' inputName='distribution' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'/>
+<!-- when FixMeanMutationRatesOperator, the prior is uniform due to the operator -->
+            <connect srcID='MutationRatePrior.s:$(n)'         targetID='prior' inputName='distribution' if='nooperator(FixMeanMutationRatesOperator) and inlikelihood(mutationRate.s:$(n)) and mutationRate.s:$(n)/estimate=true'/>
+
+            <connect srcID='Tree.t:$(n)'                      targetID='state' inputName='stateNode' if='inposterior(Tree.t:$(n))'/>
+            <connect srcID='proportionInvariant.s:$(n)'       targetID='state' inputName='stateNode' if='inlikelihood(proportionInvariant.s:$(n)) and proportionInvariant.s:$(n)/estimate=true'/>
+            <connect srcID='mutationRate.s:$(n)'              targetID='state' inputName='stateNode' if='inlikelihood(mutationRate.s:$(n)) and mutationRate.s:$(n)/estimate=true'/>
+            <connect srcID='gammaShape.s:$(n)'                targetID='state' inputName='stateNode' if='inlikelihood(gammaShape.s:$(n)) and gammaShape.s:$(n)/estimate=true'/>
+            <connect srcID='clockRate.c:$(n)'                 targetID='state' inputName='stateNode' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'/>
+            <connect srcID='birthRate.t:$(n)'                 targetID='state' inputName='stateNode' if='inposterior(YuleModel.t:$(n)) and inposterior(Tree.t:$(n)) and birthRate.t:$(n)/estimate=true'/>
+
+
+            <connect srcID='proportionInvariantScaler.s:$(n)' targetID='mcmc' inputName='operator' if='inlikelihood(proportionInvariant.s:$(n)) and proportionInvariant.s:$(n)/estimate=true'>Scales proportion of invariant sites parameter of partition $(n)</connect>
+            <connect srcID='mutationRateScaler.s:$(n)'        targetID='mcmc' inputName='operator' if='nooperator(FixMeanMutationRatesOperator) and inlikelihood(mutationRate.s:$(n)) and mutationRate.s:$(n)/estimate=true'>Scales mutation rate of partition s:$(n)</connect>
+            <connect srcID='gammaShapeScaler.s:$(n)'          targetID='mcmc' inputName='operator' if='inlikelihood(gammaShape.s:$(n)) and gammaShape.s:$(n)/estimate=true'>Scales gamma shape parameter of partition s:$(n)</connect>
+            <connect srcID='StrictClockRateScaler.c:$(n)'     targetID='mcmc' inputName='operator' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'>Scale clock rate of partition c:$(n)</connect>
+            <connect srcID='YuleBirthRateScaler.t:$(n)'       targetID='mcmc' inputName='operator' if='inposterior(birthRate.t:$(n)) and birthRate.t:$(n)/estimate=true'>Scales birth rate of Yule prior for partition t:$(n)</connect>
+
+            <connect srcID='allTipDatesRandomWalker.t:$(n)'   targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and allTipDatesRandomWalker.t:$(n)/weight!=0.0'>Estimates tip dates for tree t:$(n)</connect>
+
+            <connect srcID='treeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales all internal nodes for tree t:$(n)</connect>
+            <connect srcID='treeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales root node for tree t:$(n)</connect>
+            <connect srcID='UniformOperator.t:$(n)'           targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Draws new internal node heights uniformally for tree t:$(n)</connect>
+            <connect srcID='SubtreeSlide.t:$(n)'              targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs subtree slide rearrangement of tree t:$(n)</connect>
+            <connect srcID='narrow.t:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Narrow exchange performs local rearrangement of tree t:$(n)</connect>
+            <connect srcID='wide.t:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Wide exchange performs global rearrangement of tree t:$(n)</connect>
+            <connect srcID='WilsonBalding.t:$(n)'             targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs Wilson-Balding global rearrangement of tree t:$(n)</connect>
+            <connect srcID='strictClockUpDownOperator.c:$(n)' targetID='mcmc' inputName='operator' if='nooperator(FixMeanRatesOperator) and inlikelihood(clockRate.c:$(n)) and inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true and clockRate.c:$(n)/estimate=true'>Scale up substitution rate c:$(n) and scale down tree t:($n) </connect>
+
+            <connect srcID='treeLikelihood.$(n)'              targetID='tracelog' inputName='log' if='inlikelihood(treeLikelihood.$(n))'/>
+            <connect srcID='TreeHeight.t:$(n)'                targetID='tracelog' inputName='log' if='inposterior(Tree.t:$(n))'/>
+            <connect srcID='proportionInvariant.s:$(n)'       targetID='tracelog' inputName='log' if='inposterior(proportionInvariant.s:$(n)) and proportionInvariant.s:$(n)/estimate=true'/>
+            <connect srcID='mutationRate.s:$(n)'              targetID='tracelog' inputName='log' if='inlikelihood(mutationRate.s:$(n)) and mutationRate.s:$(n)/estimate=true'/>
+            <connect srcID='gammaShape.s:$(n)'                targetID='tracelog' inputName='log' if='inlikelihood(gammaShape.s:$(n)) and gammaShape.s:$(n)/estimate=true'/>
+            <connect srcID='clockRate.c:$(n)'                 targetID='tracelog' inputName='log' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'/>
+            <connect srcID='YuleModel.t:$(n)'                 targetID='tracelog' inputName='log' if='inposterior(YuleModel.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
+            <connect srcID='birthRate.t:$(n)'                 targetID='tracelog' inputName='log' if='inposterior(YuleModel.t:$(n)) and birthRate.t:$(n)/estimate=true'/>
+
+            <connect srcID='GammaShapePrior.s:$(n)'           targetID='prior' inputName='distribution' if='inlikelihood(gammaShape.s:$(n)) and gammaShape.s:$(n)/estimate=true'/>
+            <connect srcID='PropInvariantPrior.s:$(n)'        targetID='prior' inputName='distribution' if='inlikelihood(proportionInvariant.s:$(n)) and proportionInvariant.s:$(n)/estimate=true'/>
+            <connect srcID='YuleBirthRatePrior.t:$(n)'        targetID='prior' inputName='distribution' if='inposterior(YuleModel.t:$(n)) and inposterior(Tree.t:$(n)) and birthRate.t:$(n)/estimate=true'/>
+
+			<mergepoint id='aux-partitiontemplate'/>
+        </partitiontemplate>
+
+		<mergepoint id='substModelTemplates'/>
+		<mergepoint id='clockModelTemplates'/>
+		<mergepoint id='treePriorTemplates'/>
+        <mergepoint id='parametricDistributions'/>
+
+<!-- Tree initialisation -->
+<!-- Random tree -->
+
+        <subtemplate id='RandomTree' class='yabby.evolution.tree.RandomTree' mainid='RandomTree.t:$(n)'>
+<![CDATA[
+            <tree spec='yabby.evolution.tree.RandomTree' id='RandomTree.t:$(n)' estimate='false' trait='@datetrait.$(n)'>
+                <taxa spec='Alignment' idref='data'/>
+                <populationModel id='ConstantPopulation0.t:$(n)' spec='ConstantPopulation'>
+            		<popSize id='randomPopSize.t:$(n)' spec='parameter.RealParameter' value='1'/>
+	            </populationModel>
+            </tree>
+]]>
+        </subtemplate>
+
+<!-- Cluster tree (for UPGMA) -->
+
+        <subtemplate id='UPGMATree' class='yabby.util.ClusterTree' mainid='UPGMATree.t:$(n)'>
+<![CDATA[
+        <tree spec='yabby.util.ClusterTree' id='UPGMATree.t:$(n)' clusterType='upgma' estimate='false'  trait='@datetrait.$(n)' taxa='@$(n)'/>
+]]>
+        </subtemplate>
+
+<!-- Newick tree -->
+        <subtemplate id='NewickTree' class='yabby.util.ClusterTree' mainid='NewickTree.t:$(n)'>
+<![CDATA[
+        <tree spec='yabby.util.TreeParser' id='NewickTree.t:$(n)' estimate='false'  trait='@datetrait.$(n)'  taxa='@$(n)' newick=""/>
+]]>
+        </subtemplate>
+
+    </beauticonfig>
+
+
+<!--
+<operator spec='DeltaExchangeOperator' id='FixMeanRatesOperator' weight='2' delta='0.75'/>
+-->
+
+<!-- framework for main model -->
+
+    <run spec="MCMC" id="mcmc" chainLength="10000000">
+
+        <state storeEvery='5000' id='state'>
+        </state>
+
+        <distribution spec="CompoundDistribution" id="posterior">
+            <distribution spec="CompoundDistribution" id="prior">
+				<mergepoint id='aux-priors'/>
+            </distribution>
+            <distribution spec="CompoundDistribution" id="likelihood">
+				<mergepoint id='aux-likelihoods'/>
+            </distribution>
+        </distribution>
+
+        <logger id='tracelog' logEvery="1000" fileName="yabby.log" sort="smart" sanitiseHeaders='true'>
+	        <model idref='posterior'/>
+            <log idref="posterior"/>
+            <log idref="likelihood"/>
+            <log idref="prior"/>
+        </logger>
+
+        <logger id='screenlog' logEvery="1000">
+	        <!--model idref='posterior'/-->
+            <log idref="posterior"/>
+      	    <ESS spec='ESS' name='log' arg="@posterior"/>
+            <log idref="likelihood"/>
+            <log idref="prior"/>
+        </logger>
+    </run>
+
+</yabby>
+
