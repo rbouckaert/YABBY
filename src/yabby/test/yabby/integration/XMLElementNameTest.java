@@ -67,7 +67,7 @@ public class XMLElementNameTest extends TestCase {
         HashMap<String, String> sElement2ClassMap = parser.getElement2ClassMap();
 
         // allow 'parameter' for any of the various parameter derivatives, not just RealParameter
-        sElement2ClassMap.put("parameter", "yabby.core.parameter.Parameter");
+        sElement2ClassMap.put("parameter", "yabby.core.parameter.Parameter.BaseP");
 
         // check each plugin
         List<String> sPluginNames = AddOnManager.find(yabby.core.YABBYObject.class, AddOnManager.IMPLEMENTATION_DIR);
@@ -85,6 +85,7 @@ public class XMLElementNameTest extends TestCase {
                         Class<?> type = input.getType();
                         String sBaseType = sElement2ClassMap.get(input.getName());
                         if (!isDerivedType(type, sBaseType)) {
+                        	isDerivedType(type, sBaseType);
                             sImproperInputs.add(sPlugin + "." + input.getName());
                         }
                     }
@@ -108,7 +109,7 @@ public class XMLElementNameTest extends TestCase {
      * true if type is a class equal to or derived from sBaseType *
      */
     boolean isDerivedType(Class<?> type, String sBaseType) {
-        if (sBaseType.equals(type.getName())) {
+        if (sBaseType.equals(type.getName().replaceAll("\\$", "."))) {
             return true;
         }
         Class<?> superType = type.getSuperclass();
