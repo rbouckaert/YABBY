@@ -118,10 +118,10 @@ public class BeautiConfig extends YABBYObject {
     }
 
     final static String HYPER_PRIOR_XML = 
-    		"    <beast version='2.0'\n" +
-    		"    	       namespace='beast.app.beauti:beast.core:beast.evolution.branchratemodel:beast.evolution.speciation:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution:beast.math.distributions'>\n" +
+    		"    <yabby version='2.0'\n" +
+    		"    	       namespace='yabby.app.beauti:yabby.core:yabby.evolution.branchratemodel:yabby.evolution.speciation:yabby.evolution.tree.coalescent:yabby.core.util:yabby.evolution.nuc:yabby.evolution.operators:yabby.evolution.sitemodel:yabby.evolution.substitutionmodel:yabby.evolution.likelihood:yabby.evolution:yabby.math.distributions'>\n" +
     		"    	<!-- Parameter Hyper Prior -->\n" +
-    		"    	        <subtemplate id='HyperPrior' class='beast.math.distributions.Prior' mainid='HyperPrior.$(n)'>\n" +
+    		"    	        <subtemplate id='HyperPrior' class='yabby.math.distributions.Prior' mainid='HyperPrior.$(n)'>\n" +
     		"    	<![CDATA[\n" +
     		"    	        <plugin id='HyperPrior.$(n)' spec='Prior' x='@parameter.$(n)'>\n" +
     		"    	            <distr spec='OneOnX'/>\n" +
@@ -138,7 +138,7 @@ public class BeautiConfig extends YABBYObject {
     		"\n" +
     		"    	            <connect srcID='HyperPrior.$(n)'           targetID='prior' inputName='distribution' if='inposterior(parameter.$(n)) and parameter.$(n)/estimate=true'>Hyper prior for parameter $(n)</connect>\n" +
     		"    	        </subtemplate>\n" +
-    		"    	</beast>\n";
+    		"    	</yabby>\n";
     
     public void setDoc(BeautiDoc doc) {
         partitionTemplate.get().setDoc(doc);

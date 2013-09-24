@@ -60,7 +60,7 @@ public class BeautiSubTemplate extends YABBYObject {
         sMainID = sMainInput.get();
         // sanity check: make sure the XML is parseable
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.newDocumentBuilder().parse(new InputSource(new StringReader("<beast>" + sXML + "</beast>")));
+        factory.newDocumentBuilder().parse(new InputSource(new StringReader("<yabby>" + sXML + "</yabby>")));
         // make sure there are no comments in the XML: this screws up any XML when saved to file
         if (sXML.contains("<!--")) {
             while (sXML.contains("<!--")) {
@@ -171,10 +171,10 @@ public class BeautiSubTemplate extends YABBYObject {
 
     private YABBYObject createSubNet(PartitionContext context, /*BeautiDoc doc,*/ HashMap<String, YABBYObject> sIDMap, boolean init) {
         // wrap in a beast element with appropriate name spaces
-        String _sXML = "<beast version='2.0' \n" +
-                "namespace='beast.app.beauti:beast.core:beast.evolution.branchratemodel:beast.evolution.speciation:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution:beast.math.distributions'>\n" +
+        String _sXML = "<yabby version='2.0' \n" +
+                "namespace='yabby.app.beauti:yabby.core:yabby.evolution.branchratemodel:yabby.evolution.speciation:yabby.evolution.tree.coalescent:yabby.core.util:yabby.evolution.nuc:yabby.evolution.operators:yabby.evolution.sitemodel:yabby.evolution.substitutionmodel:yabby.evolution.likelihood:yabby.evolution:yabby.math.distributions'>\n" +
                 sXML +
-                "</beast>\n";
+                "</yabby>\n";
 
         // resolve alignment references
         _sXML = _sXML.replaceAll("idref=[\"']data['\"]", "idref='" + context.partition + "'");

@@ -444,10 +444,10 @@ public class XMLParser {
     public YABBYObject parseBareFragment(String sXML, boolean bInitialize) throws Exception {
         // get rid of XML processing instruction
         sXML = sXML.replaceAll("<\\?xml[^>]*>", "");
-        if (sXML.indexOf("<beast") > -1) {
+        if (sXML.indexOf("<beast") > -1 || sXML.indexOf("<yabby") > -1) {
             return parseFragment(sXML, bInitialize);
         } else {
-            return parseFragment("<beast>" + sXML + "</beast>", bInitialize);
+            return parseFragment("<yabby>" + sXML + "</yabby>", bInitialize);
         }
     }
 
