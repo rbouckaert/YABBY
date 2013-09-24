@@ -29,6 +29,7 @@ import java.util.*;
 
 import yabby.core.YABBYObject;
 import yabby.core.Description;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.HeapSort;
 
 
@@ -71,7 +72,7 @@ public class Node extends YABBYObject {
     /**
      * status of this node after an operation is performed on the state *
      */
-    int isDirty = Tree.IS_CLEAN;
+    int isDirty = BaseTree.IS_CLEAN;
 
     /**
      * meta-data contained in square brackets in Newick *
@@ -82,7 +83,7 @@ public class Node extends YABBYObject {
      * The Tree that this node is a part of.
      * This allows e.g. access to the State containing the Tree *
      */
-    protected Tree m_tree;
+    protected BaseTree m_tree;
 
     public Node() {
     }
@@ -92,7 +93,7 @@ public class Node extends YABBYObject {
         initAndValidate();
     }
 
-    public Tree getTree() {
+    public BaseTree getTree() {
         return m_tree;
     }
 
@@ -128,11 +129,11 @@ public class Node extends YABBYObject {
     public void setHeight(double fHeight) {
         startEditing();
         height = fHeight;
-        isDirty |= Tree.IS_DIRTY;
+        isDirty |= BaseTree.IS_DIRTY;
         if (!isLeaf()) {
-            getLeft().isDirty |= Tree.IS_DIRTY;
+            getLeft().isDirty |= BaseTree.IS_DIRTY;
             if (getRight() != null) {
-                getRight().isDirty |= Tree.IS_DIRTY;
+                getRight().isDirty |= BaseTree.IS_DIRTY;
             }
         }
     }
@@ -199,7 +200,7 @@ public class Node extends YABBYObject {
         if (inOperator) startEditing();
         if (this.parent != parent) {
         	this.parent = parent;
-            if (inOperator) isDirty = Tree.IS_FILTHY;
+            if (inOperator) isDirty = BaseTree.IS_FILTHY;
         }
     }
 
@@ -600,7 +601,7 @@ public class Node extends YABBYObject {
                 sPattern.equals(TraitSet.DATE_FORWARD_TRAIT) ||
                 sPattern.equals(TraitSet.DATE_BACKWARD_TRAIT)) {
             height = (Double) fValue;
-            isDirty |= Tree.IS_DIRTY;
+            isDirty |= BaseTree.IS_DIRTY;
         } else {
             if (metaData == null) metaData = new TreeMap<String, Object>();
             metaData.put(sPattern, fValue);
@@ -635,7 +636,7 @@ public class Node extends YABBYObject {
      */
     public void scale(double fScale) throws Exception {
         startEditing();
-        isDirty |= Tree.IS_DIRTY;
+        isDirty |= BaseTree.IS_DIRTY;
         if (!isLeaf()) {
             height *= fScale;
             getLeft().scale(fScale);

@@ -7,15 +7,15 @@ import java.util.List;
 import yabby.core.CalculationNode;
 import yabby.core.Description;
 import yabby.core.Input;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 
 @Description("Finds height of highest tree among a set of trees")
 public class TreeTopFinder extends CalculationNode {
-    public Input<List<Tree>> treeInputs = new Input<List<Tree>>("tree", "set of trees to search among", new ArrayList<Tree>());
+    public Input<List<BaseTree>> treeInputs = new Input<List<BaseTree>>("tree", "set of trees to search among", new ArrayList<BaseTree>());
 
-    List<Tree> trees;
+    List<BaseTree> trees;
 
     double oldHeight;
     double height;
@@ -32,7 +32,7 @@ public class TreeTopFinder extends CalculationNode {
 
     private double calcHighestTreeHeight() {
         double fTop = 0;
-        for (Tree tree : trees) {
+        for (BaseTree tree : trees) {
             fTop = Math.max(tree.getRoot().getHeight(), fTop);
         }
         return fTop;

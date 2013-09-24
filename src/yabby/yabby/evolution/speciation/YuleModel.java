@@ -7,7 +7,7 @@ import yabby.core.Input;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.RealParameter;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -35,7 +35,7 @@ public class YuleModel extends SpeciesTreeDistribution {
 
         // make sure that all tips are at the same height,
         // otherwise this Yule Model is not appropriate
-        Tree tree = treeInput.get();
+        BaseTree tree = treeInput.get();
         if (tree == null) {
         	tree = treeIntervalsInput.get().treeInput.get();
         }
@@ -50,11 +50,11 @@ public class YuleModel extends SpeciesTreeDistribution {
     }
 
     @Override
-    public double calculateTreeLogLikelihood(final Tree tree) {
+    public double calculateTreeLogLikelihood(final BaseTree tree) {
         return calculateTreeLogLikelihood(tree, 1, 0);
     }
 
-    protected double calculateTreeLogLikelihood(final Tree tree, final double rho, final double a) {
+    protected double calculateTreeLogLikelihood(final BaseTree tree, final double rho, final double a) {
         final int taxonCount = tree.getLeafNodeCount();
         final double r = birthDiffRateParameterInput.get().getValue();
 

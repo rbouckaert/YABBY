@@ -5,17 +5,17 @@ import yabby.core.Input;
 import yabby.core.Operator;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.IntegerParameter;
-import yabby.core.parameter.Parameter;
 import yabby.core.parameter.RealParameter;
+import yabby.core.parameter.Parameter.BaseP;
 import yabby.util.Randomizer;
 
 @Description("Assign one or more parameter values to a uniformly selected value in its range.")
 public class UniformOperator extends Operator {
-    public Input<Parameter<?>> parameterInput = new Input<Parameter<?>>("parameter", "a real or integer parameter to sample individual values for", Validate.REQUIRED, Parameter.class);
+    public Input<BaseP<?>> parameterInput = new Input<BaseP<?>>("parameter", "a real or integer parameter to sample individual values for", Validate.REQUIRED, BaseP.class);
     public Input<Integer> howManyInput = new Input<Integer>("howMany", "number of items to sample, default 1, must be less than the dimension of the parameter", 1);
 
     int howMany;
-    Parameter<?> parameter;
+    BaseP<?> parameter;
     double fLower, fUpper;
     int iLower, iUpper;
 

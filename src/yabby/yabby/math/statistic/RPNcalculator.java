@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.io.PrintStream;
 
 import yabby.core.*;
-import yabby.core.parameter.Parameter;
+import yabby.core.parameter.Parameter.BaseP;
 
 
 
@@ -26,7 +26,7 @@ public class RPNcalculator extends CalculationNode implements Loggable, Function
 
 
     public Input<String> strExpressionInput = new Input<String>("expression", "Expressions needed for the calculations", Input.Validate.REQUIRED);
-    public Input<List<Parameter>> parametersInput = new Input<List<Parameter>>("parameter", "Parameters needed for the calculations", new ArrayList<Parameter>());
+    public Input<List<BaseP>> parametersInput = new Input<List<BaseP>>("parameter", "Parameters needed for the calculations", new ArrayList<BaseP>());
 
     private RPNexpressionCalculator[] expressions;
     private List<String> names;
@@ -42,7 +42,7 @@ public class RPNcalculator extends CalculationNode implements Loggable, Function
 
         int pdim;
 
-        for (Parameter p : parametersInput.get()) {
+        for (BaseP p : parametersInput.get()) {
 
             pdim = p.getDimension();
 
@@ -90,7 +90,7 @@ public class RPNcalculator extends CalculationNode implements Loggable, Function
     }
 
     private void updateValues() {
-        for (Parameter p : parametersInput.get()) {
+        for (BaseP p : parametersInput.get()) {
             for (int i = 0; i < p.getDimension(); i++) {
                 variables.put(p.getID(), p.getValues());
             }
@@ -148,7 +148,7 @@ public class RPNcalculator extends CalculationNode implements Loggable, Function
 
     public List<String> getArguments() {
         List<String> arguments = new ArrayList<String>();
-        for (Parameter par : parametersInput.get()) {
+        for (BaseP par : parametersInput.get()) {
             arguments.add(par.getID());
         }
         return arguments;

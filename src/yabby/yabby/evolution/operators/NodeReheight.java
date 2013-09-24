@@ -12,7 +12,7 @@ import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Taxon;
 import yabby.evolution.alignment.TaxonSet;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 
 
@@ -22,7 +22,7 @@ import yabby.util.Randomizer;
         "then reconstructs the tree from node heights.")
 public class NodeReheight extends TreeOperator {
     public final Input<TaxonSet> taxonSetInput = new Input<TaxonSet>("taxonset", "taxon set describing species tree taxa and their gene trees", Validate.REQUIRED);
-    public final Input<List<Tree>> geneTreesInput = new Input<List<Tree>>("genetree", "list of gene trees that constrain species tree movement", new ArrayList<Tree>());
+    public final Input<List<BaseTree>> geneTreesInput = new Input<List<BaseTree>>("genetree", "list of gene trees that constrain species tree movement", new ArrayList<BaseTree>());
     Node[] m_nodes;
 
 
@@ -49,7 +49,7 @@ public class NodeReheight extends TreeOperator {
 
         /** build the taxon map for each gene tree **/
         m_taxonMap = new ArrayList<Map<Integer, Integer>>();
-        for (final Tree tree : geneTreesInput.get()) {
+        for (final BaseTree tree : geneTreesInput.get()) {
             final Map<Integer, Integer> map = new HashMap<Integer, Integer>();
             setupTaxaMap(tree.getRoot(), map, taxonMap);
             m_taxonMap.add(map);
@@ -71,7 +71,7 @@ public class NodeReheight extends TreeOperator {
 
     @Override
     public double proposal() {
-        final Tree tree = treeInput.get();
+        final BaseTree tree = treeInput.get();
         m_nodes = tree.getNodesAsArray();
         final int nNodes = tree.getNodeCount();
         // randomly change left/right order
@@ -124,7 +124,7 @@ public class NodeReheight extends TreeOperator {
 
         // calculate for every species tree the maximum allowable merge point
         for (int i = 0; i < nrOfGeneTrees; i++) {
-            final Tree tree = geneTreesInput.get().get(i);
+            final BaseTree tree = geneTreesInput.get().get(i);
             findMaximaInGeneTree(tree.getRoot(), new boolean[nrOfSpecies], m_taxonMap.get(i), fMaxHeight);
         }
 

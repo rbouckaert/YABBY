@@ -4,7 +4,7 @@ package test.yabby.evolution.tree.coalescent;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.evolution.tree.coalescent.BayesianSkyline;
 import yabby.evolution.tree.coalescent.TreeIntervals;
 
@@ -24,7 +24,7 @@ public class BayesianSkylineTest extends TestCase {
 
         //popSize.setValue(1, 2.0);
 
-        Tree tree = new Tree("(((1:1,2:1):2.5,(3:1.5,4:1.5):2):2,5:5.5);");
+        BaseTree tree = new BaseTree("(((1:1,2:1):2.5,(3:1.5,4:1.5):2):2,5:5.5);");
         TreeIntervals intervals = new TreeIntervals(tree);
 
         BayesianSkyline skyline = new BayesianSkyline();

@@ -29,14 +29,12 @@ import java.io.PrintStream;
 
 import yabby.core.Description;
 
-
-
 /**
  * @author Joseph Heled
  */
 @Description("A Boolean-valued parameter represents a value (or array of values if the dimension is larger than one) " +
         "in the state space that can be changed by operators.")
-public class BooleanParameter extends Parameter<java.lang.Boolean> {
+public class BooleanParameter extends Parameter.BaseP<java.lang.Boolean> {
     public BooleanParameter() {
         m_fUpper = true;
     }

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import yabby.evolution.alignment.*;
 import yabby.evolution.datatype.DataType;
 import yabby.evolution.tree.TraitSet;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -39,7 +39,7 @@ public class NexusParser {
     public TraitSet traitSet;
 
     public List<String> taxa;
-    public List<Tree> trees;
+    public List<BaseTree> trees;
 
     static Set<String> g_sequenceIDs;
 
@@ -108,7 +108,7 @@ public class NexusParser {
     } // parseFile
 
     private void parseTreesBlock(BufferedReader fin) throws Exception {
-        trees = new ArrayList<Tree>();
+        trees = new ArrayList<BaseTree>();
         // read to first non-empty line within trees block
         String sStr = fin.readLine().trim();
         while (sStr.equals("")) {

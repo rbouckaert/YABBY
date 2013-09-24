@@ -4,7 +4,7 @@ package yabby.evolution.operators;
 import java.util.List;
 
 import yabby.core.Description;
-import yabby.core.parameter.Parameter;
+import yabby.core.parameter.Parameter.BaseP;
 
 
 
@@ -13,9 +13,9 @@ import yabby.core.parameter.Parameter;
 public class CompoundParameterHelper<T> {
     protected int[] parameterIndex; // store the index of parameter list
 
-    final List<Parameter<T>> parameterList;
+    final List<BaseP<T>> parameterList;
 
-    public CompoundParameterHelper(final List<Parameter<T>> parameterList) {
+    public CompoundParameterHelper(final List<BaseP<T>> parameterList) {
         this.parameterList = parameterList;
 
         if (parameterList == null || parameterList.size() < 1) {
@@ -23,14 +23,14 @@ public class CompoundParameterHelper<T> {
         }
 
         int dim = 0;
-        for (final Parameter<T> para : parameterList) {
+        for (final BaseP<T> para : parameterList) {
             dim += para.getDimension();
         }
 
         parameterIndex = new int[dim];
 
         for (int y = 0; y < parameterList.size(); y++) {
-            final Parameter<T> para = parameterList.get(y);
+            final BaseP<T> para = parameterList.get(y);
             for (int d = 0; d < para.getDimension(); d++) {
                 parameterIndex[y + d] = y;
             }
@@ -42,7 +42,7 @@ public class CompoundParameterHelper<T> {
     }
 
     public void setValue(final int iParam, final T fValue) {
-        final Parameter<T> para = parameterList.get(getY(iParam));
+        final BaseP<T> para = parameterList.get(getY(iParam));
         para.setValue(getX(iParam), fValue);
     }
 

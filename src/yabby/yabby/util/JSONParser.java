@@ -37,8 +37,8 @@ import yabby.core.YABBYObject;
 import yabby.core.State;
 
 import yabby.core.Input.Validate;
-import yabby.core.parameter.Parameter;
 import yabby.core.parameter.RealParameter;
+import yabby.core.parameter.Parameter.BaseP;
 
 
 import java.io.BufferedReader;
@@ -616,7 +616,7 @@ public class JSONParser {
 	 */
 	boolean checkType(String sClass, YABBYObject plugin) throws Exception {
 		// parameter clutch
-		if (plugin instanceof Parameter<?>) {
+		if (plugin instanceof BaseP<?>) {
 			for (String nameSpace : m_sNameSpaces) {
 				nameSpace = nameSpace.replaceAll("beast", "yabby");
 				if ((nameSpace + sClass).equals(RealParameter.class.getName())) {

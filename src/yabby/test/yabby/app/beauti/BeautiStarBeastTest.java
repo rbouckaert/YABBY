@@ -5,7 +5,6 @@ package test.yabby.app.beauti;
 
 import java.io.File;
 
-import org.fest.swing.fixture.JCheckBoxFixture;
 import org.fest.swing.fixture.JComboBoxFixture;
 import org.fest.swing.fixture.JMenuItemFixture;
 import org.fest.swing.fixture.JOptionPaneFixture;

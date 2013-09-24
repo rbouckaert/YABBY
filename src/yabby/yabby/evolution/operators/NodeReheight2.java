@@ -3,7 +3,7 @@ package yabby.evolution.operators;
 import yabby.core.Description;
 import yabby.core.Input;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 
 @Description("Tree operator which randomly changes the height of a node, " +
@@ -22,7 +22,7 @@ public class NodeReheight2 extends TreeOperator {
 	
 	@Override
 	public double proposal() {
-		Tree tree = treeInput.get();
+		BaseTree tree = treeInput.get();
 		m_nodes = tree.getNodesAsArray();
 		int nNodes = tree.getNodeCount();
 		// randomly change left/right order

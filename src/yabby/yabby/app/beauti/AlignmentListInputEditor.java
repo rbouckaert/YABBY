@@ -50,7 +50,7 @@ import yabby.evolution.branchratemodel.BranchRateModel;
 import yabby.evolution.likelihood.GenericTreeLikelihood;
 import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.sitemodel.SiteModelInterface;
-import yabby.evolution.tree.TreeInterface;
+import yabby.evolution.tree.Tree;
 
 
 
@@ -415,10 +415,10 @@ public class AlignmentListInputEditor extends ListInputEditor {
 			// make sure that *if* the clock model has a tree as input, it is
 			// the same as
 			// for the likelihood
-			TreeInterface tree = null;
+			Tree tree = null;
 			for (Input<?> input : ((YABBYObject) clockModel).listInputs()) {
 				if (input.getName().equals("tree")) {
-					tree = (TreeInterface) input.get();
+					tree = (Tree) input.get();
 				}
 
 			}
@@ -434,16 +434,16 @@ public class AlignmentListInputEditor extends ListInputEditor {
 		}
 			break;
 		case TREE_COLUMN: {
-			TreeInterface tree = null;
+			Tree tree = null;
 			if (treeLikelihood != null) { // getDoc().getPartitionNr(sPartition,
 											// BeautiDoc.TREEMODEL_PARTITION) !=
 											// iRow) {
 				tree = treeLikelihood.treeInput.get();
 			} else {
-				tree = (TreeInterface) doc.pluginmap.get("Tree.t:" + sPartition);
+				tree = (Tree) doc.pluginmap.get("Tree.t:" + sPartition);
 				if (tree != likelihoods[iRow].treeInput.get()) {
 					PartitionContext context = getPartitionContext(iRow);
-					tree = (TreeInterface) BeautiDoc.deepCopyPlugin((YABBYObject) likelihoods[iRow].treeInput.get(), likelihoods[iRow],
+					tree = (Tree) BeautiDoc.deepCopyPlugin((YABBYObject) likelihoods[iRow].treeInput.get(), likelihoods[iRow],
 							(MCMC) doc.mcmc.get(), context, doc, null);
 				}
 			}
@@ -469,8 +469,8 @@ public class AlignmentListInputEditor extends ListInputEditor {
 			needsRePartition = (this.likelihoods[iRow].treeInput.get() != tree);
 System.err.println("needsRePartition = " + needsRePartition);			
 			if (needsRePartition) {
-				TreeInterface oldTree = this.likelihoods[iRow].treeInput.get();
-				List<TreeInterface> tModels = new ArrayList<TreeInterface>();
+				Tree oldTree = this.likelihoods[iRow].treeInput.get();
+				List<Tree> tModels = new ArrayList<Tree>();
 				for (GenericTreeLikelihood likelihood : likelihoods) {
 					if (likelihood.treeInput.get() == oldTree) {
 						tModels.add(likelihood.treeInput.get());
@@ -1053,7 +1053,7 @@ System.err.println("needsRePartition = " + needsRePartition);
 			// check whether any of the models are linked
 			BranchRateModel.Base clockModel = likelihoods[iRow].branchRateModelInput.get();
 			SiteModelInterface siteModel = likelihoods[iRow].siteModelInput.get();
-			TreeInterface tree = likelihoods[iRow].treeInput.get();
+			Tree tree = likelihoods[iRow].treeInput.get();
 			List<GenericTreeLikelihood> cModels = new ArrayList<GenericTreeLikelihood>();
 			List<GenericTreeLikelihood> sModels = new ArrayList<GenericTreeLikelihood>();
 			List<GenericTreeLikelihood> tModels = new ArrayList<GenericTreeLikelihood>();

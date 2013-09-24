@@ -43,7 +43,7 @@ import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.substitutionmodel.SubstitutionModel;
 import yabby.evolution.tree.Node;
 import yabby.evolution.tree.Tree;
-import yabby.evolution.tree.TreeInterface;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -232,7 +232,7 @@ public class TreeLikelihood extends GenericTreeLikelihood {
         } else {
             setStates(treeInput.get().getRoot(), dataInput.get().getPatternCount());
         }
-        hasDirt = Tree.IS_FILTHY;
+        hasDirt = BaseTree.IS_FILTHY;
         for (int i = 0; i < intNodeCount; i++) {
             likelihoodCore.createNodePartials(extNodeCount + i);
         }
@@ -305,9 +305,9 @@ public class TreeLikelihood extends GenericTreeLikelihood {
             logP = beagle.calculateLogP();
             return logP;
         }
-        final TreeInterface tree = treeInput.get();
+        final Tree tree = treeInput.get();
 
-        if (traverse(tree.getRoot()) != Tree.IS_CLEAN)
+        if (traverse(tree.getRoot()) != BaseTree.IS_CLEAN)
             calcLogP();
 
         m_nScale++;
@@ -326,7 +326,7 @@ public class TreeLikelihood extends GenericTreeLikelihood {
             System.err.println("Turning on scaling to prevent numeric instability " + m_fScale);
             likelihoodCore.setUseScaling(m_fScale);
             likelihoodCore.unstore();
-            hasDirt = Tree.IS_FILTHY;
+            hasDirt = BaseTree.IS_FILTHY;
             traverse(tree.getRoot());
             calcLogP();
             return logP;
@@ -360,7 +360,7 @@ public class TreeLikelihood extends GenericTreeLikelihood {
 
         // First update the transition probability matrix(ices) for this branch
         //if (!node.isRoot() && (update != Tree.IS_CLEAN || branchTime != m_StoredBranchLengths[iNode])) {
-        if (!node.isRoot() && (update != Tree.IS_CLEAN || branchTime != m_branchLengths[iNode])) {
+        if (!node.isRoot() && (update != BaseTree.IS_CLEAN || branchTime != m_branchLengths[iNode])) {
             m_branchLengths[iNode] = branchTime;
             final Node parent = node.getParent();
             likelihoodCore.setNodeMatrixForUpdate(iNode);
@@ -370,7 +370,7 @@ public class TreeLikelihood extends GenericTreeLikelihood {
                 //System.out.println(node.getNr() + " " + Arrays.toString(m_fProbabilities));
                 likelihoodCore.setNodeMatrix(iNode, i, probabilities);
             }
-            update |= Tree.IS_DIRTY;
+            update |= BaseTree.IS_DIRTY;
         }
 
         // If the node is internal, update the partial likelihoods.
@@ -384,14 +384,14 @@ public class TreeLikelihood extends GenericTreeLikelihood {
             final int update2 = traverse(child2);
 
             // If either child node was updated then update this node too
-            if (update1 != Tree.IS_CLEAN || update2 != Tree.IS_CLEAN) {
+            if (update1 != BaseTree.IS_CLEAN || update2 != BaseTree.IS_CLEAN) {
 
                 final int childNum1 = child1.getNr();
                 final int childNum2 = child2.getNr();
 
                 likelihoodCore.setNodePartialsForUpdate(iNode);
                 update |= (update1 | update2);
-                if (update >= Tree.IS_FILTHY) {
+                if (update >= BaseTree.IS_FILTHY) {
                     likelihoodCore.setNodeStatesForUpdate(iNode);
                 }
 
@@ -437,14 +437,14 @@ public class TreeLikelihood extends GenericTreeLikelihood {
         if (beagle != null) {
             return beagle.requiresRecalculation();
         }
-        hasDirt = Tree.IS_CLEAN;
+        hasDirt = BaseTree.IS_CLEAN;
 
         if (dataInput.get().isDirtyCalculation()) {
-            hasDirt = Tree.IS_FILTHY;
+            hasDirt = BaseTree.IS_FILTHY;
             return true;
         }
         if (m_siteModel.isDirtyCalculation()) {
-            hasDirt = Tree.IS_DIRTY;
+            hasDirt = BaseTree.IS_DIRTY;
             return true;
         }
         if (branchRateModel != null && branchRateModel.isDirtyCalculation()) {

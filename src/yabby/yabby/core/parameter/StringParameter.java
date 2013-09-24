@@ -1,5 +1,6 @@
 package yabby.core.parameter;
 
+
 import java.io.PrintStream;
 
 import yabby.core.Description;
@@ -7,7 +8,7 @@ import yabby.core.Description;
 
 
 @Description("Parameter represented by a string value")
-public class StringParameter extends Parameter<String> {
+public class StringParameter extends Parameter.BaseP<String> {
 
 	@Override
 	public double getArrayValue() {return 0;}

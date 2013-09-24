@@ -46,12 +46,12 @@ import yabby.core.Distribution;
 import yabby.core.Operator;
 import yabby.core.Logger;
 import yabby.core.Input.Validate;
-import yabby.core.parameter.Parameter;
 import yabby.core.parameter.RealParameter;
+import yabby.core.parameter.Parameter.BaseP;
 import yabby.core.util.Log;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.Sequence;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -154,7 +154,7 @@ public class XMLParser {
     final static String REAL_PARAMETER_CLASS = RealParameter.class.getName();
     final static String PLUGIN_CLASS = YABBYObject.class.getName();
     final static String INPUT_CLASS = Input.class.getName();
-    final static String TREE_CLASS = Tree.class.getName();
+    final static String TREE_CLASS = BaseTree.class.getName();
     final static String RUNNABLE_CLASS = Runnable.class.getName();
 
 
@@ -632,7 +632,7 @@ public class XMLParser {
             return true;
         }
         // parameter clutch
-        if (sClass.equals(RealParameter.class.getName()) && plugin instanceof Parameter<?>) {
+        if (sClass.equals(RealParameter.class.getName()) && plugin instanceof BaseP<?>) {
             return true;
         }
         return false;

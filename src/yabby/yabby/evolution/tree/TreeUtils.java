@@ -2,6 +2,8 @@ package yabby.evolution.tree;
 
 import java.util.*;
 
+import yabby.evolution.tree.Tree.BaseTree;
+
 /**
  * @author Alexei Drummond
  */
@@ -106,7 +108,7 @@ public class TreeUtils {
      * @param leafNodes a set of names
      * @return the NodeRef of the MRCA
      */
-    public static Node getCommonAncestorNode(Tree tree, Set<String> leafNodes) {
+    public static Node getCommonAncestorNode(BaseTree tree, Set<String> leafNodes) {
 
         int cardinality = leafNodes.size();
 
@@ -123,7 +125,7 @@ public class TreeUtils {
     /*
     * Private recursive function used by getCommonAncestorNode.
     */
-    private static int getCommonAncestorNode(Tree tree, Node node,
+    private static int getCommonAncestorNode(BaseTree tree, Node node,
                                              Set<String> leafNodes, int cardinality,
                                              Node[] mrca) {
 
@@ -162,7 +164,7 @@ public class TreeUtils {
      * @param node
      * @return the length of the (sub)tree below the given node.
      */
-    public static double getTreeLength(Tree tree, Node node) {
+    public static double getTreeLength(BaseTree tree, Node node) {
 
         int childCount = node.getChildCount();
         if (childCount == 0) return node.getLength();
@@ -180,7 +182,7 @@ public class TreeUtils {
      * @param tree
      * @return the sum of the external branch lengths of the given tree
      */
-    public static double getExternalLength(Tree tree) {
+    public static double getExternalLength(BaseTree tree) {
         double length = 0.0;
         for (Node node : tree.getExternalNodes()) {
             length += node.getLength();
@@ -192,7 +194,7 @@ public class TreeUtils {
      * @param tree
      * @return the sum of the internal branch lengths of the given tree
      */
-    public static double getInternalLength(Tree tree) {
+    public static double getInternalLength(BaseTree tree) {
         double length = 0.0;
         for (Node node : tree.getExternalNodes()) {
             length += node.getLength();
@@ -203,7 +205,7 @@ public class TreeUtils {
     /**
      * @return the intervals in an ultrametric tree in order from root to tips.
      */
-    public static double[] getIntervals(Tree tree) {
+    public static double[] getIntervals(BaseTree tree) {
 
         List<Double> heights = new ArrayList<Double>();
 
@@ -230,7 +232,7 @@ public class TreeUtils {
      * @param node the node to get names of leaves below
      * @return a set of taxa names (as strings) of the leaf nodes descended from the given node.
      */
-    public static Set<String> getDescendantLeaves(Tree tree, Node node) {
+    public static Set<String> getDescendantLeaves(BaseTree tree, Node node) {
 
         HashSet<String> set = new HashSet<String>();
         getDescendantLeaves(tree, node, set);
@@ -242,7 +244,7 @@ public class TreeUtils {
      * @param node the node to get name of leaves below
      * @param set  will be populated with taxa names (as strings) of the leaf nodes descended from the given node.
      */
-    private static void getDescendantLeaves(Tree tree, Node node, Set<String> set) {
+    private static void getDescendantLeaves(BaseTree tree, Node node, Set<String> set) {
 
         if (node.isLeaf()) {
             set.add(tree.getTaxonId(node));
@@ -260,7 +262,7 @@ public class TreeUtils {
      *                  and the tree still be regarded as ultrametric
      * @return true only if all tips have height 0.0
      */
-    public static boolean isUltrametric(Tree tree, double threshold) {
+    public static boolean isUltrametric(BaseTree tree, double threshold) {
         for (Node node : tree.getExternalNodes()) {
             if (Math.abs(node.getHeight()) > threshold)
                 return false;
@@ -273,7 +275,7 @@ public class TreeUtils {
      * @return true only if all tips have height exactly 0.0. Since newick is expressed in branch lengths
      * it may be necessary to use isUltrametric(tree, threshold) to allow for numerical precision issues.
      */
-    public static boolean isUltrametric(Tree tree) {
+    public static boolean isUltrametric(BaseTree tree) {
         for (Node node : tree.getExternalNodes()) {
             if (node.getHeight() != 0.0)
                 return false;
@@ -285,7 +287,7 @@ public class TreeUtils {
      * @param tree the tree to test if binary
      * @return true only if internal nodes have 2 children
      */
-    public static boolean isBinary(Tree tree) {
+    public static boolean isBinary(BaseTree tree) {
         for (Node node : tree.getInternalNodes()) {
             if (node.getChildCount() != 2)
                 return false;

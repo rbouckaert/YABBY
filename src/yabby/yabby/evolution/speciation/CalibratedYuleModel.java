@@ -16,7 +16,7 @@ import yabby.core.parameter.RealParameter;
 import yabby.core.util.CompoundDistribution;
 import yabby.evolution.alignment.TaxonSet;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.math.distributions.MRCAPrior;
 import yabby.math.statistic.RPNcalculator;
 
@@ -89,7 +89,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
 
         type = correctionTypeInput.get();
 
-        final Tree tree = treeInput.get();
+        final BaseTree tree = treeInput.get();
 
         // shallow copy. we will be changing cals later
         final List<CalibrationPoint> cals = new ArrayList<CalibrationPoint>(calibrationsInput.get());
@@ -265,7 +265,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
         }
     }
 
-    Tree compatibleInitialTree() throws Exception {
+    BaseTree compatibleInitialTree() throws Exception {
         final int nCals = orderedCalibrations.length;
         final double[] lowBound = new double[nCals];
         final double[] cladeHeight = new double[nCals];
@@ -297,7 +297,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
             }
         }
 
-        final Tree tree = treeInput.get();
+        final BaseTree tree = treeInput.get();
         final int nNodes = tree.getLeafNodeCount();
         final boolean[] used = new boolean[nNodes];
 
@@ -360,14 +360,14 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
                 h += 1;
             }
         }
-        final Tree t = new Tree();
+        final BaseTree t = new BaseTree();
         t.setRoot(finalTree);
         t.initAndValidate();
         return t;
     }
 
     @Override
-    double calculateTreeLogLikelihood(final Tree tree) {
+    double calculateTreeLogLikelihood(final BaseTree tree) {
         final double lam = birthRateInput.get().getArrayValue();
 
         double logL = calculateYuleLikelihood(tree, lam);
@@ -377,7 +377,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
         return logL;
     }
 
-    private static double calculateYuleLikelihood(final Tree tree, final double lam) {
+    private static double calculateYuleLikelihood(final BaseTree tree, final double lam) {
         final int taxonCount = tree.getLeafNodeCount();
 
         // add all lambda multipliers here
@@ -395,7 +395,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
         return logL;
     }
 
-    public double getCorrection(final Tree tree, final double lam) {
+    public double getCorrection(final BaseTree tree, final double lam) {
         double logL = 0.0;
 
         final int nCals = orderedCalibrations.length;
@@ -776,7 +776,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
 
     // Q2R Those generic functions could find a better home
 
-    public static int getTaxonIndex(final Tree tree, final String taxon) {
+    public static int getTaxonIndex(final BaseTree tree, final String taxon) {
         for (int i = 0; i < tree.getNodeCount(); i++) {
             final Node node = tree.getNode(i);
             if (node.isLeaf() && node.getID().equals(taxon)) {
@@ -802,7 +802,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
     // return the node-ref of the MRCA.
 
     // would be nice to use nodeRef's, but they are not preserved :(
-    public static Node getCommonAncestor(final Tree tree, final int[] nodes) {
+    public static Node getCommonAncestor(final BaseTree tree, final int[] nodes) {
         Node cur = tree.getNode(nodes[0]);
 
         for (int k = 1; k < nodes.length; ++k) {
@@ -840,7 +840,7 @@ public class CalibratedYuleModel extends SpeciesTreeDistribution {
     public void log(final int nSample, final PrintStream out) {
         out.print(getCurrentLogP() + "\t");
         if (calcCalibrations) {
-            final Tree tree = treeInput.get();
+            final BaseTree tree = treeInput.get();
             for (int k = 0; k < orderedCalibrations.length; ++k) {
                 final CalibrationPoint cal = orderedCalibrations[k];
                 Node c;

@@ -5,7 +5,7 @@ import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.parameter.IntegerParameter;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.math.distributions.ParametricDistribution;
 
 @Description("Defines an uncorrelated relaxed molecular clock.")
@@ -13,7 +13,7 @@ import yabby.math.distributions.ParametricDistribution;
 public class DiscretizedBranchRates extends BranchRateModel.Base {
     public Input<ParametricDistribution> rateDistInput = new Input<ParametricDistribution>("distr", "the distribution governing the rates among branches", Input.Validate.REQUIRED);
     public Input<IntegerParameter> categoryInput = new Input<IntegerParameter>("rateCategories", "the rate categories associated with nodes in the tree for sampling of individual rates among branches.", Input.Validate.REQUIRED);
-    public Input<Tree> treeInput = new Input<Tree>("tree", "the tree this relaxed clock is associated with.", Input.Validate.REQUIRED);
+    public Input<BaseTree> treeInput = new Input<BaseTree>("tree", "the tree this relaxed clock is associated with.", Input.Validate.REQUIRED);
     public Input<Boolean> normalizeInput = new Input<Boolean>("normalize", "Whether to normalize the average rate (default false).", false);
     public Input<Double> normalizeToInput = new Input<Double>("normalizeto", "the value to normalize, if normalising.", Double.NaN);
     
@@ -28,7 +28,7 @@ public class DiscretizedBranchRates extends BranchRateModel.Base {
     private boolean normalize = false;
     private double normalizeBranchRateTo = Double.NaN;
     private double scaleFactor = 1.0;
-    private Tree tree;
+    private BaseTree tree;
     //private double logDensityNormalizationConstant;
 
 	boolean recompute = true;
@@ -107,7 +107,7 @@ public class DiscretizedBranchRates extends BranchRateModel.Base {
 
     
     static int x = 0;
-    public int getRateCategory(final Tree tree, final Node node) {
+    public int getRateCategory(final BaseTree tree, final Node node) {
         // assert !tree.isRoot(node) : "root node doesn't have a rate!";
     	if (node.isRoot()) {
     		return 1;

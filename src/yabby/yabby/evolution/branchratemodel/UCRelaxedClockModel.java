@@ -14,7 +14,7 @@ import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.substitutionmodel.JukesCantor;
 import yabby.evolution.substitutionmodel.SubstitutionModel;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.math.distributions.ParametricDistribution;
 
 /**
@@ -27,7 +27,7 @@ public class UCRelaxedClockModel extends BranchRateModel.Base {
 
     public Input<ParametricDistribution> rateDistInput = new Input<ParametricDistribution>("distr", "the distribution governing the rates among branches. Must have mean of 1. The clock.rate parameter can be used to change the mean rate.", Input.Validate.REQUIRED);
     public Input<IntegerParameter> categoryInput = new Input<IntegerParameter>("rateCategories", "the rate categories associated with nodes in the tree for sampling of individual rates among branches.", Input.Validate.REQUIRED);
-    public Input<Tree> treeInput = new Input<Tree>("tree", "the tree this relaxed clock is associated with.", Input.Validate.REQUIRED);
+    public Input<BaseTree> treeInput = new Input<BaseTree>("tree", "the tree this relaxed clock is associated with.", Input.Validate.REQUIRED);
     public Input<Boolean> normalizeInput = new Input<Boolean>("normalize", "Whether to normalize the average rate (default false).", false);
     public Input<Boolean> initialiseInput = new Input<Boolean>("initialise", "Whether to initilise rates by a heuristic instead of random (default false).", false);
 
@@ -174,7 +174,7 @@ public class UCRelaxedClockModel extends BranchRateModel.Base {
 					
 					// set up treelikelihood with Jukes Cantor no gamma, no inv, strict clock
 					Alignment data = (Alignment) output.getInput("data").get();
-					Tree tree = (Tree) output.getInput("tree").get();
+					BaseTree tree = (BaseTree) output.getInput("tree").get();
 					TreeLikelihoodD likelihood = new TreeLikelihoodD();
 					SiteModel siteModel = new SiteModel();
 					JukesCantor substitutionModel = new JukesCantor();
@@ -310,7 +310,7 @@ public class UCRelaxedClockModel extends BranchRateModel.Base {
 
     ParametricDistribution distribution;
     IntegerParameter categories;
-    Tree tree;
+    BaseTree tree;
 
     private boolean normalize = false;
     private boolean recompute = true;

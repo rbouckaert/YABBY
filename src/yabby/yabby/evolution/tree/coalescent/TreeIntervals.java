@@ -10,7 +10,7 @@ import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.Input.Validate;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.HeapSort;
 
 
@@ -50,13 +50,13 @@ import yabby.util.HeapSort;
 @Description("Extracts the intervals from a tree. Points in the intervals " +
         "are defined by the heights of nodes in the tree.")
 public class TreeIntervals extends CalculationNode implements IntervalList {
-    public Input<Tree> treeInput = new Input<Tree>("tree", "tree for which to calculate the intervals", Validate.REQUIRED);
+    public Input<BaseTree> treeInput = new Input<BaseTree>("tree", "tree for which to calculate the intervals", Validate.REQUIRED);
 
     public TreeIntervals() {
         super();
     }
 
-    public TreeIntervals(Tree tree) throws Exception {
+    public TreeIntervals(BaseTree tree) throws Exception {
         init(tree);
     }
 
@@ -312,7 +312,7 @@ public class TreeIntervals extends CalculationNode implements IntervalList {
      */
     @SuppressWarnings("unchecked")
     protected void calculateIntervals() {
-        Tree tree = treeInput.get();
+        BaseTree tree = treeInput.get();
 
         final int nodeCount = tree.getNodeCount();
 
@@ -447,7 +447,7 @@ public class TreeIntervals extends CalculationNode implements IntervalList {
      * @param times       the times of the nodes in the beast.tree
      * @param childCounts the number of children of each node
      */
-    protected static void collectTimes(Tree tree, double[] times, int[] childCounts) {
+    protected static void collectTimes(BaseTree tree, double[] times, int[] childCounts) {
         Node[] nodes = tree.getNodesAsArray();
         for (int i = 0; i < nodes.length; i++) {
             Node node = nodes[i];

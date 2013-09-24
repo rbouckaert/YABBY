@@ -2,10 +2,12 @@ package yabby.core.parameter;
 
 
 
+
 import java.io.PrintStream;
 
 import yabby.core.Description;
 import yabby.core.Input;
+import yabby.core.parameter.Parameter;
 
 
 
@@ -16,7 +18,7 @@ import yabby.core.Input;
 
 @Description("An integer-valued parameter represents a value (or array of values if the dimension is larger than one) " +
         "in the state space that can be changed by operators.")
-public class IntegerParameter extends Parameter<java.lang.Integer> {
+public class IntegerParameter extends Parameter.BaseP<java.lang.Integer> {
     public Input<Integer> lowerValueInput = new Input<Integer>("lower", "lower value for this parameter (default -infinity)");
     public Input<Integer> upperValueInput = new Input<Integer>("upper", "upper value for this parameter  (default +infinity)");
 

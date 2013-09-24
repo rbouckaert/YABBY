@@ -7,7 +7,7 @@ import yabby.core.Input;
 import yabby.core.Input.Validate;
 import yabby.evolution.tree.Node;
 import yabby.evolution.tree.RandomTree;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.evolution.tree.coalescent.PopulationFunction;
 
 
@@ -17,7 +17,7 @@ import yabby.evolution.tree.coalescent.PopulationFunction;
         "that the root of the species tree is lower than any coalescent events in " +
         "the gene tree")
 public class RandomGeneTree extends RandomTree {
-    public Input<Tree> speciesTreeInput = new Input<Tree>("speciesTree", "The species tree in which this random gene tree needs to fit", Validate.REQUIRED);
+    public Input<BaseTree> speciesTreeInput = new Input<BaseTree>("speciesTree", "The species tree in which this random gene tree needs to fit", Validate.REQUIRED);
 
     @Override
     public void initAndValidate() throws Exception {

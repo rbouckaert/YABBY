@@ -10,8 +10,8 @@ import yabby.core.Input;
 import yabby.core.Operator;
 import yabby.core.StateNode;
 import yabby.core.Input.Validate;
-import yabby.core.parameter.Parameter;
 import yabby.core.parameter.RealParameter;
+import yabby.core.parameter.Parameter.BaseP;
 import yabby.util.Randomizer;
 
 
@@ -123,8 +123,8 @@ public class UpDownOperator extends Operator {
     }
 
     private boolean outsideBounds(final StateNode node) {
-        if (node instanceof Parameter<?>) {
-            final Parameter<?> p = (Parameter) node;
+        if (node instanceof BaseP<?>) {
+            final BaseP<?> p = (BaseP) node;
             final Double lower = (Double) p.getLower();
             final Double upper = (Double) p.getUpper();
             final Double value = (Double) p.getValue();

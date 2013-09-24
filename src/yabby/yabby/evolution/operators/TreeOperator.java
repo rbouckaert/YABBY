@@ -30,12 +30,12 @@ import yabby.core.Input;
 import yabby.core.Operator;
 import yabby.core.Input.Validate;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 @Description("This operator changes a beast.tree.")
 abstract public class TreeOperator extends Operator {
-    public Input<Tree> treeInput = new Input<Tree>("tree", "yabby.tree on which this operation is performed", Validate.REQUIRED);
+    public Input<BaseTree> treeInput = new Input<BaseTree>("tree", "yabby.tree on which this operation is performed", Validate.REQUIRED);
 
 
     /**
@@ -61,8 +61,8 @@ abstract public class TreeOperator extends Operator {
     public void replace(Node node, Node child, Node replacement) {
     	node.removeChild(child);
     	node.addChild(replacement);
-        node.makeDirty(Tree.IS_FILTHY);
-        replacement.makeDirty(Tree.IS_FILTHY);
+        node.makeDirty(BaseTree.IS_FILTHY);
+        replacement.makeDirty(BaseTree.IS_FILTHY);
     }
 
 }

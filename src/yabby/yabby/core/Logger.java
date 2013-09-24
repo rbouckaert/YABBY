@@ -41,7 +41,7 @@ import java.util.List;
 
 import yabby.core.Input.Validate;
 import yabby.core.util.Log;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 import yabby.util.XMLProducer;
 
@@ -128,7 +128,7 @@ public class Logger extends YABBYObject {
         LOGMODE sMode = modeInput.get();
         if (sMode.equals(LOGMODE.autodetect)) {
             mode = COMPOUND_LOGGER;
-            if (nLoggers == 1 && loggerList.get(0) instanceof Tree) {
+            if (nLoggers == 1 && loggerList.get(0) instanceof BaseTree) {
                 mode = TREE_LOGGER;
             }
         } else if (sMode.equals(LOGMODE.tree)) {

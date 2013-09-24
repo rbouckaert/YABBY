@@ -34,7 +34,7 @@ import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.RealParameter;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -85,7 +85,7 @@ public class BirthDeathGernhard08Model extends YuleModel {
     }
 
     @Override
-    public double calculateTreeLogLikelihood(final Tree tree) {
+    public double calculateTreeLogLikelihood(final BaseTree tree) {
         final double a = relativeDeathRateParameterInput.get().getValue();
         final double rho = (sampleProbabilityInput.get() == null ? 1.0 : sampleProbabilityInput.get().getValue());
         return calculateTreeLogLikelihood(tree, rho, a);

@@ -19,8 +19,8 @@ import yabby.app.draw.SmallLabel;
 import yabby.core.YABBYObject;
 import yabby.core.Input;
 import yabby.evolution.tree.TraitSet;
-import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TreeDistribution;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -137,7 +137,7 @@ public class TreeDistributionInputEditor extends InputEditor.Base {
 	@Override
 	public void validateInput() {
 		TreeDistribution distr = (TreeDistribution) m_plugin;
-	    Tree tree = distr.treeInput.get();
+	    BaseTree tree = distr.treeInput.get();
 	    if (tree == null) {
 	    	tree = distr.treeIntervalsInput.get().treeInput.get();
 	    }

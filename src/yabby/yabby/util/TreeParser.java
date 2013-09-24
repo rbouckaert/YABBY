@@ -37,13 +37,13 @@ import yabby.core.StateNodeInitialiser;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.TaxonSet;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 
 
 
 @Description("Create beast.tree by parsing from a specification of a beast.tree in Newick format " +
         "(includes parsing of any meta data in the Newick string).")
-public class TreeParser extends Tree implements StateNodeInitialiser {
+public class TreeParser extends BaseTree implements StateNodeInitialiser {
     /**
      * default beast.tree branch length, used when that info is not in the Newick beast.tree
      */
@@ -98,7 +98,7 @@ public class TreeParser extends Tree implements StateNodeInitialiser {
             } else {
                 if (m_initial.get() != null) {
                     // try to pick up taxa from initial tree
-                    Tree tree = m_initial.get();
+                    BaseTree tree = m_initial.get();
                     if (tree.m_taxonset.get() != null) {
                         labels = tree.m_taxonset.get().asStringList();
                     } else {

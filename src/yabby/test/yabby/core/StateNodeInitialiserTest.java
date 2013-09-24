@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import test.yabby.BEASTTestCase;
 import yabby.evolution.alignment.Alignment;
-import yabby.evolution.tree.Tree;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.ClusterTree;
 import yabby.util.TreeParser;
 
@@ -17,7 +17,7 @@ public class StateNodeInitialiserTest extends TestCase {
     @Test
     public void testClusterTree() throws Exception {
         Alignment data = BEASTTestCase.getAlignment();
-        Tree tree = new Tree();
+        BaseTree tree = new BaseTree();
         tree.initAndValidate();
         assertEquals(true, tree.getNodeCount() == 1);
 
@@ -34,7 +34,7 @@ public class StateNodeInitialiserTest extends TestCase {
     @Test
     public void testNewickTree() throws Exception {
         Alignment data = BEASTTestCase.getAlignment();
-        Tree tree = new Tree();
+        BaseTree tree = new BaseTree();
         tree.initAndValidate();
         assertEquals(true, tree.getNodeCount() == 1);
 

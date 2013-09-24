@@ -15,8 +15,8 @@ import yabby.core.State;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.IntegerParameter;
 import yabby.evolution.speciation.SpeciesTreeDistribution;
-import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TreeDistribution;
+import yabby.evolution.tree.Tree.BaseTree;
 import yabby.math.Binomial;
 
 
@@ -43,7 +43,7 @@ public class BayesianSkyline extends TreeDistribution {
 
     Function popSizes;
     IntegerParameter groupSizes;
-    Tree tree;
+    BaseTree tree;
     TreeIntervals intervals;
     double[] coalescentTimes;
 

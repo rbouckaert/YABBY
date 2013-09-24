@@ -9,8 +9,8 @@ import yabby.core.Input;
 import yabby.core.Operator;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.IntegerParameter;
-import yabby.core.parameter.Parameter;
 import yabby.core.parameter.RealParameter;
+import yabby.core.parameter.Parameter.BaseP;
 import yabby.util.Randomizer;
 
 
@@ -24,7 +24,7 @@ public class SwapOperator extends Operator {
 
 
     int howMany;
-    Parameter<?> parameter;
+    BaseP<?> parameter;
     private List<Integer> masterList = null;
 
     @Override
