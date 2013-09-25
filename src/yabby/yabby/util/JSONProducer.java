@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import yabby.core.YABBYObject;
 import yabby.core.Input;
@@ -50,7 +51,7 @@ public class JSONProducer {
      * #spaces before elements in XML *
      */
     int indentCount;
-
+    
     final public static String DEFAULT_NAMESPACE = "yabby.core:yabby.evolution.alignment:yabby.evolution.tree.coalescent:yabby.core.util:yabby.evolution.nuc:yabby.evolution.operators:yabby.evolution.sitemodel:yabby.evolution.substitutionmodel:yabby.evolution.likelihood";
 
     public JSONProducer() {
@@ -244,8 +245,8 @@ public class JSONProducer {
                 if (buf3.length() > 0) {
                 	buf2.append((needsComma == true) ? ",\n" : "\n");
                 	buf2.append(buf3);
+                    needsComma = true;
                 }
-                needsComma = true;
             }
             if (buf2.length() != 0) {
                 buf.append(buf2);
@@ -264,7 +265,7 @@ public class JSONProducer {
         //if (m_nIndent < 2) {
         // collapse newlines if there are no sub-objects
         String str = buf.toString();
-        if (str.indexOf('}') < 0) {
+        if (str.indexOf('}') < 0 && str.length() < 1024) {
         	str = str.replaceAll("\\s+", " ");
         	buf.delete(0, buf.length());
         	buf.append(indent);
@@ -295,8 +296,32 @@ public class JSONProducer {
                 if (input.getName().equals(input0)) {
                     // found the input with name sInput
                     if (input.get() != null) {
-                        // distinguish between List, Plugin and primitive input types
-                        if (input.get() instanceof List) {
+                        // distinguish between Map, List, Plugin and primitive input types
+                        if (input.get() instanceof Map) {
+                            if (!isShort) {
+	                        	Map<String,?> map = (Map<String,?>) input.get();
+	                        	StringBuffer buf2 = new StringBuffer();
+	                        	// determine label widith
+	                        	int whiteSpaceWidth = 0;
+	                        	for (String key : map.keySet()) {
+	                        		whiteSpaceWidth = Math.max(whiteSpaceWidth, key.length());
+	                        	}
+	                        	boolean needsComma = false;
+	                        	for (String key : map.keySet()) {
+	                            	if (needsComma) {
+	                            		buf2.append(",\n");
+	                            	}
+	                        		buf2.append(indent + " " + key);
+	                        		for (int k = key.length(); k < whiteSpaceWidth; k++) {
+	                        			buf2.append(' ');
+	                        		}
+	                        		buf2.append(" :\"" + map.get(key) +"\"");
+	                        		needsComma = true;
+	                        	}
+	                        	buf.append(buf2);
+                            }
+                        	return;
+                        } else if (input.get() instanceof List) {
                             if (!isShort) {
                             	StringBuffer buf2 = new StringBuffer();
                             	//buf2.append(indent + " \"" + input0 + "\": [\n");

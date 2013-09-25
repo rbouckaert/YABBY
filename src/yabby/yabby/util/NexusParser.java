@@ -462,10 +462,11 @@ public class NexusParser {
                 }
             }
 
-            Sequence sequence = new Sequence();
-            sequence.init(nTotalCount, sTaxon, sData);
-            sequence.setID(generateSequenceID(sTaxon));
-            alignment.sequenceInput.setValue(sequence, alignment);
+            alignment.setInputValue(sTaxon, sData);
+//            Sequence sequence = new Sequence();
+//            sequence.init(nTotalCount, sTaxon, sData);
+//            sequence.setID(generateSequenceID(sTaxon));
+//            alignment.sequenceInput.setValue(sequence, alignment);
         }
         alignment.initAndValidate();
         if (nTaxa > 0 && nTaxa != alignment.getNrTaxa()) {

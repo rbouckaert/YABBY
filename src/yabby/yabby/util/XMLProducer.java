@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * converts MCMC plug in into XML, i.e. does the reverse of XMLParser
@@ -695,7 +696,7 @@ public class XMLProducer extends XMLParser {
      * @throws Exception
      */
     @SuppressWarnings("rawtypes")
-    void inputToXML(String sInput, YABBYObject plugin, StringBuffer buf, boolean bShort) throws Exception {
+    void inputToXML(String sInput, YABBYObject plugin, StringBuffer buf, boolean isShort) throws Exception {
         Field[] fields = plugin.getClass().getFields();
         for (int i = 0; i < fields.length; i++) {
             if (fields[i].getType().isAssignableFrom(Input.class)) {
@@ -703,9 +704,26 @@ public class XMLProducer extends XMLParser {
                 if (input.getName().equals(sInput)) {
                     // found the input with name sInput
                     if (input.get() != null) {
-                        // distinguish between List, Plugin and primitive input types
-                        if (input.get() instanceof List) {
-                            if (!bShort) {
+                        if (input.get() instanceof Map) {
+                            // distinguish between List, Plugin and primitive input types
+                        	if (!isShort) {
+	                        	Map<String,?> map = (Map<String,?>) input.get();
+	                        	// determine label widith
+	                        	int whiteSpaceWidth = 0;
+	                        	for (String key : map.keySet()) {
+	                        		whiteSpaceWidth = Math.max(whiteSpaceWidth, key.length());
+	                        	}
+	                        	for (String key : map.keySet()) {
+                                    buf.append("        <input name='" + key + "'>");
+	                        		for (int k = key.length(); k < whiteSpaceWidth; k++) {
+	                        			buf.append(' ');
+	                        		}
+	                        		buf.append(normalise(input.get().toString()) + "</input>\n");
+	                        	}
+                            }
+                        	return;
+                        } else if (input.get() instanceof List) {
+                            if (!isShort) {
                             	int k = 0;
                             	List list = (List) input.get();
                                 for (Object o2 : list) {
@@ -723,11 +741,11 @@ public class XMLProducer extends XMLParser {
                             return;
                         } else if (input.get() instanceof YABBYObject) {
                         	if (!input.get().equals(input.defaultValue)) {
-	                            if (bShort && isDone.contains((YABBYObject) input.get())) {
+	                            if (isShort && isDone.contains((YABBYObject) input.get())) {
 	                                buf.append(" " + sInput + "='@" + ((YABBYObject) input.get()).getID() + "'");
 	                                inputsDone.add(input);
 	                            }
-	                            if (!bShort && !inputsDone.contains(input)) {
+	                            if (!isShort && !inputsDone.contains(input)) {
 	                                pluginToXML((YABBYObject) input.get(), buf, sInput, false);
 	                            }
                         	}
@@ -736,7 +754,7 @@ public class XMLProducer extends XMLParser {
                         	if (!input.get().equals(input.defaultValue)) {
 	                            // primitive type, see if
 	                            String sValue = input.get().toString();
-	                            if (bShort) {
+	                            if (isShort) {
 	                                if (sValue.indexOf('\n') < 0) {
 	                                    buf.append(" " + sInput + "='" + normalise(input.get().toString()) + "'");
 	                                }

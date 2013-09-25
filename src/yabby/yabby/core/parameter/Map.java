@@ -1,19 +1,20 @@
 package yabby.core.parameter;
 
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.lang.String;
 
-import yabby.core.YABBYObject;
+import yabby.core.CalculationNode;
 import yabby.core.Description;
 import yabby.core.Input;
 
 
 
 @Description("Unordered set mapping keys to values")
-abstract public class Map<T> extends YABBYObject {	
+abstract public class Map<T> extends CalculationNode {	
 	
 	public Input<java.util.Map<java.lang.String, T>> defaultInput = new Input<java.util.Map<java.lang.String, T>>("*",
 			"Input containing the map", new HashMap<java.lang.String, T>());
