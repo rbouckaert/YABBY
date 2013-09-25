@@ -26,7 +26,7 @@ import yabby.evolution.substitutionmodel.MTREV;
 import yabby.evolution.substitutionmodel.MutationDeathModel;
 import yabby.evolution.substitutionmodel.SubstitutionModel;
 import yabby.evolution.substitutionmodel.WAG;
-import yabby.evolution.tree.Tree.BaseTree;
+import yabby.evolution.tree.Tree;
 
 /**
  * This test mimics the testLikelihood.xml file from Beast 1, which compares Beast 1 results to PAUP results.
@@ -48,7 +48,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testJC69Likelihood() throws Exception {
         // Set up JC69 model: uniform freqs, kappa = 1, 0 gamma categories
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         JukesCantor JC = new JukesCantor();
         JC.initAndValidate();
@@ -71,7 +71,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testAscertainedJC69Likelihood() throws Exception {
         // as testJC69Likelihood but with ascertained alignment
         Alignment data = BEASTTestCase.getAscertainedAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data,
@@ -96,7 +96,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testK80Likelihood() throws Exception {
         // Set up K80 model: uniform freqs, kappa = 27.402591, 0 gamma categories
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data,
@@ -124,7 +124,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testHKY85Likelihood() throws Exception {
         // Set up HKY85 model: estimated freqs, kappa = 29.739445, 0 gamma categories
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data);
@@ -152,7 +152,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testHKY85GLikelihood() throws Exception {
         // Set up HKY85+G model: estimated freqs, kappa = 38.82974, 4 gamma categories, shape = 0.137064
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data);
@@ -183,7 +183,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testHKY85ILikelihood() throws Exception {
         // Set up HKY85+I model: estimated freqs, kappa = 38.564672, 0 gamma categories, prop invariant = 0.701211
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data);
@@ -213,7 +213,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testHKY85GILikelihood() throws Exception {
         // Set up HKY85+G+I model: estimated freqs, kappa = 39.464538, 4 gamma categories, shape = 0.587649, prop invariant = 0.486548
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data);
@@ -244,7 +244,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testGTRLikelihood() throws Exception {
         // Set up GTR model: no gamma categories, no proportion invariant
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data);
@@ -272,7 +272,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testGTRILikelihood() throws Exception {
         // Set up GTR model: prop invariant = 0.5
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data);
@@ -302,7 +302,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testGTRGLikelihood() throws Exception {
         // Set up GTR model: 4 gamma categories, gamma shape = 0.5
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data);
@@ -331,7 +331,7 @@ public class TreeLikelihoodTest extends TestCase {
     public void testGTRGILikelihood() throws Exception {
         // Set up GTR model: 4 gamma categories, gamma shape = 0.5, prop invariant = 0.5
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         Frequencies freqs = new Frequencies();
         freqs.initByName("data", data);
@@ -359,7 +359,7 @@ public class TreeLikelihoodTest extends TestCase {
 
     void aminoacidModelTest(SubstitutionModel substModel, double fExpectedValue) throws Exception {
         Alignment data = BEASTTestCase.getAminoAcidAlignment();
-        BaseTree tree = BEASTTestCase.getAminoAcidTree(data);
+        Tree tree = BEASTTestCase.getAminoAcidTree(data);
         SiteModel siteModel = new SiteModel();
         siteModel.initByName("mutationRate", "1.0", "gammaCategoryCount", 1, "substModel", substModel);
 
@@ -424,7 +424,7 @@ public class TreeLikelihoodTest extends TestCase {
 
     void aminoacidModelTestI(SubstitutionModel substModel, double fExpectedValue) throws Exception {
         Alignment data = BEASTTestCase.getAminoAcidAlignment();
-        BaseTree tree = BEASTTestCase.getAminoAcidTree(data);
+        Tree tree = BEASTTestCase.getAminoAcidTree(data);
         SiteModel siteModel = new SiteModel();
         siteModel.initByName("mutationRate", "1.0", "gammaCategoryCount", 1, "substModel", substModel,
                 "proportionInvariant", "0.2");
@@ -487,7 +487,7 @@ public class TreeLikelihoodTest extends TestCase {
 
     void aminoacidModelTestIG(SubstitutionModel substModel, double fExpectedValue) throws Exception {
         Alignment data = BEASTTestCase.getAminoAcidAlignment();
-        BaseTree tree = BEASTTestCase.getAminoAcidTree(data);
+        Tree tree = BEASTTestCase.getAminoAcidTree(data);
         SiteModel siteModel = new SiteModel();
         siteModel.initByName("mutationRate", "1.0", "gammaCategoryCount", 1, "substModel", substModel,
                 "gammaCategoryCount", 4,
@@ -574,7 +574,7 @@ public class TreeLikelihoodTest extends TestCase {
                 "userDataType", dataType
         );
 
-        BaseTree tree = BEASTTestCase.getTree(data, "((English_ST:0.22743347188019544,(German_ST:0.10557648379843088,Dutch_List:0.10557648379843088):0.12185698808176457):1.5793160946109988,(Spanish:0.11078392189606047,(Italian:0.10119772534558173,French:0.10119772534558173):0.009586196550478737):1.6959656445951337)");
+        Tree tree = BEASTTestCase.getTree(data, "((English_ST:0.22743347188019544,(German_ST:0.10557648379843088,Dutch_List:0.10557648379843088):0.12185698808176457):1.5793160946109988,(Spanish:0.11078392189606047,(Italian:0.10119772534558173,French:0.10119772534558173):0.009586196550478737):1.6959656445951337)");
 
         RealParameter frequencies = new RealParameter("1 0");
         Frequencies freqs = new Frequencies();
@@ -601,7 +601,7 @@ public class TreeLikelihoodTest extends TestCase {
     @Test
     public void testBinaryCovarionLikelihood() throws Exception {
         Alignment data = BEASTTestCase.getCovarionAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data, "((English_ST:0.22743347188019544,(German_ST:0.10557648379843088,Dutch_List:0.10557648379843088):0.12185698808176457):1.5793160946109988,(Spanish:0.11078392189606047,(Italian:0.10119772534558173,French:0.10119772534558173):0.009586196550478737):1.6959656445951337)");
+        Tree tree = BEASTTestCase.getTree(data, "((English_ST:0.22743347188019544,(German_ST:0.10557648379843088,Dutch_List:0.10557648379843088):0.12185698808176457):1.5793160946109988,(Spanish:0.11078392189606047,(Italian:0.10119772534558173,French:0.10119772534558173):0.009586196550478737):1.6959656445951337)");
 
 
         RealParameter alpha = new RealParameter("0.284");

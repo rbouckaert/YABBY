@@ -12,15 +12,15 @@ import yabby.core.Input;
 import yabby.core.State;
 import yabby.core.Input.Validate;
 import yabby.evolution.alignment.TaxonSet;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
 @Description("Prior over set of taxa, useful for defining monophyletic constraints and "
         + "distributions over MRCA times or (sets of) tips of trees")
 public class MRCAPrior extends Distribution {
-    public final Input<BaseTree> treeInput = new Input<BaseTree>("tree", "the tree containing the taxon set", Validate.REQUIRED);
+    public final Input<Tree> treeInput = new Input<Tree>("tree", "the tree containing the taxon set", Validate.REQUIRED);
     public final Input<TaxonSet> taxonsetInput = new Input<TaxonSet>("taxonset",
             "set of taxa for which prior information is available");
     public final Input<Boolean> isMonophyleticInput = new Input<Boolean>("monophyletic",
@@ -38,7 +38,7 @@ public class MRCAPrior extends Distribution {
      * shadow members *
      */
     ParametricDistribution dist;
-    BaseTree tree;
+    Tree tree;
     // number of taxa in taxon set
     int nrOfTaxa = -1;
     // array of flags to indicate which taxa are in the set

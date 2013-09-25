@@ -51,8 +51,8 @@ package yabby.evolution.operators;
 
 import yabby.core.Description;
 import yabby.core.Input;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 
 
@@ -77,7 +77,7 @@ public class Exchange extends TreeOperator {
      */
     @Override
     public double proposal() {
-        final BaseTree tree = treeInput.get(this);
+        final Tree tree = treeInput.get(this);
 
         double fLogHastingsRatio = 0;
 
@@ -101,7 +101,7 @@ public class Exchange extends TreeOperator {
     /**
      * WARNING: Assumes strictly bifurcating beast.tree.
      */
-    public double narrow(final BaseTree tree) {
+    public double narrow(final Tree tree) {
 
         if( true ) {
             //        Alternative implementation that has less risk of rejection due to
@@ -180,7 +180,7 @@ public class Exchange extends TreeOperator {
      * WARNING: Assumes strictly bifurcating beast.tree.
      * @param tree
      */
-    public double wide(final BaseTree tree) {
+    public double wide(final Tree tree) {
 
         final int nodeCount = tree.getNodeCount();
 

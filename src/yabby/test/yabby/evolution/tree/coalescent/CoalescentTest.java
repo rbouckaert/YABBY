@@ -2,7 +2,7 @@ package test.yabby.evolution.tree.coalescent;
 
 import test.yabby.BEASTTestCase;
 import yabby.evolution.alignment.Alignment;
-import yabby.evolution.tree.Tree.BaseTree;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.coalescent.Coalescent;
 import yabby.evolution.tree.coalescent.ConstantPopulation;
 import yabby.evolution.tree.coalescent.TreeIntervals;
@@ -24,7 +24,7 @@ public class CoalescentTest extends BEASTTestCase {
 
     public void testConstantPopulation() throws Exception {
         // *********** 3 taxon **********
-        BaseTree tree = getTree(data, trees[0]);
+        Tree tree = getTree(data, trees[0]);
         TreeIntervals treeIntervals = new TreeIntervals();
         treeIntervals.initByName("tree", tree);
 

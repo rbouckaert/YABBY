@@ -10,15 +10,15 @@ import yabby.core.Loggable;
 import yabby.core.StateNode;
 import yabby.core.Input.Validate;
 import yabby.evolution.speciation.SpeciesTreePrior.PopSizeFunction;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
 
 @Description("Logs tree annotated with metadata in starBeast format")
 public class SpeciesTreeLogger extends YABBYObject implements Loggable {
-    public Input<BaseTree> treeInput = new Input<BaseTree>("tree", "tree to be logged", Validate.REQUIRED);
+    public Input<Tree> treeInput = new Input<Tree>("tree", "tree to be logged", Validate.REQUIRED);
     public Input<Function> parameterInput = new Input<Function>("popSize", "population size parameter associated with tree nodes", Validate.REQUIRED);
     public Input<Function> parameterTopInput = new Input<Function>("popSizeTop", "population size parameter associated with top of tree branches, only used for non-constant *beast analysis");
     public Input<SpeciesTreePrior> speciesTreePriorInput = new Input<SpeciesTreePrior>("speciesTreePrior", "species tree prior, used to find which Population Size Function is used. If not specified, assumes 'constant'");
@@ -48,7 +48,7 @@ public class SpeciesTreeLogger extends YABBYObject implements Loggable {
     @Override
     public void log(final int nSample, final PrintStream out) {
         // make sure we get the current version of the inputs
-        final BaseTree tree = (BaseTree) treeInput.get().getCurrent();
+        final Tree tree = (Tree) treeInput.get().getCurrent();
         Function metadata = parameterInput.get();
         if (metadata instanceof StateNode) {
             metadata = ((StateNode) metadata).getCurrent();
@@ -79,7 +79,7 @@ public class SpeciesTreeLogger extends YABBYObject implements Loggable {
             }
             buf.append(")");
         } else {
-            buf.append(node.getNr()+BaseTree.taxaTranslationOffset);
+            buf.append(node.getNr()+Tree.taxaTranslationOffset);
         }
         buf.append("[&");
         switch (popSizeFunction) {

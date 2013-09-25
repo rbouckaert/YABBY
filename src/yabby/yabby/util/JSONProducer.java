@@ -308,7 +308,11 @@ public class JSONProducer {
                                 		buf2.append(",\n");
                                 	}
                                 	StringBuffer buf3 = new StringBuffer();
-                                    pluginToJSON((YABBYObject) o2, input.getType(), buf3, null, false);
+                                	if (o2 instanceof YABBYObject) {
+                                		pluginToJSON((YABBYObject) o2, input.getType(), buf3, null, false);
+                                	} else {
+                                		buf2.append(o2.toString());
+                                	}
                                     buf2.append(buf3);
                                     needsComma = oldLen < buf2.length();
                                 }

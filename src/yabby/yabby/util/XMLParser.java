@@ -51,7 +51,7 @@ import yabby.core.parameter.Parameter.BaseP;
 import yabby.core.util.Log;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.Sequence;
-import yabby.evolution.tree.Tree.BaseTree;
+import yabby.evolution.tree.Tree;
 
 
 
@@ -154,7 +154,7 @@ public class XMLParser {
     final static String REAL_PARAMETER_CLASS = RealParameter.class.getName();
     final static String PLUGIN_CLASS = YABBYObject.class.getName();
     final static String INPUT_CLASS = Input.class.getName();
-    final static String TREE_CLASS = BaseTree.class.getName();
+    final static String TREE_CLASS = Tree.class.getName();
     final static String RUNNABLE_CLASS = Runnable.class.getName();
 
 

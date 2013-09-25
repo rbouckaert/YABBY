@@ -50,8 +50,8 @@
 package yabby.evolution.operators;
 
 import yabby.core.Description;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 
 
@@ -70,7 +70,7 @@ public class Uniform extends TreeOperator {
      */
     @Override
     public double proposal() {
-        final BaseTree tree = treeInput.get(this);
+        final Tree tree = treeInput.get(this);
 
         // randomly select internal node
         final int nNodeCount = tree.getNodeCount();

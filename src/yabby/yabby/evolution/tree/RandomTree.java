@@ -36,7 +36,6 @@ import yabby.core.StateNodeInitialiser;
 import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.TaxonSet;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.evolution.tree.coalescent.PopulationFunction;
 import yabby.math.distributions.MRCAPrior;
 import yabby.math.distributions.ParametricDistribution;
@@ -47,7 +46,7 @@ import yabby.util.Randomizer;
 
 
 @Description("This class provides the basic engine for coalescent simulation of a given demographic model over a given time period. ")
-public class RandomTree extends BaseTree implements StateNodeInitialiser {
+public class RandomTree extends Tree implements StateNodeInitialiser {
     public Input<Alignment> taxaInput = new Input<Alignment>("taxa", "set of taxa to initialise tree with specified by alignment");
     //public Input<TaxonSet> m_taxonset = new Input<TaxonSet>("taxonset","set of taxa to initialise tree with specified by a taxonset", Validate.XOR, m_taxa);
     public Input<PopulationFunction> populationFunctionInput = new Input<PopulationFunction>("populationModel", "population function for generating coalescent???", Validate.REQUIRED);

@@ -11,14 +11,13 @@ import yabby.core.StateNode;
 import yabby.core.Input.Validate;
 import yabby.core.parameter.Parameter.BaseP;
 import yabby.evolution.branchratemodel.BranchRateModel;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
 
 @Description("Logs tree annotated with metadata and/or rates")
 public class TreeWithMetaDataLogger extends YABBYObject implements Loggable {
-    public Input<BaseTree> treeInput = new Input<BaseTree>("tree", "tree to be logged", Validate.REQUIRED);
+    public Input<Tree> treeInput = new Input<Tree>("tree", "tree to be logged", Validate.REQUIRED);
     // TODO: make this input a list of valuables
     public Input<Function> parameterInput = new Input<Function>("metadata", "meta data to be logged with the tree nodes");
     public Input<BranchRateModel.Base> clockModelInput = new Input<BranchRateModel.Base>("branchratemodel", "rate to be logged with branches of the tree");
@@ -55,7 +54,7 @@ public class TreeWithMetaDataLogger extends YABBYObject implements Loggable {
     @Override
     public void log(int nSample, PrintStream out) {
         // make sure we get the current version of the inputs
-        BaseTree tree = (BaseTree) treeInput.get().getCurrent();
+        Tree tree = (Tree) treeInput.get().getCurrent();
         Function metadata = parameterInput.get();
         if (metadata != null && metadata instanceof StateNode) {
             metadata = ((StateNode) metadata).getCurrent();

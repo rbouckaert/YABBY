@@ -42,8 +42,8 @@ import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.distance.Distance;
 import yabby.evolution.alignment.distance.JukesCantorDistance;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -62,7 +62,7 @@ import yabby.evolution.tree.Tree.BaseTree;
         "<br/>o adjusted complete link " +
         "<br/>o neighborjoining " +
         "<br/>o neighborjoining2 - corrects tree for tip data, unlike plain neighborjoining")
-public class ClusterTree extends BaseTree implements StateNodeInitialiser {
+public class ClusterTree extends Tree implements StateNodeInitialiser {
     final static String M_SINGLE = "single";
     final static String M_AVERAGE = "average";
     final static String M_COMPLETE = "complete";

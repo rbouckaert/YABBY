@@ -15,17 +15,17 @@ import yabby.core.parameter.RealParameter;
 import yabby.evolution.alignment.Taxon;
 import yabby.evolution.alignment.TaxonSet;
 import yabby.evolution.speciation.SpeciesTreePrior.PopSizeFunction;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
 import yabby.evolution.tree.TreeDistribution;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
 
 @Description("Calculates probability of gene tree conditioned on a species tree (as in *BEAST)")
 public class GeneTreeForSpeciesTreeDistribution extends TreeDistribution {
-    public Input<BaseTree> speciesTreeInput =
-            new Input<BaseTree>("speciesTree", "species tree containing the associated gene tree", Validate.REQUIRED);
+    public Input<Tree> speciesTreeInput =
+            new Input<Tree>("speciesTree", "species tree containing the associated gene tree", Validate.REQUIRED);
 
 //    public enum PLOIDY {autosomal_nuclear, X, Y, mitrochondrial};
     
@@ -160,7 +160,7 @@ public class GeneTreeForSpeciesTreeDistribution extends TreeDistribution {
 
         Arrays.fill(nrOfLineages, 0);
 
-        final BaseTree stree = speciesTreeInput.get();
+        final Tree stree = speciesTreeInput.get();
         final Node[] speciesNodes = stree.getNodesAsArray();
 
         traverseLineageTree(speciesNodes, treeInput.get().getRoot());

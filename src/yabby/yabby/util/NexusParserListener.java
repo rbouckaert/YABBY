@@ -1,6 +1,6 @@
 package yabby.util;
 
-import yabby.evolution.tree.Tree.BaseTree;
+import yabby.evolution.tree.Tree;
 
 /**
  * @author Alexei Drummond
@@ -12,5 +12,5 @@ public interface NexusParserListener {
      * @param treeIndex the index of the tree (starting from zero)
      * @param tree the tree that has been parsed
      */
-    void treeParsed(int treeIndex, BaseTree tree);
+    void treeParsed(int treeIndex, Tree tree);
 }

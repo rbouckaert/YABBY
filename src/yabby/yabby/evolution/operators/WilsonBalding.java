@@ -50,8 +50,8 @@
 package yabby.evolution.operators;
 
 import yabby.core.Description;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 
 /**
@@ -79,7 +79,7 @@ public class WilsonBalding extends TreeOperator {
      */
     @Override
     public double proposal() {
-        BaseTree tree = treeInput.get(this);
+        Tree tree = treeInput.get(this);
 
         double oldMinAge, newMinAge, newRange, oldRange, newAge, fHastingsRatio;
 

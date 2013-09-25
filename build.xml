@@ -84,6 +84,7 @@
 			<src path="${src}/geo"/>
 			<src path="${src}/rb"/>
 			<src path="${src}/snapp"/>
+			<src path="${src}/model-selection"/>
 			<include name="yabby/**/**" />
 			<!-- apache commons math, JSON -->
 			<include name="org/**/**" />

@@ -16,8 +16,8 @@ import yabby.evolution.branchratemodel.BranchRateModel;
 import yabby.evolution.datatype.DataType;
 import yabby.evolution.likelihood.TreeLikelihood;
 import yabby.evolution.sitemodel.SiteModel;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 import yabby.util.XMLParser;
 import yabby.util.XMLProducer;
@@ -32,7 +32,7 @@ import yabby.util.XMLProducer;
         "Sequences for the leave nodes in the tree are returned as an alignment.")
 public class SequenceSimulator extends yabby.core.Runnable {
     public Input<Alignment> m_data = new Input<Alignment>("data", "alignment data which specifies datatype and taxa of the beast.tree", Validate.REQUIRED);
-    public Input<BaseTree> m_treeInput = new Input<BaseTree>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
+    public Input<Tree> m_treeInput = new Input<Tree>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
     public Input<SiteModel.Base> m_pSiteModelInput = new Input<SiteModel.Base>("siteModel", "site model for leafs in the beast.tree", Validate.REQUIRED);
     public Input<BranchRateModel.Base> m_pBranchRateModelInput = new Input<BranchRateModel.Base>("branchRateModel",
             "A model describing the rates on the branches of the beast.tree.");
@@ -50,7 +50,7 @@ public class SequenceSimulator extends yabby.core.Runnable {
     /**
      * tree used for generating samples *
      */
-    protected BaseTree m_tree;
+    protected Tree m_tree;
     /**
      * site model used for generating samples *
      */
@@ -199,7 +199,7 @@ public class SequenceSimulator extends yabby.core.Runnable {
     /**
      * get transition probability matrix for particular rate category *
      */
-    void getTransitionProbabilities(BaseTree tree, Node node, int rateCategory, double[] probs) {
+    void getTransitionProbabilities(Tree tree, Node node, int rateCategory, double[] probs) {
 
         Node parent = node.getParent();
         double branchRate = (m_branchRateModel == null ? 1.0 : m_branchRateModel.getRateForBranch(node));
@@ -289,7 +289,7 @@ public class SequenceSimulator extends yabby.core.Runnable {
                 throw new Exception("No treelikelihood found in file. Giving up now.");
             }
             Alignment data = ((Input<Alignment>) treeLikelihood.getInput("data")).get();
-            BaseTree tree = ((Input<BaseTree>) treeLikelihood.getInput("tree")).get();
+            Tree tree = ((Input<Tree>) treeLikelihood.getInput("tree")).get();
             SiteModel pSiteModel = ((Input<SiteModel>) treeLikelihood.getInput("siteModel")).get();
             BranchRateModel pBranchRateModel = ((Input<BranchRateModel>) treeLikelihood.getInput("branchRateModel")).get();
 

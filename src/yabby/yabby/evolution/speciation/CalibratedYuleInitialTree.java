@@ -33,13 +33,13 @@ import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.StateNode;
 import yabby.core.StateNodeInitialiser;
-import yabby.evolution.tree.Tree.BaseTree;
+import yabby.evolution.tree.Tree;
 
 
 
 
 @Description("This class provides the basic engine for coalescent simulation of a given demographic model over a given time period.")
-public class CalibratedYuleInitialTree extends BaseTree implements StateNodeInitialiser {
+public class CalibratedYuleInitialTree extends Tree implements StateNodeInitialiser {
 
     public Input<List<CalibrationPoint>> calibrationsInput =
             new Input<List<CalibrationPoint>>("calibrations", "Set of calibrated nodes", new ArrayList<CalibrationPoint>(),
@@ -67,7 +67,7 @@ public class CalibratedYuleInitialTree extends BaseTree implements StateNodeInit
         cym.setInputValue("type", CalibratedYuleModel.Type.NONE) ; //"none");
         cym.initAndValidate();
 
-        final BaseTree t = cym.compatibleInitialTree();
+        final Tree t = cym.compatibleInitialTree();
         m_initial.get().assignFromWithoutID(t);
     }
 

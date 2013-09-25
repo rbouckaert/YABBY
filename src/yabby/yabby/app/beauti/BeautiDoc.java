@@ -55,9 +55,9 @@ import yabby.evolution.alignment.Taxon;
 import yabby.evolution.branchratemodel.BranchRateModel;
 import yabby.evolution.branchratemodel.StrictClockModel;
 import yabby.evolution.likelihood.GenericTreeLikelihood;
-import yabby.evolution.tree.TraitSet;
 import yabby.evolution.tree.Tree;
-import yabby.evolution.tree.Tree.BaseTree;
+import yabby.evolution.tree.TraitSet;
+import yabby.evolution.tree.TreeInterface;
 import yabby.math.distributions.MRCAPrior;
 import yabby.util.JSONProducer;
 import yabby.util.NexusParser;
@@ -898,7 +898,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 				if (d instanceof GenericTreeLikelihood) {
 					try {
 						// TODO: this might not be a valid type conversion from TreeInterface to Tree 
-						BaseTree tree = (BaseTree) ((GenericTreeLikelihood) d).treeInput.get();
+						Tree tree = (Tree) ((GenericTreeLikelihood) d).treeInput.get();
 						tree.m_trait.setValue(trait, tree);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -940,11 +940,11 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		for (Distribution d : likelihood.pDistributions.get()) {
 			BranchRateModel clockModel = ((GenericTreeLikelihood) d).branchRateModelInput.get();
 			// sanity check
-			BaseTree tree = null;
+			Tree tree = null;
 			try {
 				for (Input<?> input : ((YABBYObject) clockModel).listInputs()) {
 					if (input.getName().equals("tree")) {
-						tree = (BaseTree) input.get();
+						tree = (Tree) input.get();
 					}
 
 				}
@@ -1050,18 +1050,18 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 
 			// set estimate flag on tree, only if tree occurs in a partition
 			for (YABBYObject plugin : pluginmap.values()) {
-				if (plugin instanceof BaseTree) {
-					BaseTree tree = (BaseTree) plugin;
+				if (plugin instanceof Tree) {
+					Tree tree = (Tree) plugin;
 					tree.isEstimatedInput.setValue(false, tree);
                 }
 			}
 			for (YABBYObject plugin : pPartition[2]) {
 				// TODO: this might not be a valid type conversion from TreeInterface to Tree 
-				BaseTree tree = (BaseTree) ((GenericTreeLikelihood) plugin).treeInput.get();
+				Tree tree = (Tree) ((GenericTreeLikelihood) plugin).treeInput.get();
 				tree.isEstimatedInput.setValue(true, tree);
             }
 			if (pluginmap.containsKey("Tree.t:Species")) {
-				BaseTree tree = (BaseTree) pluginmap.get("Tree.t:Species");
+				Tree tree = (Tree) pluginmap.get("Tree.t:Species");
 				tree.isEstimatedInput.setValue(true, tree);
 			}
 
@@ -1209,7 +1209,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 						bNeedsEstimation = (model.meanRateInput.get() != firstClock) || firstClock.isEstimatedInput.get();
 					} else {
 						// TODO: this might not be a valid type conversion from TreeInterface to Tree 
-						BaseTree tree = (BaseTree) treeLikelihood.treeInput.get();
+						Tree tree = (Tree) treeLikelihood.treeInput.get();
 						// check whether there are tip dates
 						TraitSet trait = tree.m_trait.get();
 						if (trait != null) {
@@ -1640,7 +1640,7 @@ public class BeautiDoc extends YABBYObject implements RequiredInputProvider {
 		tabu.addAll(mcmc.loggersInput.get());
 		// add trees
 		for (StateNode node: mcmc.startStateInput.get().stateNodeInput.get()) {
-			if (node instanceof BaseTree) {
+			if (node instanceof Tree) {
 				tabu.add(node);
 			}
 		}

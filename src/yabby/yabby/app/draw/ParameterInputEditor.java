@@ -57,10 +57,18 @@ public class ParameterInputEditor extends YABBYObjectInputEditor {
         if (m_input.get() != null) {
         	if (itemNr < 0) {
         		RealParameter parameter = (RealParameter) m_input.get();
-        		m_entry.setText(parameter.valuesInput.get());
+        		String s = "";
+        		for (Double d : parameter.valuesInput.get()) {
+        			s += d + " ";
+        		}
+        		m_entry.setText(s);
         	} else {
         		RealParameter parameter = (RealParameter) ((List)m_input.get()).get(itemNr);
-        		m_entry.setText(parameter.valuesInput.get());
+        		String s = "";
+        		for (Double d : parameter.valuesInput.get()) {
+        			s += d + " ";
+        		}
+        		m_entry.setText(s);
         	}
         }
     }
@@ -247,7 +255,11 @@ public class ParameterInputEditor extends YABBYObjectInputEditor {
     @Override
     void refresh() {
         RealParameter parameter = (RealParameter) m_input.get();
-        m_entry.setText(parameter.valuesInput.get());
+		String s = "";
+		for (Double d : parameter.valuesInput.get()) {
+			s += d + " ";
+		}
+		m_entry.setText(s);
         m_isEstimatedBox.setSelected(parameter.isEstimatedInput.get());
         repaint();
     }

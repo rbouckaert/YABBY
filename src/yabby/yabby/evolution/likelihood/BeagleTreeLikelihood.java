@@ -35,8 +35,8 @@ import yabby.evolution.alignment.AscertainedAlignment;
 import yabby.evolution.branchratemodel.StrictClockModel;
 import yabby.evolution.sitemodel.SiteModel;
 import yabby.evolution.substitutionmodel.EigenDecomposition;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 /**
@@ -471,17 +471,17 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
      */
     @Override
     protected boolean requiresRecalculation() {
-        hasDirt = BaseTree.IS_CLEAN;
+        hasDirt = Tree.IS_CLEAN;
 
         updateSiteModel |= m_siteModel.isDirtyCalculation();
         updateSubstitutionModel |= substitutionModel.isDirtyCalculation();
 
         if (dataInput.get().isDirtyCalculation()) {
-            hasDirt = BaseTree.IS_FILTHY;
+            hasDirt = Tree.IS_FILTHY;
             return true;
         }
         if (m_siteModel.isDirtyCalculation()) {
-            hasDirt = BaseTree.IS_DIRTY;
+            hasDirt = Tree.IS_DIRTY;
             return true;
         }
         if (branchRateModel != null && branchRateModel.isDirtyCalculation()) {
@@ -571,7 +571,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             useScaleFactors = true;
             if (rescalingCountInner < RESCALE_TIMES) {
                 recomputeScaleFactors = true;
-                hasDirt = BaseTree.IS_FILTHY;// makeDirty();
+                hasDirt = Tree.IS_FILTHY;// makeDirty();
 //                System.err.println("Recomputing scale factors");
             }
 
@@ -584,7 +584,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
         } else if (this.rescalingScheme == PartialsRescalingScheme.DELAYED && everUnderflowed) {
             useScaleFactors = true;
             recomputeScaleFactors = true;
-            hasDirt = BaseTree.IS_FILTHY;
+            hasDirt = Tree.IS_FILTHY;
             rescalingCount++;
         }
 
@@ -773,7 +773,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
 //        }
         final double branchRate = branchRateModel.getRateForBranch(node);
         final double branchTime = node.getLength() * branchRate;
-        if (!node.isRoot() && (update != BaseTree.IS_CLEAN || branchTime != m_branchLengths[nodeNum])) {
+        if (!node.isRoot() && (update != Tree.IS_CLEAN || branchTime != m_branchLengths[nodeNum])) {
             m_branchLengths[nodeNum] = branchTime;
             if (branchTime < 0.0) {
                 throw new RuntimeException("Negative branch length: " + branchTime);
@@ -798,7 +798,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             branchLengths[eigenIndex][updateCount] = branchTime;
             branchUpdateCount[eigenIndex]++;
 
-            update |= BaseTree.IS_DIRTY;
+            update |= Tree.IS_DIRTY;
         }
 
         // If the node is internal, update the partial likelihoods.
@@ -814,7 +814,7 @@ public class BeagleTreeLikelihood extends TreeLikelihood {
             final int update2 = traverse(child2, op2, flip);
 
             // If either child node was updated then update this node too
-            if (update1 != BaseTree.IS_CLEAN || update2 != BaseTree.IS_CLEAN) {
+            if (update1 != Tree.IS_CLEAN || update2 != Tree.IS_CLEAN) {
 
                 int x = operationCount[operationListCount] * Beagle.OPERATION_TUPLE_SIZE;
 

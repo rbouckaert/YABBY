@@ -54,19 +54,19 @@ public class IntegerParameter extends Parameter.BaseP<java.lang.Integer> {
         } else {
             m_fUpper = Integer.MAX_VALUE - 1;
         }
-        String sValue = valuesInput.get();
-        // remove start and end spaces
-        sValue = sValue.replaceAll("^\\s+", "");
-        sValue = sValue.replaceAll("\\s+$", "");
-        // split into space-separated bits
-        String[] sValues = sValue.split("\\s+");
-        int nDimension = Math.max(m_nDimension.get(), sValues.length);
-        m_nDimension.setValue(nDimension, this);
-        values = new java.lang.Integer[nDimension];
-        storedValues = new java.lang.Integer[nDimension];
-        for (int i = 0; i < values.length; i++) {
-            values[i] = new Integer(sValues[i % sValues.length]);
-        }
+//        String sValue = valuesInput.get();
+//        // remove start and end spaces
+//        sValue = sValue.replaceAll("^\\s+", "");
+//        sValue = sValue.replaceAll("\\s+$", "");
+//        // split into space-separated bits
+//        String[] sValues = sValue.split("\\s+");
+//        int nDimension = Math.max(dimensionInput.get(), sValues.length);
+//        dimensionInput.setValue(nDimension, this);
+//        values = new java.lang.Integer[nDimension];
+//        storedValues = new java.lang.Integer[nDimension];
+//        for (int i = 0; i < values.length; i++) {
+//            values[i] = new Integer(sValues[i % sValues.length]);
+//        }
         super.initAndValidate();
     }
 

@@ -12,7 +12,6 @@ import yabby.core.Loggable;
 import yabby.core.Input.Validate;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.alignment.TaxonSet;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -22,7 +21,7 @@ import yabby.evolution.tree.Tree.BaseTree;
 public class MRCATime extends CalculationNode implements Function, Loggable {
 	public Input<TaxonSet> taxaInput = new Input<TaxonSet>("taxa","comma separated list of taxa", Validate.REQUIRED);
 	public Input<Alignment> dataInput = new Input<Alignment>("data","alignment containing the complete list of taxa to choose from", Validate.REQUIRED);
-	public Input<BaseTree> treeInput = new Input<BaseTree>("tree","tree for which the MRCA time is calculated", Validate.REQUIRED);
+	public Input<Tree> treeInput = new Input<Tree>("tree","tree for which the MRCA time is calculated", Validate.REQUIRED);
 	
 	// number of taxa in taxon set
 	int nrOfTaxa = -1;

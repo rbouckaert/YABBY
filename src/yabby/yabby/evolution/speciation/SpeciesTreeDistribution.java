@@ -32,8 +32,8 @@ import java.util.Random;
 
 import yabby.core.Description;
 import yabby.core.State;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TreeDistribution;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -58,7 +58,7 @@ abstract public class SpeciesTreeDistribution extends TreeDistribution {
     public double calculateLogP() {
         // (Q2R): what if tree intervals?
         // (Q2R): always the same tree, no? so why pass in argument
-        final BaseTree tree = treeInput.get();
+        final Tree tree = treeInput.get();
         logP = calculateTreeLogLikelihood(tree);
         return logP;
     } // calculateLogP
@@ -70,7 +70,7 @@ abstract public class SpeciesTreeDistribution extends TreeDistribution {
      * @param tree
      * @return log-likelihood of density
      */
-    abstract double calculateTreeLogLikelihood(BaseTree tree);
+    abstract double calculateTreeLogLikelihood(Tree tree);
 
     // ****************************************************************
     // Private and protected stuff

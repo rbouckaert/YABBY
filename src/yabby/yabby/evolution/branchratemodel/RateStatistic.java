@@ -35,8 +35,8 @@ import yabby.core.Input;
 import yabby.core.Loggable;
 import yabby.core.Input.Validate;
 import yabby.evolution.likelihood.GenericTreeLikelihood;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.math.statistic.DiscreteStatistics;
 
 
@@ -49,11 +49,11 @@ public class RateStatistic extends YABBYObject implements Loggable, Function {
 	
     public Input<GenericTreeLikelihood> likelihoodInput = new Input<GenericTreeLikelihood>("treeLikelihood", "TreeLikelihood containing branch rate model that provides rates for a tree");
     public Input<BranchRateModel> branchRateModelInput = new Input<BranchRateModel>("branchratemodel", "model that provides rates for a tree", Validate.XOR, likelihoodInput);
-    public Input<BaseTree> treeInput = new Input<BaseTree>("tree", "tree for which the rates apply");
+    public Input<Tree> treeInput = new Input<Tree>("tree", "tree for which the rates apply");
     public Input<Boolean> internalInput = new Input<Boolean>("internal", "consider internal nodes, default true", true);
     public Input<Boolean> externalInput = new Input<Boolean>("external", "consider external nodes, default true", true);
 
-    private BaseTree tree = null;
+    private Tree tree = null;
     private BranchRateModel branchRateModel = null;
     private boolean internal = true;
     private boolean external = true;

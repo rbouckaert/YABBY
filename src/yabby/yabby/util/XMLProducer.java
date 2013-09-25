@@ -706,8 +706,18 @@ public class XMLProducer extends XMLParser {
                         // distinguish between List, Plugin and primitive input types
                         if (input.get() instanceof List) {
                             if (!bShort) {
-                                for (Object o2 : (List) input.get()) {
-                                    pluginToXML((YABBYObject) o2, buf, sInput, false);
+                            	int k = 0;
+                            	List list = (List) input.get();
+                                for (Object o2 : list) {
+                                	if (o2 instanceof YABBYObject) {
+                                		pluginToXML((YABBYObject) o2, buf, sInput, false);
+                                	} else {
+                                		k++;
+                                		buf.append(o2.toString());
+                                		if (k < list.size()-1) {
+                                			buf.append(' ');
+                                		}
+                                	}
                                 }
                             }
                             return;

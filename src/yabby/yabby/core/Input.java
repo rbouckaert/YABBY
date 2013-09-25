@@ -541,6 +541,31 @@ public class Input<T> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void setStringValue(final String sValue, final YABBYObject plugin) throws Exception {
         // figure out the type of T and create object based on T=Integer, T=Double, T=Boolean, T=Valuable
+        if (value instanceof List<?>) {
+        	List list = (List) value;
+        	list.clear();
+			// remove start and end spaces
+			String sValue2 = sValue.replaceAll("^\\s+", "");
+			sValue2 = sValue2.replaceAll("\\s+$", "");
+			// split into space-separated bits
+			String[] sValues = sValue2.split("\\s+");
+			for (int i = 0; i < sValues.length; i++) {
+	            if (theClass.equals(Integer.class)) {
+	            	list.add(new Integer(sValues[i % sValues.length]));
+	            }
+	            else if (theClass.equals(Double.class)) {
+	            	list.add(new Double(sValues[i % sValues.length]));
+	            }
+	            else if (theClass.equals(Boolean.class)) {
+	            	list.add(new Boolean(sValues[i % sValues.length]));
+	            }
+	            else if (theClass.equals(String.class)) {
+	            	list.add(new String(sValues[i % sValues.length]));
+	            }
+			}
+			return;
+        }
+    	
         if (theClass.equals(Integer.class)) {
             value = (T) new Integer(sValue);
             return;

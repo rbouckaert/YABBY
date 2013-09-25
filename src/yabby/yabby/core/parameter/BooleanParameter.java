@@ -61,27 +61,19 @@ public class BooleanParameter extends Parameter.BaseP<java.lang.Boolean> {
 //    	init(value, dimension);
 //    }
 
-    @Override
-    public void initAndValidate() throws Exception {
-        String sValue = valuesInput.get();
-        // remove start and end spaces
-        sValue = sValue.replaceAll("^\\s+", "");
-        sValue = sValue.replaceAll("\\s+$", "");
-        // split into space-separated bits
-        String[] sValues = sValue.split("\\s+");
-        int nDimension = Math.max(m_nDimension.get(), sValues.length);
-        m_nDimension.setValue(nDimension, this);
-        values = new java.lang.Boolean[nDimension];
-        storedValues = new java.lang.Boolean[nDimension];
-        String tempValue;
-        for (int i = 0; i < values.length; i++) {
-            tempValue = sValues[i % sValues.length];
-            if (tempValue.equals("1.") || tempValue.equals("1") || tempValue.equals("1.0")) tempValue = "true";
-            if (tempValue.equals("0.") || tempValue.equals("0") || tempValue.equals("0.0")) tempValue = "false";
-            values[i] = new Boolean(tempValue);
-        }
-        super.initAndValidate();
-    }
+//    @Override
+//    public void initAndValidate() throws Exception {
+//        Boolean[] sValues = valuesInput.get().toArray(new Boolean[]{});
+//
+//        int nDimension = Math.max(dimensionInput.get(), sValues.length);
+//        dimensionInput.setValue(nDimension, this);
+//        values = new java.lang.Boolean[nDimension];
+//        storedValues = new java.lang.Boolean[nDimension];
+//        for (int i = 0; i < values.length; i++) {
+//            values[i] = sValues[i % sValues.length];
+//        }
+//        super.initAndValidate();
+//    }
 
 
     @Override

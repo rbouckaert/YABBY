@@ -7,8 +7,8 @@ import java.util.List;
 import yabby.core.Description;
 import yabby.core.Input;
 import yabby.evolution.alignment.TaxonSet;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 
 
@@ -63,7 +63,7 @@ public class TipDatesScaler extends TreeOperator {
 
     @Override
     public double proposal() {
-        BaseTree tree = treeInput.get(this);
+        Tree tree = treeInput.get(this);
 
         // randomly select leaf node
         int i = Randomizer.nextInt(taxonIndices.length);

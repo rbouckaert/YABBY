@@ -5,8 +5,8 @@ import yabby.core.Description;
 import yabby.core.Input;
 import yabby.core.parameter.BooleanParameter;
 import yabby.core.parameter.RealParameter;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 
 /**
  * @author Alexei Drummond
@@ -25,12 +25,12 @@ public class RandomLocalClockModel extends BranchRateModel.Base {
     //    public Input<RealParameter> meanRateInput =
 //            new Input<RealParameter>("meanRate",
 //                    "an optional parameter to set the mean rate across the whole tree");
-    public Input<BaseTree> treeInput =
-            new Input<BaseTree>("tree", "the tree this relaxed clock is associated with.", Input.Validate.REQUIRED);
+    public Input<Tree> treeInput =
+            new Input<Tree>("tree", "the tree this relaxed clock is associated with.", Input.Validate.REQUIRED);
     public Input<Boolean> ratesAreMultipliersInput =
             new Input<Boolean>("ratesAreMultipliers", "true if the rates should be treated as multipliers (default false).", false);
 
-    BaseTree m_tree;
+    Tree m_tree;
     RealParameter meanRate;
 
     @Override

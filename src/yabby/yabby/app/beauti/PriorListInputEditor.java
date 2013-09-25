@@ -31,8 +31,8 @@ import yabby.core.StateNode;
 import yabby.core.parameter.RealParameter;
 import yabby.evolution.alignment.Taxon;
 import yabby.evolution.alignment.TaxonSet;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TreeDistribution;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.math.distributions.MRCAPrior;
 import yabby.math.distributions.OneOnX;
 import yabby.math.distributions.Prior;
@@ -75,11 +75,11 @@ public class PriorListInputEditor extends ListInputEditor {
 					// first the tree priors
 					if (o1 instanceof TreeDistribution) {
 						if (o2 instanceof TreeDistribution) {
-							BaseTree tree1 = ((TreeDistribution)o1).treeInput.get();
+							Tree tree1 = ((TreeDistribution)o1).treeInput.get();
 							if (tree1 == null) {
 								tree1 = ((TreeDistribution)o1).treeIntervalsInput.get().treeInput.get();
 							}
-							BaseTree tree2 = ((TreeDistribution)o2).treeInput.get();
+							Tree tree2 = ((TreeDistribution)o2).treeInput.get();
 							if (tree2 == null) {
 								tree2 = ((TreeDistribution)o2).treeIntervalsInput.get().treeInput.get();
 							}
@@ -169,7 +169,7 @@ public class PriorListInputEditor extends ListInputEditor {
 
     Set<Taxon> getTaxonCandidates(MRCAPrior prior) {
         Set<Taxon> candidates = new HashSet<Taxon>();
-        BaseTree tree = prior.treeInput.get();
+        Tree tree = prior.treeInput.get();
         String [] taxa = null;
         if (tree.m_taxonset.get() != null) {
         	try {
@@ -235,12 +235,12 @@ public class PriorListInputEditor extends ListInputEditor {
         MRCAPrior prior = new MRCAPrior();
         try {
 
-            List<BaseTree> trees = new ArrayList<BaseTree>();
+            List<Tree> trees = new ArrayList<Tree>();
             getDoc().scrubAll(true, false);
             State state = (State) doc.pluginmap.get("state");
             for (StateNode node : state.stateNodeInput.get()) {
-                if (node instanceof BaseTree) { // && ((Tree) node).m_initial.get() != null) {
-                    trees.add((BaseTree) node);
+                if (node instanceof Tree) { // && ((Tree) node).m_initial.get() != null) {
+                    trees.add((Tree) node);
                 }
             }
             int iTree = 0;

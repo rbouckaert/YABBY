@@ -32,8 +32,8 @@ import yabby.core.Input;
 import yabby.evolution.alignment.Taxon;
 import yabby.evolution.alignment.TaxonSet;
 import yabby.evolution.operators.TipDatesRandomWalker;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.TraitSet;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
@@ -49,10 +49,10 @@ public class TipDatesInputEditor extends YABBYObjectInputEditor {
 
     @Override
     public Class<?> type() {
-        return BaseTree.class;
+        return Tree.class;
     }
 
-    BaseTree tree;
+    Tree tree;
     TraitSet traitSet;
     JComboBox unitsComboBox;
     JComboBox relativeToComboBox;
@@ -69,9 +69,9 @@ public class TipDatesInputEditor extends YABBYObjectInputEditor {
         m_bAddButtons = bAddButtons;
 		this.itemNr = itemNr;
 		if (itemNr >= 0) {
-	        tree = (BaseTree) ((List<?>)input.get()).get(itemNr);
+	        tree = (Tree) ((List<?>)input.get()).get(itemNr);
 		} else {
-	        tree = (BaseTree) input.get();			
+	        tree = (Tree) input.get();			
 		}
         if (tree != null) {
             m_input = tree.m_trait;
@@ -245,7 +245,7 @@ public class TipDatesInputEditor extends YABBYObjectInputEditor {
         try {
             // clear
             for (YABBYObject plugin : traitSet.outputs) {
-                if (plugin instanceof BaseTree) {
+                if (plugin instanceof Tree) {
                     for (YABBYObject plugin2 : plugin.outputs) {
                         if (plugin2 instanceof TipDatesRandomWalker) {
                         	TipDatesRandomWalker operator = (TipDatesRandomWalker) plugin2;

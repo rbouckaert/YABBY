@@ -7,7 +7,7 @@ import test.yabby.BEASTTestCase;
 import yabby.core.parameter.RealParameter;
 import yabby.evolution.alignment.Alignment;
 import yabby.evolution.speciation.BirthDeathGernhard08Model;
-import yabby.evolution.tree.Tree.BaseTree;
+import yabby.evolution.tree.Tree;
 import junit.framework.TestCase;
 
 public class BirthDeathGernhard08ModelTest extends TestCase {
@@ -17,7 +17,7 @@ public class BirthDeathGernhard08ModelTest extends TestCase {
     public void testJC69Likelihood() throws Exception {
         // Set up JC69 model: uniform freqs, kappa = 1, 0 gamma categories
         Alignment data = BEASTTestCase.getAlignment();
-        BaseTree tree = BEASTTestCase.getTree(data);
+        Tree tree = BEASTTestCase.getTree(data);
 
         RealParameter birthDiffRate = new RealParameter("1.0");
         RealParameter relativeDeathRate = new RealParameter("0.5");

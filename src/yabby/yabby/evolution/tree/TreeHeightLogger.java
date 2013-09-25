@@ -10,13 +10,12 @@ import yabby.core.Function;
 import yabby.core.Input;
 import yabby.core.Loggable;
 import yabby.core.Input.Validate;
-import yabby.evolution.tree.Tree.BaseTree;
 
 
 
 @Description("Logger to report height of a tree")
 public class TreeHeightLogger extends CalculationNode implements Loggable, Function {
-    public Input<BaseTree> treeInput = new Input<BaseTree>("tree", "tree to report height for.", Validate.REQUIRED);
+    public Input<Tree> treeInput = new Input<Tree>("tree", "tree to report height for.", Validate.REQUIRED);
 
     @Override
     public void initAndValidate() {
@@ -25,7 +24,7 @@ public class TreeHeightLogger extends CalculationNode implements Loggable, Funct
 
     @Override
     public void init(PrintStream out) throws Exception {
-        final BaseTree tree = treeInput.get();
+        final Tree tree = treeInput.get();
         if (getID() == null || getID().matches("\\s*")) {
             out.print(tree.getID() + ".height\t");
         } else {
@@ -35,7 +34,7 @@ public class TreeHeightLogger extends CalculationNode implements Loggable, Funct
 
     @Override
     public void log(int nSample, PrintStream out) {
-        final BaseTree tree = treeInput.get();
+        final Tree tree = treeInput.get();
         out.print(tree.getRoot().getHeight() + "\t");
     }
 

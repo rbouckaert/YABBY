@@ -32,8 +32,8 @@ import yabby.core.Input;
 import yabby.core.Operator;
 import yabby.core.parameter.BooleanParameter;
 import yabby.core.parameter.RealParameter;
+import yabby.evolution.tree.Tree;
 import yabby.evolution.tree.Node;
-import yabby.evolution.tree.Tree.BaseTree;
 import yabby.util.Randomizer;
 
 
@@ -42,7 +42,7 @@ import yabby.util.Randomizer;
 @Description("Scales a parameter or a complete beast.tree (depending on which of the two is specified.")
 public class ScaleOperator extends Operator {
 
-    public final Input<BaseTree> treeInput = new Input<BaseTree>("tree", "if specified, all beast.tree branch length are scaled");
+    public final Input<Tree> treeInput = new Input<Tree>("tree", "if specified, all beast.tree branch length are scaled");
 
     public final Input<RealParameter> parameterInput = new Input<RealParameter>("parameter", "if specified, this parameter is scaled",
             Input.Validate.XOR, treeInput);
@@ -124,7 +124,7 @@ public class ScaleOperator extends Operator {
             final double scale = getScaler();
 
             if (m_bIsTreeScaler) {
-                final BaseTree tree = treeInput.get(this);
+                final Tree tree = treeInput.get(this);
                 if (rootOnlyInput.get()) {
                     final Node root = tree.getRoot();
                     final double fNewHeight = root.getHeight() * scale;

@@ -4,7 +4,9 @@ import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -71,8 +73,8 @@ public interface Parameter<T> {
 	     * this will make it the responsibility of the other class to maintain internal consistency of
 	     * the parameter.
 	     */
-	    public Input<String> valuesInput = new Input<String>("value", "start value(s) for this parameter. If multiple values are specified, they should be separated by whitespace.", yabby.core.Input.Validate.REQUIRED);
-	    public final Input<java.lang.Integer> m_nDimension =
+	    public Input<List<T>> valuesInput = new Input<List<T>>("value", "start value(s) for this parameter. If multiple values are specified, they should be separated by whitespace.", new ArrayList<T>(), yabby.core.Input.Validate.REQUIRED,  getMax().getClass());
+	    public final Input<java.lang.Integer> dimensionInput =
 	            new Input<java.lang.Integer>("dimension", "dimension of the parameter (default 1, i.e scalar)", 1);
 	    public final Input<Integer> minorDimensionInput = new Input<Integer>("minordimension", "minor-dimension when the parameter is interpreted as a matrix (default 1)", 1);
 
@@ -93,18 +95,28 @@ public interface Parameter<T> {
 
 	    @Override
 	    public void initAndValidate() throws Exception {
-	        m_bIsDirty = new boolean[m_nDimension.get()];
+            T[] sValues = valuesInput.get().toArray((T[]) Array.newInstance(getMax().getClass(), 0));
+
+            int nDimension = Math.max(dimensionInput.get(), sValues.length);
+            dimensionInput.setValue(nDimension, this);
+            values = (T[]) Array.newInstance(getMax().getClass(), nDimension);
+            storedValues = (T[]) Array.newInstance(getMax().getClass(), nDimension);
+            for (int i = 0; i < values.length; i++) {
+                values[i] = sValues[i % sValues.length];
+            }
+	    	
+	    	m_bIsDirty = new boolean[dimensionInput.get()];
 
 	        minorDimension = minorDimensionInput.get();
-	        if (minorDimension > 0 && m_nDimension.get() % minorDimension > 0) {
+	        if (minorDimension > 0 && dimensionInput.get() % minorDimension > 0) {
 	            throw new Exception("Dimension must be divisble by stride");
 	        }
 	        this.storedValues = values.clone();
 	    }
 
-
 	    /**
-	     * upper & lower bound *
+	     * upper & lower bound
+	     * These are located before the inputs (instead of after the inputs, as usual) so that valuesInput can determines the class
 	     */
 	    protected T m_fUpper;
 	    protected T m_fLower;
@@ -175,7 +187,7 @@ public interface Parameter<T> {
 	    @SuppressWarnings("unchecked")
 	    public void setDimension(final int nDimension) {
 	        if (getDimension() != nDimension) {
-	            final T[] values2 = (T[]) Array.newInstance(m_fUpper.getClass(), nDimension);
+	            final T[] values2 = (T[]) Array.newInstance(getMax().getClass(), nDimension);
 	            for (int i = 0; i < nDimension; i++) {
 	                values2[i] = values[i % getDimension()];
 	            }
@@ -183,11 +195,16 @@ public interface Parameter<T> {
 	            //storedValues = (T[]) Array.newInstance(m_fUpper.getClass(), nDimension);
 	        }
 	        m_bIsDirty = new boolean[nDimension];
+	        try {
+	        	dimensionInput.setValue(nDimension, this);
+	        } catch (Exception e) {
+	        	// ignore
+	        }
 	    }
 	    
 	    public void setMinorDimension(final int nDimension) throws Exception {
 	        minorDimension = nDimension;
-	        if (minorDimension > 0 && m_nDimension.get() % minorDimension > 0) {
+	        if (minorDimension > 0 && dimensionInput.get() % minorDimension > 0) {
 	            throw new Exception("Dimension must be divisble by stride");
 	        }
 	    }
