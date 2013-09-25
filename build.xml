@@ -183,7 +183,7 @@
 			<formatter type="xml" />
 
 			<batchtest fork="yes" todir="${report}">
-				<fileset dir="${src}">
+				<fileset dir="${src}/yabby">
                     <include name="test/yabby/app/beauti/**/*Test.java"/>
 				</fileset>
 			</batchtest>
@@ -193,8 +193,8 @@
 
 
 	<!-- Release -->
-	<property name="version" value="2.0.2" />
-	<property name="version_number" value="2.0.2" />
+	<property name="version" value="2.0.3" />
+	<property name="version_number" value="2.0.3" />
 	<property name="release_dir" value="release" />
 	<property name="copyright" value="Beast 2 development team 2011-2013" />
 
