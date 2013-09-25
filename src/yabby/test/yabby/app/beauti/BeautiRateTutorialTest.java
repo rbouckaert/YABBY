@@ -34,7 +34,7 @@ import yabby.app.util.Utils;
 public class BeautiRateTutorialTest extends BeautiBase {
 	// file used to store, then reload xml
 	final static String XML_FILE = "rsv.xml";
-	final static String PREFIX = "doc/tutorials/MEPs/figures/generated/BEAUti_";
+	final static String PREFIX = "doc/tutorials/MEPs/figures/BEAUti_";
 
 	@Test
 	public void MEPTutorial() throws InterruptedException {
