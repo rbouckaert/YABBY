@@ -141,7 +141,21 @@ public class XMLProducer extends XMLParser {
 
             sXML = sXML.replaceAll("xmlns=\"http://www.w3.org/TR/xhtml1/strict\"", "");
 
-            return sXML;
+            //insert newlines in alignments
+            int k = sXML.indexOf("<data ");
+            StringBuffer buf2 = new StringBuffer(sXML); 
+            while (k > 0) {
+            	while (sXML.charAt(k) != '>') {
+            		if (sXML.charAt(k) == ' ') {
+            			buf2.setCharAt(k, '\n');
+            		}
+            		k++;
+            	}
+            	k = sXML.indexOf("<data ", k + 1);
+            }
+            
+
+            return buf2.toString();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -706,19 +720,20 @@ public class XMLProducer extends XMLParser {
                     if (input.get() != null) {
                         if (input.get() instanceof Map) {
                             // distinguish between List, Plugin and primitive input types
-                        	if (!isShort) {
+                        	if (isShort) {
 	                        	Map<String,?> map = (Map<String,?>) input.get();
-	                        	// determine label widith
+	                        	// determine label width
 	                        	int whiteSpaceWidth = 0;
 	                        	for (String key : map.keySet()) {
 	                        		whiteSpaceWidth = Math.max(whiteSpaceWidth, key.length());
 	                        	}
 	                        	for (String key : map.keySet()) {
-                                    buf.append("        <input name='" + key + "'>");
+                                    //buf.append("        <input name='" + key + "'>");
+                                    buf.append("\n        " + key);
 	                        		for (int k = key.length(); k < whiteSpaceWidth; k++) {
 	                        			buf.append(' ');
 	                        		}
-	                        		buf.append(normalise(input.get().toString()) + "</input>\n");
+	                        		buf.append("=\"" + normalise(map.get(key).toString()) + "\"");
 	                        	}
                             }
                         	return;
