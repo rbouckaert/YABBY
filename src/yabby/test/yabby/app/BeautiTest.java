@@ -13,6 +13,7 @@ import yabby.app.beauti.BeautiDoc;
 
 import junit.framework.TestCase;
 
+
 public class BeautiTest extends TestCase {
     String sFile = "tmp123x666.xml";
     String sTemplateFile = "template123x666.xml";
