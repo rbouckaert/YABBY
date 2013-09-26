@@ -66,6 +66,7 @@ public class State extends YABBYObject {
      * Access through getNrStatNodes() and getStateNode(.).
      */
     protected StateNode[] stateNode;
+    protected StateNode[] storedStateNode;
 
     /**
      * number of state nodes *
@@ -76,10 +77,6 @@ public class State extends YABBYObject {
         return nrOfStateNodes;
     }
 
-    /**
-     * pointers to memory allocated to stateNodes and storedStateNodes *
-     */
-    private StateNode[] stateNodeMem;
 
     /**
      * File name used for storing the state, either periodically or at the end of an MCMC chain
@@ -99,6 +96,7 @@ public class State extends YABBYObject {
      * This map only contains those plug-ins that have a path to the posterior *
      */
     private HashMap<YABBYObject, List<YABBYObject>> outputMap;
+    private HashMap<YABBYObject, List<YABBYObject>> storedOutputMap;
 
     /**
      * Same as m_outputMap, but only for StateNodes indexed by the StateNode number
@@ -116,7 +114,7 @@ public class State extends YABBYObject {
      * The code is reset when the state is stored, and every time a StateNode
      * is requested by an operator, changeStateNodes is updated.
      */
-    private int[] changeStateNodes;
+    private int[] changedStateNodes;
     private int nrOfChangedStateNodes;
 
     /**
@@ -124,6 +122,7 @@ public class State extends YABBYObject {
      * the set of calculation nodes that is potentially affected by an operation *
      */
     Trie trie;
+    Trie storedTrie;
 
     /**
      * class for quickly finding which calculation nodes need to be updated
@@ -144,7 +143,7 @@ public class State extends YABBYObject {
             if (iPos == 0) {
                 return list;
             }
-            Trie child = children[changeStateNodes[iPos - 1]];
+            Trie child = children[changedStateNodes[iPos - 1]];
             if (child == null) {
                 return null;
             }
@@ -159,10 +158,10 @@ public class State extends YABBYObject {
                 this.list = list;
                 return;
             }
-            Trie child = children[changeStateNodes[iPos - 1]];
+            Trie child = children[changedStateNodes[iPos - 1]];
             if (child == null) {
                 child = new Trie();
-                children[changeStateNodes[iPos - 1]] = child;
+                children[changedStateNodes[iPos - 1]] = child;
             }
             child.set(list, iPos - 1);
         }
@@ -180,23 +179,18 @@ public class State extends YABBYObject {
             stateNode[i].index = i;
         }
         // make itself known
-        for (StateNode state : stateNode) {
-            state.state = this;
+        for (StateNode node : stateNode) {
+            node.state = this;
         }
 
         nrOfStateNodes = stateNode.length;
-        // allocate memory for StateNodes and a copy.
-        stateNodeMem = new StateNode[nrOfStateNodes * 2];
-        for (int i = 0; i < nrOfStateNodes; i++) {
-            stateNodeMem[i] = stateNode[i];
-            stateNodeMem[nrOfStateNodes + i] = stateNodeMem[i].copy();
-        }
 
         // set up data structure for encoding which StateNodes change by an operation
-        changeStateNodes = new int[stateNode.length];
+        changedStateNodes = new int[stateNode.length];
         //Arrays.fill(changeStateNodes, -1);
         nrOfChangedStateNodes = 0;
         trie = new Trie();
+        storedTrie = trie;
         // add the empty list for the case none of the StateNodes have changed
         trie.list = new ArrayList<CalculationNode>();
     } // initAndValidate
@@ -223,11 +217,11 @@ public class State extends YABBYObject {
      */
     protected StateNode getEditableStateNode(int nID, Operator operator) {
         for (int i = 0; i < nrOfChangedStateNodes; i++) {
-            if (changeStateNodes[i] == nID) {
+            if (changedStateNodes[i] == nID) {
                 return stateNode[nID];
             }
         }
-        changeStateNodes[nrOfChangedStateNodes++] = nID;
+        changedStateNodes[nrOfChangedStateNodes++] = nID;
         return stateNode[nID];
     }
 
@@ -244,6 +238,11 @@ public class State extends YABBYObject {
     public void store(int iSample) {
         //Arrays.fill(changeStateNodes, -1);
         nrOfChangedStateNodes = 0;
+        
+        // take care of dynamic part of the state
+        storedTrie = trie;
+        storedOutputMap = outputMap;
+        storedStateNode = stateNode;
     }
 
     /**
@@ -253,8 +252,13 @@ public class State extends YABBYObject {
      */
     public void restore() {
         for (int i = 0; i < nrOfChangedStateNodes; i++) {
-            stateNode[changeStateNodes[i]].restore();
+            stateNode[changedStateNodes[i]].restore();
         }
+        
+        // take care of dynamic part of the state
+        trie = storedTrie;
+        outputMap = storedOutputMap;
+        stateNode = storedStateNode;
     }
 
     /**
@@ -437,7 +441,7 @@ public class State extends YABBYObject {
         if (isDirty) {
             // happens only during debugging and start of MCMC chain
             for (int i = 0; i < stateNode.length; i++) {
-                changeStateNodes[i] = i;
+                changedStateNodes[i] = i;
             }
             nrOfChangedStateNodes = stateNode.length;
         }
@@ -458,6 +462,9 @@ public class State extends YABBYObject {
         // debugging purposes (developer forgot to derive from CalculationNode)
         // we keep track of the lot.
         outputMap = new HashMap<YABBYObject, List<YABBYObject>>();
+        if (storedOutputMap == null) {
+        	storedOutputMap = outputMap;
+        }
         outputMap.put(posterior, new ArrayList<YABBYObject>());
         boolean bProgress = true;
         List<YABBYObject> plugins = new ArrayList<YABBYObject>();
@@ -544,7 +551,7 @@ public class State extends YABBYObject {
 //    	for (int i = 0; i < stateNode.length; i++) {
 //    		if (m_changedStateNodeCode.get(i)) {
         for (int k = 0; k < nrOfChangedStateNodes; k++) {
-            int i = changeStateNodes[k];
+            int i = changedStateNodes[k];
             // go grab the path to the Runnable
             // first the outputs of the StateNodes that is changed
             boolean bProgress = false;
@@ -599,4 +606,43 @@ public class State extends YABBYObject {
         return calcNodes;
     } // calculateCalcNodePath
 
+    /** dynamically add StateNode 
+     * **/
+    void addStateNode(StateNode node) {
+    	if (trie == storedTrie) {
+    		// first node that is added requires recalculating trie
+    		trie = new Trie();
+    		// enforce recalculation of outputMap
+            outputMap = null;
+    	}
+    	
+        StateNode [] old = stateNode;
+        stateNode = new StateNode[old.length + 1];
+        System.arraycopy(old, 0, stateNode, 0, old.length);
+        stateNode[old.length] = node;
+        node.index = old.length;
+        
+        int [] oldNodes = changedStateNodes; 
+        changedStateNodes = new int[stateNode.length];
+        System.arraycopy(oldNodes, 0, changedStateNodes, 0, oldNodes.length);
+        
+
+        node.state = this;
+    } // addStateNode
+    
+    /** dynamically remove StateNode 
+     * **/
+    void removeStateNode(StateNode node) {
+    	if (trie == storedTrie) {
+    		// first node that is removed requires recalculating trie
+    		trie = new Trie();
+    		// enforce recalculation of outputMap
+            outputMap = null;
+    	}
+    	
+    	int [] oldNodes = changedStateNodes; 
+        changedStateNodes = new int[stateNode.length];
+        System.arraycopy(oldNodes, 0, changedStateNodes, 0, oldNodes.length);
+    } // removeStateNode
+    
 } // class State
